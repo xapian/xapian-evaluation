@@ -36,7 +36,7 @@ trec_search : trec_search.cc $(LIBS) $(HEADERS)
 
 trec_index : trec_index.cc $(LIBS) $(HEADERS)
 	$(GCC) -c $(OPTIMISE) $(DEBUG) -I$(XAPIAN_INC) -I$(INC) trec_index.cc -o trec_index.o
-	$(GCC) $(OPTIMISE) $(DEBUG) $(LIBS) trec_index.o $(XAPIAN_LIB) -o trec_index
+	$(GCC) $(OPTIMISE) $(DEBUG) $(LIBS) trec_index.o gunzipper.o $(XAPIAN_LIB) -o trec_index
 
 trec_query : trec_query.cc $(LIBS) $(HEADERS)
 	$(GCC) -c $(OPTIMISE) $(DEBUG) -I$(XAPIAN_INC) -I$(INC) trec_query.cc -o trec_query.o
