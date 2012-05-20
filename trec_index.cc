@@ -141,36 +141,6 @@ SGMLParser::closing_tag(const string &tag)
     } // END if
 }
 
-static string file_to_string(const string &file) {
-// put the contents of a file into a string
-
-    string out;
-    struct stat st;
-    int fd = open(file.c_str(), O_RDONLY);
-    if (fd >= 0) {
-	if (fstat(fd, &st) == 0 && S_ISREG(st.st_mode)) {
-	    // Distinguish "empty file" from "failed to read file"
-	    if (st.st_size == 0) return " ";
-	    char *blk = (char*)malloc(st.st_size);
-	    if (blk) {
-		char *p = blk;
-		int len = st.st_size;
-		while (len) {
-		    int r = read(fd, p, len);
-		    if (r < 0) break;
-		    p += r;
-		    len -= r;
-		}
-		if (len == 0) out = string(blk, st.st_size);
-		free(blk);			
-	    }
-	}
-	close(fd);
-    }
-    return "";
-
-} // END file_to_string
-
 string getline( int & curpos, int uncolen ) {
 
   string line;
