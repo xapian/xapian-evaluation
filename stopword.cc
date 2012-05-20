@@ -47,7 +47,7 @@ void Init_str( char str[], int size ) {
 
 } /* END Init_str */
 
-void Read_Extra_SWord( FILE *f_id, char word[KW_SIZE], int *eof ) { 
+void Read_Extra_SWord( FILE *f_id, char word[KW_SIZE] ) { 
   /* read a stop word from the extra stop word file*/ 
  
   int i; 
@@ -69,7 +69,7 @@ void Read_SW_File( char sw_file[], SW_STORE * sw_store ) {
      version which goes directly to the file, with need for specifiying dir */ 
 
   FILE *swf_id;	/* file id for stopword file */ 
-  int i, eof = 0; 
+  int i; 
   char sw_fname[LSTRING];  /* full path and name of sw file */ 
 
   sw_store->nstops = 0;  /* init just in case! */
@@ -85,7 +85,7 @@ void Read_SW_File( char sw_file[], SW_STORE * sw_store ) {
 
   /*read stop words into stop word store*/
   for( i=0; i < MAX_STOPWORDS && !feof(swf_id); i++) {
-    Read_Extra_SWord( swf_id, sw_store->words[i], &eof );
+    Read_Extra_SWord( swf_id, sw_store->words[i] );
     if(!feof(swf_id)) 
       {
 	sw_store->nstops++;
