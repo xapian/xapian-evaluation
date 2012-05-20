@@ -54,10 +54,10 @@ lowercase(string & term )
     }
 }
 
-int split( const string &s, char c, vector<string> &res)
+void split( const string &s, char c, vector<string> &res)
  {
    res.clear();
-   if(s==""){return 0;}
+   if(s==""){return;}
    uint i;
    uint pos=0;
    for( i=0; i<=s.size(); i++)

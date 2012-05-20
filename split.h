@@ -26,6 +26,6 @@
 #include <string>
 using namespace std;
 
-extern int split( const string &s, char c, vector<string> &res);
+extern void split( const string &s, char c, vector<string> &res);
 
 #endif
