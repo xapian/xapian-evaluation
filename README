@@ -1,0 +1,13 @@
+Xapian TREC harness
+===================
+
+This was written by Andy MacFarlane at City University back in 2003 or so.
+
+I've tweaked it to build, but not tested it as I don't have access to
+TREC data.
+
+Its use of the Xapian API could do with some updating as it was written
+before the creation of Xapian::TermGenerator.
+
+Olly Betts
+2012-05-20
