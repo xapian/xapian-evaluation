@@ -1,0 +1,4 @@
+*.o
+trec_index
+trec_query
+trec_search
