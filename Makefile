@@ -1,7 +1,7 @@
 # Makefile for Ad-hoc batch TREC index and search
 
-OPTIMISE = -O3
-DEBUG = -g -Wno-deprecated
+OPTIMISE = -O2
+DEBUG = -g -Wall -W
 GCC = g++
 
 XAPIAN_CONFIG = /usr/local/bin/xapian-config
