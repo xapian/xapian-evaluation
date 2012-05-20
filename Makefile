@@ -9,7 +9,6 @@ XAPIAN_LIB = `$(XAPIAN_CONFIG) --libs`
 CXXFLAGS = `$(XAPIAN_CONFIG) --cxxflags`
 XAPIAN_INC = /usr/include
 INC = /usr/include
-#LIBS = config_file.o htmlparse.o stopword.o gunzipper.o split.o timer.o
 LIBS = config_file.o htmlparse.o stopword.o split.o timer.o
 HEADERS = config_file.h htmlparse.h stopword.h split.h timer.h timerstruct.h
 
@@ -30,11 +29,14 @@ htmlparse.o : htmlparse.cc
 stopword.o : stopword.cc
 	$(GCC) -c $(OPTIMISE) $(DEBUG) -I$(INC) stopword.cc -o stopword.o
 
+gunzipper.o:
+	$(MAKE) -f Makefile.gzip gunzipper
+
 trec_search : trec_search.cc $(LIBS) $(HEADERS)
 	$(GCC) -c $(OPTIMISE) $(DEBUG) -I$(XAPIAN_INC) -I$(INC) trec_search.cc -o trec_search.o
 	$(GCC) $(OPTIMISE) $(DEBUG) $(LIBS) trec_search.o $(XAPIAN_LIB) -o trec_search
 
-trec_index : trec_index.cc $(LIBS) $(HEADERS)
+trec_index : trec_index.cc $(LIBS) $(HEADERS) gunzipper.o
 	$(GCC) -c $(OPTIMISE) $(DEBUG) -I$(XAPIAN_INC) -I$(INC) trec_index.cc -o trec_index.o
 	$(GCC) $(OPTIMISE) $(DEBUG) $(LIBS) trec_index.o gunzipper.o $(XAPIAN_LIB) -o trec_index
 
