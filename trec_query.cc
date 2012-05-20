@@ -319,11 +319,9 @@ void create_queries( CONFIG_TREC & config ) {
 
   FILE *query_fd;
   FILE *topic_fd;
-  FILE *sw_fd;
   QUERY q;
   int code;
   char word[KW_SIZE];
-  int i,j;
   int use_desc=0;
   int use_narr=0;
   int use_title=0;
