@@ -301,10 +301,8 @@ static void index_file( const string &file,
   int curpos=0;
   Xapian::Stem stemmer( config.get_language() );
   int uncolen;
-  u_char filen[100];
-  for( int i=0; i < file.size(); i++ ) filen[i] = file[i];
 
-  uncolen = decompress_bundle( filen, (u_char *) chamber, CHAMBER_SIZE);
+  uncolen = decompress_bundle( (u_char*)file.c_str(), (u_char *) chamber, CHAMBER_SIZE);
   //cout << "DEBUG) decompresses file done, size = " << uncolen << endl;
 	
   // accumulate the text size read in
