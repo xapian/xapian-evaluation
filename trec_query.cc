@@ -164,23 +164,30 @@ void get_word( char buffer[], int size, char word[KW_SIZE], int *curpos ) {
   /* now get each character from the line */ 
   get_chars( buffer, size, curpos, word ); 
   word[KW_SIZE-1] = '\0';  /*max size keyword to record */ 
- 
 } /*END get_word*/ 
 
 void check_code( char word[KW_SIZE], int *code ) {
 
 	*code = SAVETERM; /* assume its a saveable term */
 
-	if( strncmp( word,"<top>",5) == 0 )
+	if( strncmp( word,"<top>",4) == 0 )
 		*code = -1;  
 	if( strncmp( word,"<num>",5) == 0 )
 		*code = TOPIC_NUMBER;
+	if( strncmp( word,"</num>",5) == 0 )
+		*code = NOACTION;
 	if( strncmp( word,"<title>",7) == 0 )
 		*code = TITLE;
+	if( strncmp( word,"</title>",7) == 0 )
+		*code = NOACTION;
 	if( strncmp( word,"<desc>",6) == 0 )
 		*code = DESC;
+	if( strncmp( word,"</desc>",6) == 0 )
+		*code = NOACTION;
 	if( strncmp( word,"<narr>",6) == 0 )
 		*code = NARR;
+	if( strncmp( word,"</narr>",6) == 0 )
+		*code = NOACTION;
 	if( strncmp( word,"</top>",6) == 0 )
 		*code = END_TOPIC;
 
@@ -341,7 +348,7 @@ void create_queries( CONFIG_TREC & config ) {
   cout << "QUERY) topic file name is " << config.get_topicfile().c_str() << endl;
   topic_fd = fopen( config.get_topicfile().c_str(), "r" );
   if(!topic_fd) {
-    cout << "ERROR - can't open topic file" << config.get_queryfile().c_str() << "for reading" << endl;
+    cout << "ERROR - can't open topic file" << config.get_topicfile().c_str() << "for reading" << endl;
     std::exit(-1);
   } /* END if */
   for( topic_size=0; topic_size < BIG_BUFFER && !feof(topic_fd); topic_size++ ){
@@ -385,7 +392,9 @@ void create_queries( CONFIG_TREC & config ) {
     case TOPIC_NUMBER :
       {
 	get_word( topics, BIG_BUFFER, word, &curpos ); // spin past Number
+	q.topic_no = atoi(word);
 	get_word( topics, BIG_BUFFER, word, &curpos );
+	if(q.topic_no == 0)
 	q.topic_no = atoi(word);
 	save_word=0;
       }

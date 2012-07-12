@@ -23,6 +23,7 @@
  */
 
 #include <xapian.h>
+#include <xapian/termiterator.h>
 #include <algorithm>
 #include <iostream>
 #include <string>
@@ -86,7 +87,7 @@ void SGMLParser::process_text(const string &text) {
 void
 SGMLParser::opening_tag(const string &tag, const map<string,string> &p) {
 
-    
+   	cout<<"Opening Tag"<<tag;
     if (tag == "meta") {
 	map<string, string>::const_iterator i, j;
 	if ((i = p.find("content")) != p.end()) {
@@ -127,9 +128,9 @@ SGMLParser::opening_tag(const string &tag, const map<string,string> &p) {
 void
 SGMLParser::closing_tag(const string &tag)
 {
- 	  //cout << "closing_tag) : " << tag << endl;
+ 	  cout << "closing_tag) : " << tag << endl;
     if (tag == "docno") {
-			 if( dump.size() < 30 ) // nasty hack to get round problems on terabyte track with robot tags
+			 if( dump.size() < 100 ) // nasty hack to get round problems on terabyte track with robot tags
 			 		 title = dump;
 			 else
 			     title = "DOCNO-ERROR";
@@ -173,7 +174,7 @@ Xapian::Document  remove_stopwords( Xapian::Document doc, SW_STORE & sw_store ) 
   Xapian::Document wordlist;
   char word[100];
 	
-  for( TermIterator t = doc.termlist_begin(); t != doc.termlist_end();  t++ ) {
+  for( TermIterator t = doc.termlist_begin(); t != TermIterator();  t++ ) {
     for( int i=0; i < (*t).size(); i++ ) word[i] = (*t)[i];
     if(!IsStopWord( sw_store, word )) wordlist.add_term( *t );
     
@@ -188,7 +189,7 @@ Xapian::Document stem_document( Xapian::Document & doc ) {
   Stem stemmer("english");
   Xapian::Document wordlist;
 
-  for( TermIterator t = doc.termlist_begin(); t != doc.termlist_end();  t++ ) {
+  for( TermIterator t = doc.termlist_begin(); t != TermIterator();  t++ ) {
     wordlist.add_term(stemmer(*t) );
     
   } // END for
@@ -268,8 +269,10 @@ index_text(const string &s, Xapian::Document &doc, Xapian::Stem &stemmer,
 		if (pos != static_cast<Xapian::termpos>(-1)
 			// Not in GCC 2.95.2 numeric_limits<Xapian::termpos>::max()
 		   ) {
+			cout<<"POSTING:\t"<<term<<"\t";
 		    doc.add_posting(rprefix + term, pos, wdfinc);
 		} else {
+			cout<<"TERM:\t"<<term<<"\t";
 		    doc.add_term(rprefix + term, wdfinc);
 		}
 	    }
@@ -296,14 +299,14 @@ static void index_file( const string &file,
   if (file.empty()) {
     cout << "can't read \"" << file << "\" - skipping\n";
     return;
-  } //else cout << "Indexing [" << file << "]" << endl;
+  } else cout << "Indexing [" << file << "]" << endl;
 
   int curpos=0;
   Xapian::Stem stemmer( config.get_language() );
   int uncolen;
 
   uncolen = decompress_bundle( (u_char*)file.c_str(), (u_char *) chamber, CHAMBER_SIZE);
-  //cout << "DEBUG) decompresses file done, size = " << uncolen << endl;
+  cout << "DEBUG) decompresses file done, size = " << uncolen << endl;
 	
   // accumulate the text size read in
   ttextsize += ( (float) uncolen / 1048576.0);
@@ -312,8 +315,8 @@ static void index_file( const string &file,
 				 
     // get a document
     string rawdoc = get_document( curpos, uncolen );
-    //cout << "DEBUG) got a document, size = " << rawdoc.size() << 
-    //  ", curpos = " << curpos << endl;
+//    cout << "DEBUG) got a document, size = " << rawdoc << 
+  //    ", curpos = " << curpos << endl;
 				 
     if( rawdoc.size() > 1 ) {
       
@@ -324,16 +327,19 @@ static void index_file( const string &file,
       // Add postings for terms to the document
       Xapian::Document doc;
       Xapian::termpos pos = 1;
+//	  cout<<"TITLE:\t"<<p.title<<"\nKEYWORDS: \t";
+//	  cout<<p.keywords<<"\nDUMP:\t"<<p.dump<<"\nSAMPLLE:\t"<<p.sample;
       pos = index_text( p.title, doc, stemmer, pos);
-      pos = index_text( p.keywords, doc, stemmer, pos + 1);
+      pos = index_text( p.dump, doc, stemmer, pos + 1);
+//      pos = index_text( p.keywords, doc, stemmer, pos + 1);
 
       // index the document 
       Xapian::Document doc_stopsremoved = remove_stopwords( doc, sw_store );
       Xapian::Document stemdoc = stem_document( doc_stopsremoved ); 
-      //cout << "DOCID = " << p.title << endl;
+      cout << "DOCID = " << p.title << endl;
       stemdoc.set_data(p.title);  // set the data 
-      db.add_document(stemdoc);
-      
+      cout<<"DOCID:\t"<<db.add_document(stemdoc)<<"TERMLISTCOUNT"<<stemdoc.termlist_count();
+      cout<<"DOCADDED\n"<<stemdoc.get_docid(); 
       // record the total no of docs done
       totaldocs++;
       //if( (totaldocs % 10000) == 0 ) cout << "DOCUMENTS PROCESSED) " << totaldocs << endl;
@@ -421,7 +427,7 @@ int main(int argc, char **argv)
     // Catch any Xapian::Error exceptions thrown
     try {
         // Make the database
-        Xapian::WritableDatabase db(Xapian::Flint::open(trec_config.get_db().c_str(), Xapian::DB_CREATE_OR_OPEN));
+        Xapian::WritableDatabase db(Xapian::Brass::open(trec_config.get_db().c_str(), Xapian::DB_CREATE_OR_OPEN));
 
 				struct timeval start_time, finish_time, timelapse;   /* timing variables */
 
