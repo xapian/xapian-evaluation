@@ -33,15 +33,19 @@ protected:
 	FILE * fqrels;
 
 public:
-	int totalnoifrelevantdocs;
+	
+	QRelInMemory [] qrelPerQuery;
+
+	int totalNumberofRelevantDocs;
 	
 	TRECQREL(CONFIG_TREC & config) {
 	string reljudgement = config.get_relfile().c_str();
 	fqrels = fopen(reljudgement,"r");
 	if(!fqrels) {
-		cout<<"ERROR - can't open topic file" << config.get_relfile().c_str() << "for reading" << endl;
+		cout<<"ERROR - can't open relevance judgement file" << config.get_relfile().c_str() << "for reading" << endl;
 		std::exit(-1);
 	}
+	loadQRelFile();
 	}
 	
 	/*  To get Query ids of all the queries present in relevance judgement pool.
@@ -57,11 +61,17 @@ public:
 
 	set<string> getRelevantDocument(int grade,string queryid);
 	
-    /* Get the relevant document ids for a given Query 
+	/* Get the all relevant document ids 
+	 *  @return - set of all the relevant document 
+     */
+
+	set<string> getAllReleventDocument();
+    
+	/* Get the relevant document ids for a given Query 
      *	@param queryid - Queryid of query for which the documents ned to be returned.
 	 *  @return - set of the relevant document for query queryid from all grades
      */
-		
+	
 	set<string> getRelevantDocument(string queryid);
 
 	/* Get number of relevant document for the query.
@@ -77,6 +87,10 @@ public:
 	
 	int getNumberofQueries();
 	
+	//Load the QRel file in the InMemory Datastructures.
+
+	void loadQRelFile();	
+
 	/**
 	 * Check whether Query with given identifier exist in relvance assessment
 	 * @param queryid - identifier of the Query.
