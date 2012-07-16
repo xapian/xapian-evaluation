@@ -22,6 +22,7 @@
 #include "qrelinmemory.h"
 #include <iostream>
 #include "config_file.h"
+
 using namespace std;
 
 bool 
@@ -88,7 +89,7 @@ bool
 QRelInMemory::insertNonRelDocument(string docno) {
 	nonRelDocuments.insert(docno);
 }
-
+/*
 int main() {
 QRelInMemory qrel = QRelInMemory("1");
 qrel.insertRelDocument("mydoc",1);
@@ -106,3 +107,4 @@ cout<<"mydoc grade:\t"<< qrel.getGrade("mydoc3")<<endl;
 cout<<"mydoc relevance:\t"<< qrel.isRelevant("mydoc3")<<endl;
 cout<<"mydoc relevance:\t"<< qrel.isRelevant("mydoc6")<<endl;
 }
+*/

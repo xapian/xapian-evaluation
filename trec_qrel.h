@@ -19,31 +19,36 @@
  19  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string>
 #include <fcntl.h>
 #include <iostream>
-#include <config_file.h>
+#include <fstream>
+#include "config_file.h"
 #include <set>
+#include <vector>
+#include "qrelinmemory.h"
+#include <sstream>
 
 using namespace std;
 
 class TrecQrel {
 
 protected:
-	FILE * fqrels;
+	ifstream fqrels;
 
 public:
 	
-	QRelInMemory [] qrelPerQuery;
+	vector<QRelInMemory> qrelPerQuery;
 
 	int totalNumberofRelevantDocs;
 	
-	TRECQREL(CONFIG_TREC & config) {
+	TrecQrel(CONFIG_TREC & config) {
 	string reljudgement = config.get_relfile().c_str();
-	fqrels = fopen(reljudgement,"r");
-	if(!fqrels) {
+	fqrels.open(reljudgement.c_str(), ifstream::in);
+	if(!fqrels.is_open()) {
 		cout<<"ERROR - can't open relevance judgement file" << config.get_relfile().c_str() << "for reading" << endl;
-		std::exit(-1);
+		exit(-1);
 	}
 	loadQRelFile();
 	}
@@ -51,7 +56,7 @@ public:
 	/*  To get Query ids of all the queries present in relevance judgement pool.
  	 *  @return query ids of queries in pool 
 	*/
-	string[] getQueryIds();
+	set<string> getQueryIds();
 
     /* Get the relevant document ids for a Query  and of particular grade
      *	@param grade - Integer grade for which  relevant document need to be returned.
@@ -65,7 +70,7 @@ public:
 	 *  @return - set of all the relevant document 
      */
 
-	set<string> getAllReleventDocument();
+	set<string> getAllRelevantDocument();
     
 	/* Get the relevant document ids for a given Query 
      *	@param queryid - Queryid of query for which the documents ned to be returned.
@@ -116,4 +121,4 @@ public:
 	 */
 
  	int getGrade(string docno,string queryid);
-}
+};

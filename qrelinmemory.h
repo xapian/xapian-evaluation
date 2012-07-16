@@ -19,6 +19,9 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  19  */
 
+#ifndef _QRELINMEMORY_H_
+#define _QRELINMEMORY_H_
+
 #include <set>
 #include <map>
 #include <string>
@@ -92,4 +95,6 @@ public:
 	
 	bool insertNonRelDocument(string docno);
 };
+
+#endif
 
