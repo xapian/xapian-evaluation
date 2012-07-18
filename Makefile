@@ -4,11 +4,11 @@ OPTIMISE = -O2
 DEBUG = -g -Wall -W
 GCC = g++
 
-XAPIAN_CONFIG = /usr/local/bin/xapian-config
+XAPIAN_CONFIG = /usr/local/bin/xapian-config-1.3
 XAPIAN_LIB = `$(XAPIAN_CONFIG) --libs`
 CXXFLAGS = `$(XAPIAN_CONFIG) --cxxflags`
-XAPIAN_INC = /usr/include
-INC = /usr/include
+XAPIAN_INC = /usr/local/include/xapian-1.3/
+INC = /usr/local/include/xapian-1.3/
 LIBS = config_file.o htmlparse.o stopword.o split.o timer.o
 HEADERS = config_file.h htmlparse.h stopword.h split.h timer.h timerstruct.h
 

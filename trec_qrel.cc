@@ -145,7 +145,7 @@ TrecQrel::getGrade(string docno,string queryid) {
 	}
 	return 0;
 }
-
+/*
 int main(int argc,char **argv)
 {
 CONFIG_TREC config;
@@ -158,3 +158,4 @@ for ( set<string>::iterator docs = rel.begin() ;docs != rel.end() ; docs++) {
 }
 cout<<"IS Relevan"<<qrl->isRelevantDoc(argv[2],argv[3]) <<"Grade"<<qrl->getGrade(argv[2],argv[3])<<endl;
 }
+*/

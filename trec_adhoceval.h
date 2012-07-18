@@ -19,6 +19,7 @@
  19  */
 
 #include "trec_eval.h"
+#include "config_file.h"
 #include <set>
 #include <map>
 
@@ -30,7 +31,7 @@ protected:
 
 /** Maximum number of document retreived for a query.*/
 
-int maxNumberRetreieveed;
+int maxNumberRetrieved;
 
 /** The number of Effective Queries. 
  *  An effective query that has corresponding relevant
