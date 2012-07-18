@@ -1,0 +1,82 @@
+/* @file trec_adhoceval.h
+ * @abstract Implements the Evaluation of Trec Adhoc Evaluation which read result file and evaluate for adhoc evaluation.
+ *
+ * Copyright 2012 Gaurav Arora
+ *
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License as 
+ * published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ 19  */
+
+#include "trec_eval.h"
+#include <set>
+#include <map>
+
+using namespace std;
+
+class AdhocEvaluation : public TrecEval {
+
+protected:
+
+/** Maximum number of document retreived for a query.*/
+
+int maxNumberRetreieveed;
+
+/** The number of Effective Queries. 
+ *  An effective query that has corresponding relevant
+ *  document in qrel file.
+ */
+
+int numberofEffQuery;
+
+/* Total number of document reterived .*/
+
+int totalNumberofRetrieved;
+
+/** Total number of revelant document in the qrel file*/
+
+int totalNumberofRelevant;
+
+/** The total number of relevant document retreived in the task*/
+
+int totalNumberofRelevantRetrieved;
+
+map<int,double> precisionAtRank;
+
+map<int,double> precisionAtRecall;
+
+public:
+
+AdhocEvaluation(CONFIG_TREC & config) : TrecEval(config) {
+}
+
+protected:
+/* Average Precision*/
+double meanAveragePrecision;
+/** Relevant Precision. */
+double meanRelevantPrecision;
+/** The average precision of each query*/
+set<double> averagePrecisionofEachQuery;
+/**The Query number of each query*/
+set<string> queryNo;
+
+public:
+/** Intialize the statistics for evaluating the result*/
+void intialise();
+
+/** Evaluate the given result file.*/
+void evaluate();
+
+void writeEvaluationResult();
+
+};
