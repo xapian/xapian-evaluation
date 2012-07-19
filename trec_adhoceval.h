@@ -67,9 +67,9 @@ double meanAveragePrecision;
 /** Relevant Precision. */
 double meanRelevantPrecision;
 /** The average precision of each query*/
-set<double> averagePrecisionofEachQuery;
+double * averagePrecisionofEachQuery;
 /**The Query number of each query*/
-set<string> queryNo;
+vector<string> queryNo;
 
 public:
 /** Intialize the statistics for evaluating the result*/

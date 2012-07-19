@@ -117,35 +117,45 @@ if (data.size() == 7) {
 	listofRetrieved.push_back(*retrieved);
 	listofRelevantRetrieved.push_back(*relevantRetrieved);
 	resultfile.close();
-
+	queryNo.swap(vecQueryNo);
+	numberofEffQuery = effQueryCounter;
 	vector<vector<Record> >::iterator it ;
 	vector<Record>::iterator recorditr;
+	int totalQuery = listofRelevantRetrieved.size();
+	double * ExactPrecision = new double[totalQuery];
+	int currentQuery = 0;
 	for (it = listofRelevantRetrieved.begin();it != listofRelevantRetrieved.end();it++) {
 		vector<Record> recordvec = *it;
+	    int i = 0;
+		ExactPrecision[currentQuery] = 0;
+		int sizeofvector  = recordvec.size();
 		for (recorditr = recordvec.begin();recorditr != recordvec.end();recorditr++) {
 			Record rec = *recorditr;
-		cout<<"Query ID\t"<<rec.getQueryNo()<<"DOCID\t"<<rec.getDocNo()<<"Rank \t"<<rec.getRank()<<endl;
+			ExactPrecision[currentQuery]  += (double)(i+1)/(double)(rec.getRank()+1);
+			i++;
+	//	cout<<"Query ID\t"<<rec.getQueryNo()<<"DOCID\t"<<rec.getDocNo()<<"Rank \t"<<rec.getRank()<<endl;
+	//	cout<<"Precision"<<ExactPrecision[currentQuery]<<"\tRank"<<rec.getRank()<<endl;
 		}
+	ExactPrecision[currentQuery] /= (double)(vecNumberofRelevant[currentQuery]+1);	
+//cout<<"Precision Querywise :\t"<<currentQuery<<" "<<ExactPrecision[currentQuery]<<"Number of Relevant"<<vecNumberofRelevant[currentQuery]<<"\ti\t:"<<i<<endl;
+	meanAveragePrecision +=  ExactPrecision[currentQuery];
+	currentQuery++;
 	}	
-	vector<int>::iterator noretrieved;
-	vector<int>::iterator norelevantretrieved;
-	for(noretrieved = vecNumberofRetrieved.begin(),norelevantretrieved = vecNumberofRelevantRetrieved.begin();noretrieved != vecNumberofRetrieved.end()&&norelevantretrieved != vecNumberofRelevantRetrieved.end();noretrieved++,norelevantretrieved++) {
-	int retrievedrecords = *noretrieved;
-	int relevantretrievedrecords = *norelevantretrieved;
-	cout<<"Retrieved :\t"<<retrievedrecords<<" Relevant Retrieved:\t"<<relevantretrievedrecords<<endl;
-	if (retrievedrecords != 0) {
-	meanAveragePrecision += double((double)relevantretrievedrecords/retrievedrecords);
-	//cout<<"MAP"<<double((double)relevantretrievedrecords/(double)retrievedrecords)<<endl;
-	}
-}
-meanAveragePrecision = meanAveragePrecision/vecNumberofRelevant.size();
+	averagePrecisionofEachQuery = ExactPrecision;
+	meanAveragePrecision /= (currentQuery+1);
 }
 
 
 void
 AdhocEvaluation::writeEvaluationResult() {
 cout<<"Result for the run:\t"<<configobj.get_runname()<<endl;
-cout<<"Mean Average Precision :\t"<<meanAveragePrecision;
+cout<<"-----------------------------------------------------"<<endl;
+cout<<numberofEffQuery;
+for(int i = 0;i<numberofEffQuery;i++) {
+	cout<<"Precision of Query:\t"<<queryNo[i]<<"\tis : "<<averagePrecisionofEachQuery[i]<<endl;
+
+}
+cout<<"Mean Average Precision :\t"<<meanAveragePrecision<<endl;
 }
 
 int main(int argc,char **argv) {
