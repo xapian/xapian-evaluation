@@ -63,4 +63,4 @@ trec_adhoceval : trec_adhoceval.cc $(LIBS) $(HEADERS)
 #	$(GCC) $(OPTIMISE) $(DEBUG) $(LIBS) xapian-trec.o $(XAPIAN_LIB) -o xapian-trec
 
 clean :
-	rm -rf *.o  xapian-trec index-xapian-trec trec_index trec_search trec_query
+	rm -rf *.o  xapian-trec index-xapian-trec trec_index trec_search trec_query trec_adhoceval
