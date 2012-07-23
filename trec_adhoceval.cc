@@ -123,26 +123,35 @@ if (data.size() == 7) {
 	vector<Record>::iterator recorditr;
 	int totalQuery = listofRelevantRetrieved.size();
 	double * ExactPrecision = new double[totalQuery];
+	double * RPrecision = new double[totalQuery];
 	int currentQuery = 0;
 	for (it = listofRelevantRetrieved.begin();it != listofRelevantRetrieved.end();it++) {
 		vector<Record> recordvec = *it;
 	    int i = 0;
 		ExactPrecision[currentQuery] = 0;
+		RPrecision[currentQuery] = 0;
 		int sizeofvector  = recordvec.size();
 		for (recorditr = recordvec.begin();recorditr != recordvec.end();recorditr++) {
 			Record rec = *recorditr;
+			if (rec.getRank() < vecNumberofRelevant[currentQuery]) {
+				RPrecision[currentQuery] += 1;
+			}
 			ExactPrecision[currentQuery]  += (double)(i+1)/(double)(rec.getRank()+1);
+			
 			i++;
 	//	cout<<"Query ID\t"<<rec.getQueryNo()<<"DOCID\t"<<rec.getDocNo()<<"Rank \t"<<rec.getRank()<<endl;
 	//	cout<<"Precision"<<ExactPrecision[currentQuery]<<"\tRank"<<rec.getRank()<<endl;
 		}
 	ExactPrecision[currentQuery] /= (double)(vecNumberofRelevant[currentQuery]+1);	
+	RPrecision[currentQuery] /= (double)(vecNumberofRelevant[currentQuery]+1);	
 //cout<<"Precision Querywise :\t"<<currentQuery<<" "<<ExactPrecision[currentQuery]<<"Number of Relevant"<<vecNumberofRelevant[currentQuery]<<"\ti\t:"<<i<<endl;
 	meanAveragePrecision +=  ExactPrecision[currentQuery];
+	meanRelevantPrecision +=  RPrecision[currentQuery];
 	currentQuery++;
 	}	
 	averagePrecisionofEachQuery = ExactPrecision;
 	meanAveragePrecision /= (currentQuery+1);
+	meanRelevantPrecision /= (currentQuery+1);
 }
 
 
@@ -155,7 +164,12 @@ for(int i = 0;i<numberofEffQuery;i++) {
 	cout<<"Precision of Query:\t"<<queryNo[i]<<"\tis : "<<averagePrecisionofEachQuery[i]<<endl;
 
 }
+cout<<"-----------------------------------------------------"<<endl;
+cout<<"Mean Evaluation:\t"<<endl;
+cout<<"-----------------------------------------------------"<<endl;
 cout<<"Mean Average Precision :\t"<<meanAveragePrecision<<endl;
+cout<<"-----------------------------------------------------"<<endl;
+cout<<"Mean Relevance Precision :\t"<<meanRelevantPrecision<<endl;
 }
 
 int main(int argc,char **argv) {
