@@ -45,7 +45,7 @@ using namespace std;
 
 		public:
 		/** The precision at this document.*/
-		double percision;
+		double precision;
 
 		/** The Recall at this document*/
 		double recall;

@@ -71,6 +71,9 @@ double * averagePrecisionofEachQuery;
 /**The Query number of each query*/
 vector<string> queryNo;
 
+
+//static int 
+
 public:
 /** Intialize the statistics for evaluating the result*/
 void intialise();

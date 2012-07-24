@@ -24,6 +24,9 @@
 
 using namespace std;
 
+static const int PRECISION_RANK[] = {1,2,3,4,5,10,15,20,30,50,100,200,500,1000};
+static const int PRECISION_PERCENTAGES[] = {0,10,20,30,40,50,60,70,80,90,100};
+
 void 
 AdhocEvaluation::intialise() {
 
@@ -129,6 +132,12 @@ if (data.size() == 7) {
 		totalNumberofRelevant  += vecNumberofRelevant[itr];
 		totalNumberofRelevantRetrieved += vecNumberofRelevantRetrieved[itr];
 	}
+	//Variable to store precision by rank and recall.
+	map<int,double> *precisionAtRankByQuery;
+	map<int,double> *precisionAtRecallByQuery;
+		precisionAtRankByQuery = new map<int,double>[numberofEffQuery];
+		precisionAtRecallByQuery = new map<int,double>[numberofEffQuery];
+
 	//Store the exact precision for all queries.
 	double * ExactPrecision = new double[totalQuery];
 	// Store the R(Relevance precision for all queries.
@@ -152,7 +161,24 @@ if (data.size() == 7) {
 			}
 			//Adding to the sum of precision value if a relevant document is found for query.
 			ExactPrecision[currentQuery]  += (double)(docrank+1)/(double)(rec.getRank()+1);
-			
+			rec.precision  += (double)(docrank+1)/(double)(rec.getRank()+1);
+			rec.recall += (double) (docrank+1) / vecNumberofRelevant[currentQuery];
+		
+			for ( int precisionRank = 0;precisionRank < 14;precisionRank++) {
+				if (rec.getRank()  < PRECISION_RANK[precisionRank]) {
+					map<int,double> precisioncurrent = precisionAtRankByQuery[currentQuery];
+					map<int,double>::iterator precisionrankitr = precisioncurrent.find(PRECISION_RANK[precisionRank]);
+					if ( precisionrankitr == precisioncurrent.end()) {
+						precisioncurrent.insert( pair<int,double>(PRECISION_RANK[precisionRank],1.0));
+					}
+					else {
+						double precisionhere = precisionrankitr->second;
+						precisioncurrent.erase(PRECISION_RANK[precisionRank]);
+						precisioncurrent.insert( pair<int,double>(PRECISION_RANK[precisionRank],precisionhere+1.0));
+					}
+					precisionAtRankByQuery[currentQuery] = precisioncurrent;
+				}
+			}
 			docrank++;
 		}
 	// Dividing by number of relevant for average of particular Query.
@@ -164,7 +190,16 @@ if (data.size() == 7) {
 	meanAveragePrecision +=  ExactPrecision[currentQuery];
 	meanRelevantPrecision +=  RPrecision[currentQuery];
 	currentQuery++;
-	}	
+	}
+	
+	for ( int precisionRank = 0;precisionRank < 14;precisionRank++) {
+	double rankPrecision = 0.0;
+		for ( int queryitr = 0; queryitr < numberofEffQuery;queryitr++ ) {
+			rankPrecision += (precisionAtRankByQuery[queryitr])[PRECISION_RANK[precisionRank]]/PRECISION_RANK[precisionRank];
+		}
+		rankPrecision /= numberofEffQuery;
+		precisionAtRank.insert( pair<int,double>(PRECISION_RANK[precisionRank],rankPrecision));
+	}
 	// Taking average of all Queries for final precision value/
 	averagePrecisionofEachQuery = ExactPrecision;
 	meanAveragePrecision /= (currentQuery+1);
@@ -197,6 +232,13 @@ cout<<"_______________________________________________________"<<endl;
 cout<<"Mean Average Precision :\t"<<meanAveragePrecision<<endl;
 cout<<"-----------------------------------------------------"<<endl;
 cout<<"Mean Relevance Precision :\t"<<meanRelevantPrecision<<endl;
+cout<<"_______________________________________________________"<<endl;
+cout<<"Precision At Rank:"<<endl;
+cout<<"_______________________________________________________"<<endl;
+for ( int precisionRank = 0;precisionRank < 14;precisionRank++) {
+	cout<<"Precision at Rank:\t"<<PRECISION_RANK[precisionRank]<<"\tis:\t"<<precisionAtRank[PRECISION_RANK[precisionRank]]<<endl;
+	cout<<"-----------------------------------------------------"<<endl;
+}
 cout<<"_______________________________________________________"<<endl;
 }
 
