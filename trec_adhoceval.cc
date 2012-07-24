@@ -179,26 +179,55 @@ if (data.size() == 7) {
 					precisionAtRankByQuery[currentQuery] = precisioncurrent;
 				}
 			}
+			//Calculating the Precision at particular recall values for each Query.
+			for ( int precisionPercentage = 0;precisionPercentage < 11;precisionPercentage++) {
+			const double fraction = ((double) PRECISION_PERCENTAGES[precisionPercentage])/100.0;
+			if ( rec.recall >= fraction && rec.precision >= (precisionAtRecallByQuery[currentQuery])[PRECISION_PERCENTAGES[precisionPercentage]]) {
+					map<int,double> precisioncurrent = precisionAtRecallByQuery[currentQuery];
+					map<int,double>::iterator precisionrankitr = precisioncurrent.find(PRECISION_PERCENTAGES[precisionPercentage]);
+					if ( precisionrankitr == precisioncurrent.end()) {
+						precisioncurrent.insert( pair<int,double>(PRECISION_PERCENTAGES[precisionPercentage],rec.precision));
+					}
+					else {
+						double precisionhere = precisionrankitr->second;
+						precisioncurrent.erase(PRECISION_PERCENTAGES[precisionPercentage]);
+						precisioncurrent.insert( pair<int,double>(PRECISION_PERCENTAGES[precisionPercentage],precisionhere+rec.precision));
+					}
+					precisionAtRecallByQuery[currentQuery] = precisioncurrent;
+				
+			}
+			}
 			docrank++;
 		}
 	// Dividing by number of relevant for average of particular Query.
 	ExactPrecision[currentQuery] /= (double)(vecNumberofRelevant[currentQuery]+1);	
 	RPrecision[currentQuery] /= (double)(vecNumberofRelevant[currentQuery]+1);	
-
+	
 	
 	// Summing Precision of all queries for final Average Precisions.
 	meanAveragePrecision +=  ExactPrecision[currentQuery];
 	meanRelevantPrecision +=  RPrecision[currentQuery];
 	currentQuery++;
 	}
-	
+
+	// Merge the precision at rank for the all Queries to get accumlated results.
 	for ( int precisionRank = 0;precisionRank < 14;precisionRank++) {
-	double rankPrecision = 0.0;
+		double rankPrecision = 0.0;
 		for ( int queryitr = 0; queryitr < numberofEffQuery;queryitr++ ) {
 			rankPrecision += (precisionAtRankByQuery[queryitr])[PRECISION_RANK[precisionRank]]/PRECISION_RANK[precisionRank];
 		}
 		rankPrecision /= numberofEffQuery;
 		precisionAtRank.insert( pair<int,double>(PRECISION_RANK[precisionRank],rankPrecision));
+	}
+	
+	// Merge the precision at recall values for all the queries to get accumlate results.	
+	for ( int precisionPercentage = 0;precisionPercentage < 11;precisionPercentage++) {
+		double recallPrecision = 0.0;
+		for ( int queryitr = 0; queryitr < numberofEffQuery;queryitr++ ) {
+			recallPrecision += (precisionAtRecallByQuery[queryitr])[PRECISION_PERCENTAGES[precisionPercentage]];
+		}
+		recallPrecision /= numberofEffQuery;
+		precisionAtRecall.insert( pair<int,double>(PRECISION_PERCENTAGES[precisionPercentage],recallPrecision));
 	}
 	// Taking average of all Queries for final precision value/
 	averagePrecisionofEachQuery = ExactPrecision;
@@ -209,11 +238,15 @@ if (data.size() == 7) {
 
 void
 AdhocEvaluation::writeEvaluationResult() {
+cout<<"_______________________________________________________"<<endl;
 cout<<"Result for the run:\t"<<configobj.get_runname()<<endl;
 cout<<"-----------------------------------------------------"<<endl;
+cout<<"Query wise Precision:\t"<<endl;
+cout<<"_______________________________________________________"<<endl;
 cout<<numberofEffQuery;
 for(int i = 0;i<numberofEffQuery;i++) {
 	cout<<"Precision of Query:\t"<<queryNo[i]<<"\tis : "<<averagePrecisionofEachQuery[i]<<endl;
+cout<<"-----------------------------------------------------"<<endl;
 
 }
 cout<<"_______________________________________________________"<<endl;
@@ -237,6 +270,13 @@ cout<<"Precision At Rank:"<<endl;
 cout<<"_______________________________________________________"<<endl;
 for ( int precisionRank = 0;precisionRank < 14;precisionRank++) {
 	cout<<"Precision at Rank:\t"<<PRECISION_RANK[precisionRank]<<"\tis:\t"<<precisionAtRank[PRECISION_RANK[precisionRank]]<<endl;
+	cout<<"-----------------------------------------------------"<<endl;
+}
+cout<<"_______________________________________________________"<<endl;
+cout<<"Precision At Recall:"<<endl;
+cout<<"_______________________________________________________"<<endl;
+for ( int precisionPercentage = 0;precisionPercentage < 11;precisionPercentage++) {
+	cout<<"Precision at Recall:\t"<<PRECISION_PERCENTAGES[precisionPercentage]<<"\tis:\t"<<precisionAtRecall[PRECISION_PERCENTAGES[precisionPercentage]]<<endl;
 	cout<<"-----------------------------------------------------"<<endl;
 }
 cout<<"_______________________________________________________"<<endl;

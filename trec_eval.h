@@ -61,6 +61,8 @@ using namespace std;
 			queryNo = _queryNo;
 			docNo = _docNo;
 			rank = _rank;
+			precision = 0;
+			recall = 0;
 		}
 
 		/**
