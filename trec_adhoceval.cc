@@ -33,6 +33,7 @@ AdhocEvaluation::intialise() {
 	numberofEffQuery = 0;
 	totalNumberofRetrieved = 0;
 	totalNumberofRelevant = 0;
+	totalNumberofRelevantRetrieved = 0;
 	meanAveragePrecision = 0; 
 }
 
@@ -122,33 +123,49 @@ if (data.size() == 7) {
 	vector<vector<Record> >::iterator it ;
 	vector<Record>::iterator recorditr;
 	int totalQuery = listofRelevantRetrieved.size();
+	//calculating statistics of number of relevent ,retreived 
+	for (int itr = 0;itr < numberofEffQuery ;itr++) {
+		totalNumberofRetrieved += vecNumberofRetrieved[itr];
+		totalNumberofRelevant  += vecNumberofRelevant[itr];
+		totalNumberofRelevantRetrieved += vecNumberofRelevantRetrieved[itr];
+	}
+	//Store the exact precision for all queries.
 	double * ExactPrecision = new double[totalQuery];
+	// Store the R(Relevance precision for all queries.
 	double * RPrecision = new double[totalQuery];
 	int currentQuery = 0;
+	//This forloop is equivalent to iterating Queries.
 	for (it = listofRelevantRetrieved.begin();it != listofRelevantRetrieved.end();it++) {
 		vector<Record> recordvec = *it;
-	    int i = 0;
+	    int docrank = 0;
 		ExactPrecision[currentQuery] = 0;
 		RPrecision[currentQuery] = 0;
 		int sizeofvector  = recordvec.size();
+		// Iterating the ranklist(Record List of the Queries.
 		for (recorditr = recordvec.begin();recorditr != recordvec.end();recorditr++) {
 			Record rec = *recorditr;
+			/** Incrementing Relevance Precision if relevant document 
+			is found at rank smaller than number of relevant document.
+			*/
 			if (rec.getRank() < vecNumberofRelevant[currentQuery]) {
 				RPrecision[currentQuery] += 1;
 			}
-			ExactPrecision[currentQuery]  += (double)(i+1)/(double)(rec.getRank()+1);
+			//Adding to the sum of precision value if a relevant document is found for query.
+			ExactPrecision[currentQuery]  += (double)(docrank+1)/(double)(rec.getRank()+1);
 			
-			i++;
-	//	cout<<"Query ID\t"<<rec.getQueryNo()<<"DOCID\t"<<rec.getDocNo()<<"Rank \t"<<rec.getRank()<<endl;
-	//	cout<<"Precision"<<ExactPrecision[currentQuery]<<"\tRank"<<rec.getRank()<<endl;
+			docrank++;
 		}
+	// Dividing by number of relevant for average of particular Query.
 	ExactPrecision[currentQuery] /= (double)(vecNumberofRelevant[currentQuery]+1);	
 	RPrecision[currentQuery] /= (double)(vecNumberofRelevant[currentQuery]+1);	
-//cout<<"Precision Querywise :\t"<<currentQuery<<" "<<ExactPrecision[currentQuery]<<"Number of Relevant"<<vecNumberofRelevant[currentQuery]<<"\ti\t:"<<i<<endl;
+
+	
+	// Summing Precision of all queries for final Average Precisions.
 	meanAveragePrecision +=  ExactPrecision[currentQuery];
 	meanRelevantPrecision +=  RPrecision[currentQuery];
 	currentQuery++;
 	}	
+	// Taking average of all Queries for final precision value/
 	averagePrecisionofEachQuery = ExactPrecision;
 	meanAveragePrecision /= (currentQuery+1);
 	meanRelevantPrecision /= (currentQuery+1);
@@ -164,12 +181,23 @@ for(int i = 0;i<numberofEffQuery;i++) {
 	cout<<"Precision of Query:\t"<<queryNo[i]<<"\tis : "<<averagePrecisionofEachQuery[i]<<endl;
 
 }
+cout<<"_______________________________________________________"<<endl;
+cout<<"Evaluation:\t"<<endl;
+cout<<"_______________________________________________________"<<endl;
+cout<<"Number of Queries:\t"<<numberofEffQuery<<endl;
 cout<<"-----------------------------------------------------"<<endl;
+cout<<"Retrieved:\t"<<totalNumberofRetrieved<<endl;
+cout<<"-----------------------------------------------------"<<endl;
+cout<<"Relevant Retrieved:\t"<<totalNumberofRelevantRetrieved<<endl;
+cout<<"-----------------------------------------------------"<<endl;
+cout<<"Relevant in Qrel:\t"<<totalNumberofRelevant<<endl;
+cout<<"_______________________________________________________"<<endl;
 cout<<"Mean Evaluation:\t"<<endl;
-cout<<"-----------------------------------------------------"<<endl;
+cout<<"_______________________________________________________"<<endl;
 cout<<"Mean Average Precision :\t"<<meanAveragePrecision<<endl;
 cout<<"-----------------------------------------------------"<<endl;
 cout<<"Mean Relevance Precision :\t"<<meanRelevantPrecision<<endl;
+cout<<"_______________________________________________________"<<endl;
 }
 
 int main(int argc,char **argv) {

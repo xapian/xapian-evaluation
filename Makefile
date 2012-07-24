@@ -33,7 +33,7 @@ qrelinmemory.o : qrelinmemory.cc
 	$(GCC) -c $(OPTIMISE) $(DEBUG) -I$(INC) qrelinmemory.cc -o qrelinmemory.o
 
 trec_qrel.o : trec_qrel.cc $(HEADERS) 
-	$(GCC) -c $(OPTIMISE) $(DEBUG) -I$(INC) trec_qrel.cc -o qrelinmemory.o
+	$(GCC) -c $(OPTIMISE) $(DEBUG) -I$(INC) trec_qrel.cc -o trec_qrel.o
 
 gunzipper.o:
 	$(MAKE) -f Makefile.gzip gunzipper

@@ -43,6 +43,7 @@ using namespace std;
 		/* The Document identifier. */
 		string docNo;
 
+		public:
 		/** The precision at this document.*/
 		double percision;
 
