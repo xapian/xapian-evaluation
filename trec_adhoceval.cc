@@ -96,6 +96,7 @@ if (data.size() == 7) {
 		listofRelevantRetrieved.push_back(*relevantRetrieved);
 		numberofRetrievedCounter = 0;
 		numberofRelevantRetrievedCounter = 0;
+	cout<<"Insert QueryID:\t"<<queryid<<"\twith number of Relevant Docs:\t"<<qrel->getNumberofRelevant(queryid)<<"\tTotalRetreived\t"<<retrieved->size()<<"\tTotal relevant retreived\t"<<relevantRetrieved->size()<<endl;
 		retrieved = new vector<Record>();
 		relevantRetrieved = new vector<Record>();
 		}

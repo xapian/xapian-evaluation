@@ -37,7 +37,7 @@ TrecQrel::getQueryIds() {
 set<string> 
 TrecQrel::getRelevantDocument(int grade,string queryid) {
 	for (int i = 0; i < getNumberofQueries(); i++) {
-		if ( qrelPerQuery[i].queryid == queryid) {
+		if ( qrelPerQuery[i].queryid.compare(queryid) == 0) {
 		return qrelPerQuery[i].getRelevantDocument(grade);
 		}
 	}
@@ -58,7 +58,7 @@ TrecQrel::getAllRelevantDocument() {
 set<string> 
 TrecQrel::getRelevantDocument(string queryid) {
 	for ( int i = 0 ;i <  getNumberofQueries(); i++) {
-		if ( qrelPerQuery[i].queryid == queryid) {
+		if ( qrelPerQuery[i].queryid.compare(queryid) == 0 ) {
 		return qrelPerQuery[i].getAllRelevantDocument();
 		}
 	}
@@ -69,7 +69,7 @@ TrecQrel::getRelevantDocument(string queryid) {
 int 
 TrecQrel::getNumberofRelevant(string queryid) {
 	for ( int i = 0 ;i <  getNumberofQueries(); i++) {
-		if ( qrelPerQuery[i].queryid == queryid) {
+		if ( qrelPerQuery[i].queryid.compare(queryid) == 0) {
 		return qrelPerQuery[i].getAllRelevantDocument().size();
 		}
 	}
@@ -96,7 +96,7 @@ TrecQrel::loadQRelFile() {
 	while ( !fqrels.eof() ) {
 	if( currentquery != atoi(data[0].c_str()) ) {
 		qrelPerQuery.push_back(*qrelquery);
-	//	cout<< "New Query Found in Qrel FIle :\t"<<data[0]<<endl;
+//		cout<< "New Query Found in Qrel FIle :\t"<<data[0]<<endl;
 		currentquery = atoi(data[0].c_str());
     	std::stringstream itostring;
 	    itostring << currentquery;
@@ -114,12 +114,13 @@ TrecQrel::loadQRelFile() {
 	getline(fqrels,line);
 	split(line,' ',data);
 	}
+	qrelPerQuery.push_back(*qrelquery);
 }
 
 bool
 TrecQrel::existInQrel(string queryid) {
 	for (int i = 0;i < getNumberofQueries();i++) {
-		if (qrelPerQuery[i].queryid == queryid) {
+		if (qrelPerQuery[i].queryid.compare(queryid) == 0) {
 		return true;
 		}
 	}
@@ -129,7 +130,7 @@ TrecQrel::existInQrel(string queryid) {
 bool
 TrecQrel::isRelevantDoc(string docno,string queryid) {
 	for (int i = 0;i < getNumberofQueries();i++) {
-		if (qrelPerQuery[i].queryid == queryid) {
+		if (qrelPerQuery[i].queryid.compare(queryid) == 0) {
 		return qrelPerQuery[i].isRelevant(docno);
 		}
 	}
@@ -139,7 +140,7 @@ TrecQrel::isRelevantDoc(string docno,string queryid) {
 int 
 TrecQrel::getGrade(string docno,string queryid) {
 	for (int i = 0;i < getNumberofQueries();i++) {
-		if (qrelPerQuery[i].queryid == queryid) {
+		if (qrelPerQuery[i].queryid.compare(queryid) == 0) {
 		return qrelPerQuery[i].getGrade(docno);
 		}
 	}
