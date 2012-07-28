@@ -31,7 +31,6 @@ QRelInMemory::isRelevant(string docno) {
 	
 	for (grades=relGrade.begin() ;grades != relGrade.end() ;grades++ ) {
 		map<int,set<string> >::iterator docs = relGradeDocMap.find(*grades);
-		cout<<"Grades"<<*grades<<endl;
 		if ( docs != relGradeDocMap.end()) {
 			if(docs->second.find(docno) != docs->second.end())
 			return true;

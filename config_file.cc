@@ -99,6 +99,9 @@ void CONFIG_TREC::record_tag( string config_tag, string config_value ) {
     nterms = atoi(config_value.c_str());
     found = 1;
   } // END if
+  if ( config_tag == "evaluationfiles" ) {
+  evaluationfiles = config_value;
+  } // END if
   
   if( !found ) {
     cout << "ERROR: could not locate tag [" << config_tag << "] for value [" << config_value
@@ -125,6 +128,7 @@ void CONFIG_TREC::setup_config( string filename ) {
   relfile= "noneassigned";       // path/filename of relevance judgements file
   runname = "xapiantrec";         // name of the run
   nterms = 100;                  // no of terms to pick from the topic
+  evaluationfiles = "eval.log";
   
   std::ifstream configfile( filename.c_str() );
   

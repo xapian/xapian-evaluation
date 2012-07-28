@@ -96,10 +96,11 @@ if (data.size() == 7) {
 		listofRelevantRetrieved.push_back(*relevantRetrieved);
 		numberofRetrievedCounter = 0;
 		numberofRelevantRetrievedCounter = 0;
-	cout<<"Insert QueryID:\t"<<queryid<<"\twith number of Relevant Docs:\t"<<qrel->getNumberofRelevant(queryid)<<"\tTotalRetreived\t"<<retrieved->size()<<"\tTotal relevant retreived\t"<<relevantRetrieved->size()<<endl;
+cout<<"\tTotal relevant retreived\t"<<relevantRetrieved->size()<<endl;
 		retrieved = new vector<Record>();
 		relevantRetrieved = new vector<Record>();
 		}
+	cout<<"Insert QueryID:\t"<<queryid<<"\twith number of Relevant Docs:\t"<<qrel->getNumberofRelevant(queryid)<<"\tTotalRetreived\t"<<retrieved->size();
 	effQueryCounter++;
 	vecQueryNo.push_back(queryid);
 	vecNumberofRelevant.push_back(qrel->getNumberofRelevant(queryid));
@@ -112,6 +113,7 @@ if (data.size() == 7) {
 	//adding relevant document to the relevant retreived set
 	if (qrel->isRelevantDoc(docId,queryid)) {
 		relevantRetrieved->push_back(*currrec);
+		cout<<"Relevant Doc:\t"<<docId<<endl;
 	numberofRelevantRetrievedCounter++;
 	}
 
@@ -239,48 +241,85 @@ if (data.size() == 7) {
 
 void
 AdhocEvaluation::writeEvaluationResult() {
+//Opening file to write Query Wise Precision
+ofstream evaluationQueryWise;
+evaluationQueryWise.open((configobj.get_evaluationsfile()+"_QueryWisePrecision").c_str());
 cout<<"_______________________________________________________"<<endl;
 cout<<"Result for the run:\t"<<configobj.get_runname()<<endl;
+evaluationQueryWise<<"Result for the run:\t"<<configobj.get_runname()<<endl;
 cout<<"-----------------------------------------------------"<<endl;
 cout<<"Query wise Precision:\t"<<endl;
+evaluationQueryWise<<"Query wise Precision:\t"<<endl;
 cout<<"_______________________________________________________"<<endl;
 cout<<numberofEffQuery;
 for(int i = 0;i<numberofEffQuery;i++) {
 	cout<<"Precision of Query:\t"<<queryNo[i]<<"\tis : "<<averagePrecisionofEachQuery[i]<<endl;
+	evaluationQueryWise<<"Precision of Query:\t"<<queryNo[i]<<"\tis : "<<averagePrecisionofEachQuery[i]<<endl;
 cout<<"-----------------------------------------------------"<<endl;
-
 }
+//Closing file to which QueryWise Precision is written
+evaluationQueryWise.close();
+//Opening file to write Run Statistics
+ofstream evaluationRunStatistics;
+evaluationRunStatistics.open((configobj.get_evaluationsfile()+"_RunStatistics").c_str());
+evaluationQueryWise<<"Result for the run:\t"<<configobj.get_runname()<<endl;
 cout<<"_______________________________________________________"<<endl;
 cout<<"Evaluation:\t"<<endl;
+evaluationRunStatistics<<"Evaluation:\t"<<endl;
 cout<<"_______________________________________________________"<<endl;
 cout<<"Number of Queries:\t"<<numberofEffQuery<<endl;
+evaluationRunStatistics<<"Number of Queries:\t"<<numberofEffQuery<<endl;
 cout<<"-----------------------------------------------------"<<endl;
 cout<<"Retrieved:\t"<<totalNumberofRetrieved<<endl;
+evaluationRunStatistics<<"Retrieved:\t"<<totalNumberofRetrieved<<endl;
 cout<<"-----------------------------------------------------"<<endl;
 cout<<"Relevant Retrieved:\t"<<totalNumberofRelevantRetrieved<<endl;
+evaluationRunStatistics<<"Relevant Retrieved:\t"<<totalNumberofRelevantRetrieved<<endl;
 cout<<"-----------------------------------------------------"<<endl;
 cout<<"Relevant in Qrel:\t"<<totalNumberofRelevant<<endl;
+evaluationRunStatistics<<"Relevant in Qrel:\t"<<totalNumberofRelevant<<endl;
 cout<<"_______________________________________________________"<<endl;
 cout<<"Mean Evaluation:\t"<<endl;
+evaluationRunStatistics<<"Mean Evaluation:\t"<<endl;
 cout<<"_______________________________________________________"<<endl;
 cout<<"Mean Average Precision :\t"<<meanAveragePrecision<<endl;
+evaluationRunStatistics<<"Mean Average Precision :\t"<<meanAveragePrecision<<endl;
 cout<<"-----------------------------------------------------"<<endl;
 cout<<"Mean Relevance Precision :\t"<<meanRelevantPrecision<<endl;
+evaluationRunStatistics<<"Mean Relevance Precision :\t"<<meanRelevantPrecision<<endl;
+// Closing file to which Run Statistics are written.
+evaluationRunStatistics.close();
+//Opening file to write Precision At rank result.
+ofstream evaluationPrecisionAtRank;
+evaluationPrecisionAtRank.open((configobj.get_evaluationsfile()+"_PrecisionAtRank").c_str());
+evaluationPrecisionAtRank<<"Result for the run:\t"<<configobj.get_runname()<<endl;
 cout<<"_______________________________________________________"<<endl;
 cout<<"Precision At Rank:"<<endl;
+evaluationPrecisionAtRank<<"Precision At Rank:"<<endl;
 cout<<"_______________________________________________________"<<endl;
 for ( int precisionRank = 0;precisionRank < 14;precisionRank++) {
 	cout<<"Precision at Rank:\t"<<PRECISION_RANK[precisionRank]<<"\tis:\t"<<precisionAtRank[PRECISION_RANK[precisionRank]]<<endl;
+	evaluationPrecisionAtRank<<"Precision at Rank:\t"<<PRECISION_RANK[precisionRank]<<"\tis:\t"<<precisionAtRank[PRECISION_RANK[precisionRank]]<<endl;
 	cout<<"-----------------------------------------------------"<<endl;
 }
+//Closing file to which precision @ rank results are written.
+evaluationPrecisionAtRank.close();
+//Opening file where precision @recall results are written.
+ofstream evaluationPrecisionAtRecall;
+evaluationPrecisionAtRecall.open((configobj.get_evaluationsfile()+"_PrecisionAtRecall").c_str());
+evaluationPrecisionAtRecall<<"Result for the run:\t"<<configobj.get_runname()<<endl;
+
 cout<<"_______________________________________________________"<<endl;
 cout<<"Precision At Recall:"<<endl;
 cout<<"_______________________________________________________"<<endl;
 for ( int precisionPercentage = 0;precisionPercentage < 11;precisionPercentage++) {
 	cout<<"Precision at Recall:\t"<<PRECISION_PERCENTAGES[precisionPercentage]<<"\tis:\t"<<precisionAtRecall[PRECISION_PERCENTAGES[precisionPercentage]]<<endl;
+	evaluationPrecisionAtRecall<<"Precision at Recall:\t"<<PRECISION_PERCENTAGES[precisionPercentage]<<"\tis:\t"<<precisionAtRecall[PRECISION_PERCENTAGES[precisionPercentage]]<<endl;
 	cout<<"-----------------------------------------------------"<<endl;
 }
 cout<<"_______________________________________________________"<<endl;
+//closing file to which precision At recall results are written.
+evaluationPrecisionAtRecall.close();
 }
 
 int main(int argc,char **argv) {

@@ -131,6 +131,7 @@ bool
 TrecQrel::isRelevantDoc(string docno,string queryid) {
 	for (int i = 0;i < getNumberofQueries();i++) {
 		if (qrelPerQuery[i].queryid.compare(queryid) == 0) {
+		//cout<<"query in relevant:\t"<<qrelPerQuery[i].queryid<<endl;
 		return qrelPerQuery[i].isRelevant(docno);
 		}
 	}
@@ -152,11 +153,11 @@ int main(int argc,char **argv)
 CONFIG_TREC config;
 config.setup_config(string(argv[1]));
 TrecQrel *qrl =new  TrecQrel(config);
-set<string> rel = qrl->qrelPerQuery[1].nonRelDocuments;
-cout<< "Queryid"<<qrl->qrelPerQuery[1].queryid<<endl;
+set<string> rel = qrl->getRelevantDocument(string(argv[2]));
+cout<< "Queryid"<<string(argv[2])<<endl;
 for ( set<string>::iterator docs = rel.begin() ;docs != rel.end() ; docs++) {
-//	cout<<"Relevant Document:\t"<<*docs<<endl;
+	cout<<"Relevant Document:\t"<<*docs<<endl;
 }
-cout<<"IS Relevan"<<qrl->isRelevantDoc(argv[2],argv[3]) <<"Grade"<<qrl->getGrade(argv[2],argv[3])<<endl;
+//cout<<"IS Relevan"<<qrl->isRelevantDoc(argv[2],argv[3]) <<"Grade"<<qrl->getGrade(argv[2],argv[3])<<endl;
 }
 */
