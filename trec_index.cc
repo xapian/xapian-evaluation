@@ -4,6 +4,7 @@
  * Copyright 1999,2000,2001 BrightStation PLC
  * Copyright 2003 Olly Betts
  * Copyright 2003 Andy MacFarlane, City University
+ * Copyright 2012 Gaurav Arora
  * 
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License as 

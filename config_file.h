@@ -2,6 +2,7 @@
  *
  * ----START-LICENCE----
  * Copyright 2003 Andy MacFarlane, City University
+ * Copyright 2012 Gaurav Arora
  * 
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License as 
@@ -24,6 +25,7 @@
 #define _CONFIG_H_
 
 #include <string>
+#include <xapian.h>
 using namespace std;
 
 class CONFIG_TREC {
@@ -47,8 +49,28 @@ private:
 	string runname;      // name of the run
 	int nterms;          // no of terms to pick from the topic
 	string stopsfile;    // name of the stopword file
-	string evaluationfiles; //path/filename of the evaluation files
+	string evaluationfiles; //path/filename of the evaluation files.
 	string indexbigram;  // Index Bigram in the index.
+	string queryparsebigram; //Parse and add bigrams to the Query.
+	string weightingscheme; //which weighting scheme to select
+
+	//Parameters for BM25 Weighting Scheme.
+	double bm25param_k1;
+	double bm25param_k2;
+	double bm25param_k3;
+	double bm25param_b;
+	double bm25param_min_normlen;
+	
+	//Parameters for Tras Weighting scheme.
+	double tradparam_k;
+
+	//Parameters for LMWeight Weighting Scheme.
+
+	double lmparam_log;
+	Xapian::Weight::type_smoothing lmparam_select_smoothing;
+	double lmparam_smoothing1;
+	double lmparam_smoothing2;
+	double lmparam_mixture;
 
 	// private access routines
 	void record_tag( string config_tag, string config_value );
@@ -65,6 +87,9 @@ public:
 	int check_query_config();
 	int check_index_config();
 	int check_search_config();
+	bool check_bm25();
+	bool check_trad();
+	bool check_lmweight();
 
 	// access routines
 	string get_textfile() { return textfile; }
@@ -84,8 +109,35 @@ public:
 	int get_nterms() { return nterms; }
 	string get_stopsfile() { return stopsfile; }
 	string get_evaluationsfile() { return evaluationfiles; }
+
 	bool get_indexbigram() { return (indexbigram.compare("true") == 0);
 	}
+
+	bool get_queryparsebigram() { return ((indexbigram.compare("true") == 0) && (queryparsebigram.compare("true") == 0));
+	}
+	
+	string get_weightingscheme() { return weightingscheme; }
+
+	double get_bm25param_k1() { return bm25param_k1; }
+	double get_bm25param_k2() { return bm25param_k2; }
+	double get_bm25param_k3() { return bm25param_k3; }
+	double get_bm25param_b()  { return bm25param_b;  }
+	double get_bm25param_min_normlen() { return bm25param_min_normlen; }
+
+	double get_tradparam_k() { return tradparam_k; }
+	
+	double get_lmparam_log() { return lmparam_log; }
+
+	Xapian::Weight::type_smoothing get_lmparam_select_smoothing() { return lmparam_select_smoothing; }
+
+	double get_lmparam_smoothing1() { return lmparam_smoothing1
+; }
+	
+	double get_lmparam_smoothing2() { return lmparam_smoothing2; }
+
+	double get_lmparam_mixture() { return lmparam_mixture; }
+
+
 }; // END class CONFIG
 
 #endif

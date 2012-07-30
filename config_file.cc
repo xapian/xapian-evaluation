@@ -2,6 +2,7 @@
  *
  * ----START-LICENCE----
  * Copyright 2003 Andy MacFarlane, City University
+ * Copyright 2012 Gaurav Arora
  * 
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License as 
@@ -105,10 +106,90 @@ void CONFIG_TREC::record_tag( string config_tag, string config_value ) {
   } // END if
   
   if (config_tag == "indexbigram" ) {
-	indexbigram = "true";
+	indexbigram = config_value;
     found = 1;
   } //END if
+ 
+  if (config_tag == "queryparsebigram" ) {
+	queryparsebigram = config_value;
+	found = 1;
+  }
+
+  if ( config_tag == "weightingscheme" ) {
+	weightingscheme = config_value;
+	found = 1;
+  }
+
+  if (config_tag == "bm25param_k1" ) {
+	bm25param_k1 = strtod(config_value.c_str(),NULL);
+	found = 1;
+  }
+
+  if (config_tag == "bm25param_k2" ) {
+	bm25param_k2 = strtod(config_value.c_str(),NULL);
+	found = 1;
+  }
+
+  if (config_tag == "bm25param_k3" ) {
+	bm25param_k3 = strtod(config_value.c_str(),NULL);
+	found = 1;
+  }
+
+  if (config_tag == "bm25param_b" ) {
+	bm25param_b = strtod(config_value.c_str(),NULL);
+	found = 1;
+  }
+
+  if (config_tag == "bm25param_min_normlen" ) {
+	bm25param_min_normlen = strtod(config_value.c_str(),NULL);
+	found = 1;
+  }
+
+  if (config_tag == "tradparam_k" ) {
+	tradparam_k = strtod(config_value.c_str(),NULL);
+	found = 1;
+  }
+
+  if (config_tag == "lmparam_log" ) {
+	lmparam_log = strtod(config_value.c_str(),NULL);
+	found = 1;
+  }
+
+  if (config_tag == "lmparam_smoothing1" ) {
+	lmparam_smoothing1 = strtod(config_value.c_str(),NULL);
+	found = 1;
+  }
+
+  if (config_tag == "lmparam_smoothing2" ) {
+	lmparam_smoothing2 = strtod(config_value.c_str(),NULL);
+	found = 1;
+  }
+
+  if (config_tag == "lmparam_mixture" ) {
+	lmparam_mixture = strtod(config_value.c_str(),NULL);
+	found = 1;
+  }
+
+  if (config_tag == "lmparam_select_smoothing" ) {
+	if (config_value.compare("TWO_STAGE_SMOOTHING") == 0 ) {
+		lmparam_select_smoothing = Xapian::Weight::TWO_STAGE_SMOOTHING;
+	found = 1;
+	}
+	if (config_value.compare("DIRICHLET_SMOOTHING") == 0 ) {
+		lmparam_select_smoothing = Xapian::Weight::DIRICHLET_SMOOTHING;
+	found = 1;
+	}
+	if (config_value.compare("ABSOLUTE_DISCOUNT_SMOOTHING") == 0 ) {
+		lmparam_select_smoothing = Xapian::Weight::ABSOLUTE_DISCOUNT_SMOOTHING;
+	found = 1;
+	}
+	if (config_value.compare("JELINEK_MERCER_SMOOTHING") == 0 ) {
+		lmparam_select_smoothing = Xapian::Weight::JELINEK_MERCER_SMOOTHING;
+	found = 1;
+	}
+  }
   
+
   if( !found ) {
     cout << "ERROR: could not locate tag [" << config_tag << "] for value [" << config_value
 	 << "]" << endl;
@@ -134,8 +215,21 @@ void CONFIG_TREC::setup_config( string filename ) {
   relfile= "noneassigned";       // path/filename of relevance judgements file
   runname = "xapiantrec";         // name of the run
   nterms = 100;                  // no of terms to pick from the topic
-  evaluationfiles = "eval.log";
-  
+  evaluationfiles = "eval.log";  //Name of file to which evaluation to be written.
+  indexbigram = "false";   // Default value of index bigram
+  queryparsebigram = "false"; //Default value of parse bigram in query.
+  weightingscheme = "noneassigned";
+  bm25param_k1 = -1.0;
+  bm25param_k2 = -1.0;
+  bm25param_k3 = -1.0;
+  bm25param_b = -1.0;
+  bm25param_min_normlen = -1.0;
+  tradparam_k = -1.0;
+  lmparam_log = -1.0;
+  lmparam_smoothing1 = -1.0;
+  lmparam_smoothing2 = -1.0;
+  lmparam_mixture = -1.0;
+
   std::ifstream configfile( filename.c_str() );
   
   if( !configfile ) {
@@ -229,3 +323,51 @@ int CONFIG_TREC::check_search_config( ) {
 	return 1;
 	
 } // END check_search_config
+
+bool CONFIG_TREC::check_bm25() {
+//ensure that all the information or parameters requires by BM25 are available.
+	if ( bm25param_k1 == -1.0 ) {
+		return false;
+	}	
+	if ( bm25param_k2 == -1.0 ) {
+		return false;
+	}	
+	if ( bm25param_k3 == -1.0 ) {
+		return false;
+	}	
+	if ( bm25param_b == -1.0 ) {
+		return false;
+	}	
+	if ( bm25param_min_normlen == -1.0 ) {
+		return false;
+	}	
+	return true;
+}
+
+bool CONFIG_TREC::check_trad() {
+//ensure that all the information or parameters requires by TradWeight are available.
+	if ( tradparam_k == -1.0 ) {
+		return false;
+	}	
+	return true;
+}
+
+bool CONFIG_TREC::check_lmweight() {
+//ensure that all the information or parameters requires by LMweight are available.
+	if ( lmparam_log == -1.0 ) {
+		return false;
+	}	
+	if ( lmparam_smoothing1 == -1.0 ) {
+		return false;
+	}	
+	if ( lmparam_smoothing2 == -1.0 ) {
+		return false;
+	}	
+	if ( lmparam_mixture == -1.0 ) {
+		return false;
+	}	
+	if ( lmparam_select_smoothing == NULL) {
+		return false;
+	}	
+	return true;
+}

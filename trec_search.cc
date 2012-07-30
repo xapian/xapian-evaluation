@@ -4,6 +4,7 @@
  * Copyright 1999,2000,2001 BrightStation PLC
  * Copyright 2003 Olly Betts
  * Copyright 2003 Andy MacFarlane, City University
+ * Copyright 2012 Gaurav Arora
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License as 
@@ -63,7 +64,7 @@ int load_query( std::ifstream & queryfile, int & topicno, SW_STORE sw_store, Xap
 	get_stopper(stopper);
 	qp.set_stopper(&stopper);
 	qp.set_stemmer(stemmer);
-	qp.set_bigram(false);  
+	qp.set_bigram(config.get_queryparsebigram());  
 	qp.set_stemming_strategy(Xapian::QueryParser::STEM_SOME);
 	query = qp.parse_query(line);
 	cout<<"Parsed Query is :\t"<<query.get_description()<<endl;
@@ -144,9 +145,34 @@ int main(int argc, char **argv)
 	cout << "Running " << topicno << ", query = [" << query.get_description() << "] getting " << config.get_noresults() << " docs" << endl;
 	
 	// Give the query object to the enquire session
-//	enquire.set_query(query);
-	enquire.set_weighting_scheme(Xapian::LMWeight());
-	
+	enquire.set_query(query);
+	if (config.get_weightingscheme().compare("bm25") == 0 )
+	{
+		if (config.check_bm25() ) {
+			enquire.set_weighting_scheme(Xapian::BM25Weight(config.get_bm25param_k1(),config.get_bm25param_k2(),config.get_bm25param_k3(),config.get_bm25param_b(),config.get_bm25param_min_normlen()));
+		}
+		else {
+			enquire.set_weighting_scheme(Xapian::BM25Weight());		   }
+	}
+	else if (config.get_weightingscheme().compare("trad") == 0 ) {
+		if ( config.check_trad()) {
+			enquire.set_weighting_scheme(Xapian::TradWeight(config.get_tradparam_k()));
+		}
+		else {
+			enquire.set_weighting_scheme(Xapian::TradWeight());
+		}
+ 	}
+	else if (config.get_weightingscheme().compare("lmweight") == 0) {
+		if (config.check_lmweight()) {
+			enquire.set_weighting_scheme(Xapian::LMWeight(config.get_lmparam_log(),config.get_lmparam_select_smoothing(),config.get_lmparam_smoothing1(),config.get_lmparam_smoothing2(),config.get_lmparam_mixture()));
+		}
+		else {
+			enquire.set_weighting_scheme(Xapian::LMWeight());
+		}
+	}
+	else if (config.get_weightingscheme().compare("boolweight") == 0) {
+		enquire.set_weighting_scheme(Xapian::BoolWeight());
+	}
 	// Get the top n results of the query
 	Xapian::MSet matches = enquire.get_mset( 0, config.get_noresults() );
 								
