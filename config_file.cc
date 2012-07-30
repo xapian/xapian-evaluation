@@ -100,14 +100,20 @@ void CONFIG_TREC::record_tag( string config_tag, string config_value ) {
     found = 1;
   } // END if
   if ( config_tag == "evaluationfiles" ) {
-  evaluationfiles = config_value;
+	evaluationfiles = config_value;
+    found = 1;
   } // END if
+  
+  if (config_tag == "indexbigram" ) {
+	indexbigram = "true";
+    found = 1;
+  } //END if
   
   if( !found ) {
     cout << "ERROR: could not locate tag [" << config_tag << "] for value [" << config_value
 	 << "]" << endl;
   } // END if
-  
+ 	 
 } // END record_tag
 
 void CONFIG_TREC::setup_config( string filename ) {

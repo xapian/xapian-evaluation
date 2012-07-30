@@ -48,6 +48,7 @@ private:
 	int nterms;          // no of terms to pick from the topic
 	string stopsfile;    // name of the stopword file
 	string evaluationfiles; //path/filename of the evaluation files
+	string indexbigram;  // Index Bigram in the index.
 
 	// private access routines
 	void record_tag( string config_tag, string config_value );
@@ -83,6 +84,8 @@ public:
 	int get_nterms() { return nterms; }
 	string get_stopsfile() { return stopsfile; }
 	string get_evaluationsfile() { return evaluationfiles; }
+	bool get_indexbigram() { return (indexbigram.compare("true") == 0);
+	}
 }; // END class CONFIG
 
 #endif

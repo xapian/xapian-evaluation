@@ -27,6 +27,7 @@
 #include <algorithm>
 #include <iostream>
 #include <string>
+#include <fstream>
 
 #include <sys/types.h>
 #include <dirent.h>
@@ -87,7 +88,7 @@ void SGMLParser::process_text(const string &text) {
 void
 SGMLParser::opening_tag(const string &tag, const map<string,string> &p) {
 
-   	cout<<"Opening Tag"<<tag;
+//   	cout<<"Opening Tag"<<tag;
     if (tag == "meta") {
 	map<string, string>::const_iterator i, j;
 	if ((i = p.find("content")) != p.end()) {
@@ -128,7 +129,7 @@ SGMLParser::opening_tag(const string &tag, const map<string,string> &p) {
 void
 SGMLParser::closing_tag(const string &tag)
 {
- 	  cout << "closing_tag) : " << tag << endl;
+ //	  cout << "closing_tag) : " << tag << endl;
     if (tag == "docno") {
 			 if( dump.size() < 100 ) // nasty hack to get round problems on terabyte track with robot tags
 			 		 title = dump;
@@ -198,6 +199,17 @@ Xapian::Document stem_document( Xapian::Document & doc ) {
 
 
 } // END stem_document 
+
+void get_stopper(Xapian::SimpleStopper &stopper,CONFIG_TREC &config ) {
+ifstream stopfile(config.get_stopsfile().c_str(),ifstream::in);
+while ( !stopfile.eof() ) {
+	string stopword;
+	getline(stopfile,stopword);
+	stopword[stopword.size() - 1] = '\0';
+	stopper.add(stopword);
+	}
+	stopfile.close();
+}
 
 inline static bool
 p_plusminus(unsigned int c)
@@ -269,10 +281,10 @@ index_text(const string &s, Xapian::Document &doc, Xapian::Stem &stemmer,
 		if (pos != static_cast<Xapian::termpos>(-1)
 			// Not in GCC 2.95.2 numeric_limits<Xapian::termpos>::max()
 		   ) {
-			cout<<"POSTING:\t"<<term<<"\t";
+			//cout<<"POSTING:\t"<<term<<"\t";
 		    doc.add_posting(rprefix + term, pos, wdfinc);
 		} else {
-			cout<<"TERM:\t"<<term<<"\t";
+			//cout<<"TERM:\t"<<term<<"\t";
 		    doc.add_term(rprefix + term, wdfinc);
 		}
 	    }
@@ -323,23 +335,36 @@ static void index_file( const string &file,
       // parse the document for the data
       SGMLParser p;
       p.parse_html(rawdoc);
-
+	  
+	  Xapian::TermGenerator indexer;
+	  indexer.set_stemmer(stemmer);
+      Xapian::SimpleStopper stopper;
+	  get_stopper(stopper,config);
+	  indexer.set_stopper(&stopper);
+	  if ( config.get_indexbigram() ) {
+		indexer.set_bigrams(true);
+	  }
       // Add postings for terms to the document
       Xapian::Document doc;
+	  doc.set_data(p.title);
+	  indexer.set_document(doc);
+	  indexer.index_text(p.title);
+	  indexer.index_text(p.dump);
+	  indexer.index_text(p.keywords);
       Xapian::termpos pos = 1;
 //	  cout<<"TITLE:\t"<<p.title<<"\nKEYWORDS: \t";
 //	  cout<<p.keywords<<"\nDUMP:\t"<<p.dump<<"\nSAMPLLE:\t"<<p.sample;
-      pos = index_text( p.title, doc, stemmer, pos);
-      pos = index_text( p.dump, doc, stemmer, pos + 1);
+//      pos = index_text( p.title, doc, stemmer, pos);
+  //    pos = index_text( p.dump, doc, stemmer, pos + 1);
 //      pos = index_text( p.keywords, doc, stemmer, pos + 1);
-
+		
       // index the document 
-      Xapian::Document doc_stopsremoved = remove_stopwords( doc, sw_store );
-      Xapian::Document stemdoc = stem_document( doc_stopsremoved ); 
+//      Xapian::Document doc_stopsremoved = remove_stopwords( doc, sw_store );
+      //Xapian::Document stemdoc = stem_document( doc_stopsremoved ); 
       cout << "DOCID = " << p.title << endl;
-      stemdoc.set_data(p.title);  // set the data 
-      cout<<"DOCID:\t"<<db.add_document(stemdoc)<<"TERMLISTCOUNT"<<stemdoc.termlist_count();
-      cout<<"DOCADDED\n"<<stemdoc.get_docid(); 
+  //    doc_stopsremoved.set_data(p.title);  // set the data 
+      cout<<"DOCID:\t"<<db.add_document(doc)<<"TERMLISTCOUNT"<<doc.termlist_count();
+      cout<<"DOCADDED\n"<<doc.get_docid(); 
       // record the total no of docs done
       totaldocs++;
       //if( (totaldocs % 10000) == 0 ) cout << "DOCUMENTS PROCESSED) " << totaldocs << endl;
