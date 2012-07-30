@@ -36,6 +36,19 @@
 using namespace Xapian;
 using namespace std;
 
+CONFIG_TREC config;
+
+void get_stopper(Xapian::SimpleStopper &stopper) {
+ifstream stopfile(config.get_stopsfile().c_str(),ifstream::in);
+while ( !stopfile.eof() ) {
+	string stopword;
+	getline(stopfile,stopword);
+	stopword[stopword.size() - 1] = '\0';
+	stopper.add(stopword);
+	}
+	stopfile.close();
+}
+
 int load_query( std::ifstream & queryfile, int & topicno, SW_STORE sw_store, Xapian::Query & query, Xapian::Stem & stemmer ) {
 // load a query and record its terms
 
@@ -45,25 +58,27 @@ int load_query( std::ifstream & queryfile, int & topicno, SW_STORE sw_store, Xap
 	string line;
 	getline(queryfile,line);
 	line[line.size()-1] ='\0';
+	Xapian::QueryParser qp;
+	Xapian::SimpleStopper stopper;
+	get_stopper(stopper);
+	qp.set_stopper(&stopper);
+	qp.set_stemmer(stemmer);
+	qp.set_bigram(false);  
+	qp.set_stemming_strategy(Xapian::QueryParser::STEM_SOME);
+	query = qp.parse_query(line);
+	cout<<"Parsed Query is :\t"<<query.get_description()<<endl;
 	vector<string> data;
-  split(line, ' ', data ); 
+	split(line, ' ', data ); 
 	vector <string> terms;
 	for( vector<string>::const_iterator start = data.begin(); start != data.end(); start++ ) {
 	  string queryword;
 		if( !found_topicno ) {
 			topicno = atoi( start->c_str());
 			found_topicno=1;
-		} else if(!IsStopWord( sw_store, (char *) start->c_str() )) { 
-					queryword = stemmer(*start);
-					cout << "Queryword: = " << queryword << endl;
-					terms.push_back(queryword);
-    } // END if
+		}  
 		
 	} // END for
 
-	// make the query with the terms
-	Xapian::Query consquery(Xapian::Query::OP_OR, terms.begin(), terms.end());
-	query = consquery;
 	
 	return 1;
 
@@ -81,7 +96,6 @@ int main(int argc, char **argv)
   // Catch any Xapian::Error exceptions thrown
   try {
     // load the TREC experiment configuration file
-    CONFIG_TREC config;
     config.setup_config( string(argv[1]) );
     config.check_search_config();
     Xapian::Stem stemmer( config.get_language() );
@@ -130,7 +144,8 @@ int main(int argc, char **argv)
 	cout << "Running " << topicno << ", query = [" << query.get_description() << "] getting " << config.get_noresults() << " docs" << endl;
 	
 	// Give the query object to the enquire session
-	enquire.set_query(query);
+//	enquire.set_query(query);
+	enquire.set_weighting_scheme(Xapian::LMWeight());
 	
 	// Get the top n results of the query
 	Xapian::MSet matches = enquire.get_mset( 0, config.get_noresults() );
