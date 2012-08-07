@@ -206,7 +206,6 @@ ifstream stopfile(config.get_stopsfile().c_str(),ifstream::in);
 while ( !stopfile.eof() ) {
 	string stopword;
 	getline(stopfile,stopword);
-	stopword[stopword.size() - 1] = '\0';
 	stopper.add(stopword);
 	}
 	stopfile.close();
@@ -341,6 +340,14 @@ static void index_file( const string &file,
 	  indexer.set_stemmer(stemmer);
       Xapian::SimpleStopper stopper;
 	  get_stopper(stopper,config);
+	  /*
+	  ifstream stopfile(config.get_stopsfile().c_str(),ifstream::in);
+	  while ( !stopfile.eof() ) {
+	  string stopword;
+	  getline(stopfile,stopword);
+	  stopper.add(stopword);
+	  }
+	  stopfile.close();*/
 	  indexer.set_stopper(&stopper);
 	  if ( config.get_indexbigram() ) {
 		indexer.set_bigrams(true);

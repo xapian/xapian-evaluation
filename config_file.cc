@@ -355,18 +355,23 @@ bool CONFIG_TREC::check_trad() {
 bool CONFIG_TREC::check_lmweight() {
 //ensure that all the information or parameters requires by LMweight are available.
 	if ( lmparam_log == -1.0 ) {
+		cout<<"LOG"<<endl;
 		return false;
 	}	
 	if ( lmparam_smoothing1 == -1.0 ) {
+		cout<<"Smoothign1"<<endl;
 		return false;
 	}	
 	if ( lmparam_smoothing2 == -1.0 ) {
+		cout<<"Smoothgin2"<<endl;
 		return false;
 	}	
 	if ( lmparam_mixture == -1.0 ) {
+		cout<<"Mixture"<<endl;
 		return false;
 	}	
 	if ( lmparam_select_smoothing == NULL) {
+		cout<<"typesmoothing"<<endl;
 		return false;
 	}	
 	return true;

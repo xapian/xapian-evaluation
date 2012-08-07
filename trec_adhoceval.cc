@@ -96,11 +96,11 @@ if (data.size() == 7) {
 		listofRelevantRetrieved.push_back(*relevantRetrieved);
 		numberofRetrievedCounter = 0;
 		numberofRelevantRetrievedCounter = 0;
-cout<<"\tTotal relevant retreived\t"<<relevantRetrieved->size()<<endl;
+//cout<<"\tTotal relevant retreived\t"<<relevantRetrieved->size()<<endl;
 		retrieved = new vector<Record>();
 		relevantRetrieved = new vector<Record>();
 		}
-	cout<<"Insert QueryID:\t"<<queryid<<"\twith number of Relevant Docs:\t"<<qrel->getNumberofRelevant(queryid)<<"\tTotalRetreived\t"<<retrieved->size();
+	//cout<<"Insert QueryID:\t"<<queryid<<"\twith number of Relevant Docs:\t"<<qrel->getNumberofRelevant(queryid)<<"\tTotalRetreived\t"<<retrieved->size();
 	effQueryCounter++;
 	vecQueryNo.push_back(queryid);
 	vecNumberofRelevant.push_back(qrel->getNumberofRelevant(queryid));
@@ -113,7 +113,7 @@ cout<<"\tTotal relevant retreived\t"<<relevantRetrieved->size()<<endl;
 	//adding relevant document to the relevant retreived set
 	if (qrel->isRelevantDoc(docId,queryid)) {
 		relevantRetrieved->push_back(*currrec);
-		cout<<"Relevant Doc:\t"<<docId<<endl;
+		//cout<<"Relevant Doc:\t"<<docId<<endl;
 	numberofRelevantRetrievedCounter++;
 	}
 
