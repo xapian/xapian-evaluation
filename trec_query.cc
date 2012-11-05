@@ -168,7 +168,7 @@ void get_word( char buffer[], int size, char word[KW_SIZE], int *curpos ) {
 
 void check_code( char word[KW_SIZE], int *code ) {
 
-	*code = SAVETERM; /* assume its a saveable term */
+	*code = SAVETERM; /* assume it's a saveable term */
 
 	if( strncmp( word,"<top>",4) == 0 )
 		*code = -1;  
@@ -394,6 +394,7 @@ void create_queries( CONFIG_TREC & config ) {
 	get_word( topics, BIG_BUFFER, word, &curpos ); // spin past Number
 	q.topic_no = atoi(word);
 	get_word( topics, BIG_BUFFER, word, &curpos );
+	// Extracting topic number by reading it from the file
 	if(q.topic_no == 0)
 	q.topic_no = atoi(word);
 	save_word=0;

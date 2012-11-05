@@ -24,7 +24,6 @@
  */
 
 #include <xapian.h>
-#include <xapian/termiterator.h>
 #include <algorithm>
 #include <iostream>
 #include <string>
@@ -176,7 +175,7 @@ Xapian::Document  remove_stopwords( Xapian::Document doc, SW_STORE & sw_store ) 
   Xapian::Document wordlist;
   char word[100];
 	
-  for( TermIterator t = doc.termlist_begin(); t != TermIterator();  t++ ) {
+  for( TermIterator t = doc.termlist_begin(); t != doc.termlist_end();  t++ ) {
     for( int i=0; i < (*t).size(); i++ ) word[i] = (*t)[i];
     if(!IsStopWord( sw_store, word )) wordlist.add_term( *t );
     
@@ -191,7 +190,7 @@ Xapian::Document stem_document( Xapian::Document & doc ) {
   Stem stemmer("english");
   Xapian::Document wordlist;
 
-  for( TermIterator t = doc.termlist_begin(); t != TermIterator();  t++ ) {
+  for( TermIterator t = doc.termlist_begin(); t != doc.termlist_end();  t++ ) {
     wordlist.add_term(stemmer(*t) );
     
   } // END for

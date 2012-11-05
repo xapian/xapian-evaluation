@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
- 19  */
+ */
 
 #include "trec_qrel.h"
 #include "split.h"
@@ -35,7 +35,7 @@ TrecQrel::getQueryIds() {
 
 
 set<string> 
-TrecQrel::getRelevantDocument(int grade,string queryid) {
+TrecQrel::getRelevantDocument(int grade,const string &queryid) {
 	for (int i = 0; i < getNumberofQueries(); i++) {
 		if ( qrelPerQuery[i].queryid.compare(queryid) == 0) {
 		return qrelPerQuery[i].getRelevantDocument(grade);
@@ -56,7 +56,7 @@ TrecQrel::getAllRelevantDocument() {
 
 
 set<string> 
-TrecQrel::getRelevantDocument(string queryid) {
+TrecQrel::getRelevantDocument(const string & queryid) {
 	for ( int i = 0 ;i <  getNumberofQueries(); i++) {
 		if ( qrelPerQuery[i].queryid.compare(queryid) == 0 ) {
 		return qrelPerQuery[i].getAllRelevantDocument();
@@ -67,7 +67,7 @@ TrecQrel::getRelevantDocument(string queryid) {
 }
 
 int 
-TrecQrel::getNumberofRelevant(string queryid) {
+TrecQrel::getNumberofRelevant(const string & queryid) {
 	for ( int i = 0 ;i <  getNumberofQueries(); i++) {
 		if ( qrelPerQuery[i].queryid.compare(queryid) == 0) {
 		return qrelPerQuery[i].getAllRelevantDocument().size();
@@ -118,7 +118,7 @@ TrecQrel::loadQRelFile() {
 }
 
 bool
-TrecQrel::existInQrel(string queryid) {
+TrecQrel::existInQrel(const string & queryid) {
 	for (int i = 0;i < getNumberofQueries();i++) {
 		if (qrelPerQuery[i].queryid.compare(queryid) == 0) {
 		return true;
@@ -128,7 +128,7 @@ TrecQrel::existInQrel(string queryid) {
 }
 
 bool
-TrecQrel::isRelevantDoc(string docno,string queryid) {
+TrecQrel::isRelevantDoc(const string  & docno,const string & queryid) {
 	for (int i = 0;i < getNumberofQueries();i++) {
 		if (qrelPerQuery[i].queryid.compare(queryid) == 0) {
 		//cout<<"query in relevant:\t"<<qrelPerQuery[i].queryid<<endl;
@@ -139,7 +139,7 @@ TrecQrel::isRelevantDoc(string docno,string queryid) {
 }
 
 int 
-TrecQrel::getGrade(string docno,string queryid) {
+TrecQrel::getGrade(const string & docno,const string & queryid) {
 	for (int i = 0;i < getNumberofQueries();i++) {
 		if (qrelPerQuery[i].queryid.compare(queryid) == 0) {
 		return qrelPerQuery[i].getGrade(docno);

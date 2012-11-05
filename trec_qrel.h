@@ -64,7 +64,7 @@ public:
 	 *  @return - set of the relevant document for query queryid and grade grade
      */
 
-	set<string> getRelevantDocument(int grade,string queryid);
+	set<string> getRelevantDocument(int grade,const string & queryid);
 	
 	/* Get the all relevant document ids 
 	 *  @return - set of all the relevant document 
@@ -77,14 +77,14 @@ public:
 	 *  @return - set of the relevant document for query queryid from all grades
      */
 	
-	set<string> getRelevantDocument(string queryid);
+	set<string> getRelevantDocument(const string & queryid);
 
 	/* Get number of relevant document for the query.
 	 * @param queryid - Queryid of query for which number of relevant documents to be returned.
 	 * @return - Number of relevant documents for the query.
 	 */
 
-	int getNumberofRelevant(string queryid);
+	int getNumberofRelevant(const string & queryid);
 
 	/* Get total number of queries in the pool.
 	 * @return Number of  query in the pool.
@@ -102,7 +102,7 @@ public:
 	 * @return true if the query exist in assessment pool,false otherwise.
 	 */
 	
-	bool existInQrel(string queryid);
+	bool existInQrel(const string & queryid);
 	
 	/**
 	 * Checks if the document is relvant or not for the query given by the query identifier.
@@ -111,7 +111,7 @@ public:
 	 * @return true if document is relevant for the given query.
 	 */
 	
-	 bool isRelevantDoc(string docno,string queryid);
+	 bool isRelevantDoc(const string & docno,const string & queryid);
 
 	/**
 	 * Get grade of the document for the particular query.
@@ -120,5 +120,5 @@ public:
 	 * @return int grade of the document for query if available in pool,else default grade 0.
 	 */
 
- 	int getGrade(string docno,string queryid);
+ 	int getGrade(const string & docno,const string & queryid);
 };

@@ -102,7 +102,7 @@ int main(int argc, char **argv)
     struct timeval start_time, finish_time, timelapse;   /* timing variables */
 			
     // Make the database
-    Xapian::Database db(Xapian::Brass::open(config.get_db().c_str()));
+    Xapian::Database db(config.get_db().c_str());
 
     // Start an enquire session
     Xapian::Enquire enquire(db);
