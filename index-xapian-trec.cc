@@ -262,12 +262,10 @@ static int processfile(string fp, Xapian::WritableDatabase &db, SW_STORE & sw_st
   
   int uncolen; 
   int pointer=0;
-  u_char filen[100];
 
   // uncompress the file 
   cout << "Processing" << fp <<  "\n"; 
-  for( int i=0; i < fp.size(); i++ ) filen[i] = fp[i];
-  uncolen = decompress_bundle(filen, (u_char *) chamber, CHAMBER_SIZE);
+  uncolen = decompress_bundle((u_char *)fp.c_str(), (u_char *) chamber, CHAMBER_SIZE);
 
   // index the file in Xapian 
   do {
