@@ -54,21 +54,21 @@ public:
 	 *  @param docno Document identifier to be checked for relevance
 	 * @return true if document is relevant,otherwise false.
 	*/
-	bool isRelevant(string docno);
+	bool isRelevant(const string & docno);
 
 	/**
 	 * Get the grades for the document.
 	 * @param docno Document identifier to return grade for.
 	 * @return int return grade if grade available in assessment or default grade 0.
 	 */
-	int getGrade(string docno);
+	int getGrade(const string & docno);
 	
 	/** 
 	 * Get all the relevant document for this query from relevance assessment
 	 * @return Set of Document ids of all the relevant docids for the query.
 	*/
 	
-	set<string> getAllRelevantDocument();
+	set<string> getAllRelevantDocument() const;
 	
 	/** 
 	 * Get all the relevant document for this query from relevance assessment with a particular grade
@@ -76,7 +76,7 @@ public:
 	 * @return Set of Document ids of all the relevant docids for the query for a particlar grade.
 	*/
 
-	set<string> getRelevantDocument(int grade);
+	set<string> getRelevantDocument(const int & grade) const;
 
 	/** 
 	 * Add identifier of the relevant document to the set
@@ -85,7 +85,7 @@ public:
 	 * @return true if document is added.
 	 */
 	
-	bool insertRelDocument(string docno,int grade);
+	bool insertRelDocument(const string &docno,const int & grade);
 
 	/** 
 	 * Add identifier of the non relevant document to the set
@@ -93,7 +93,7 @@ public:
 	 * @return true if document is added.
 	 */
 	
-	bool insertNonRelDocument(string docno);
+	bool insertNonRelDocument(const string &docno);
 };
 
 #endif

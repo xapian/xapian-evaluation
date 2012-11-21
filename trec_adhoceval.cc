@@ -64,7 +64,7 @@ if(!resultfile.is_open()) {
 	cout<<"ERROR - can't open the result file"<<configobj.get_resultsfile().c_str() << "for reading"<<endl;
 }
 string str;
-string previous = "";
+string previous;
 int numberofRetrievedCounter = 0;
 int numberofRelevantRetrievedCounter = 0;
 vector<Record> *relevantRetrieved = new vector<Record>();
