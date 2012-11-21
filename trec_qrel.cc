@@ -41,6 +41,7 @@ TrecQrel::getRelevantDocument(int grade,const string &queryid) {
 		return qrelPerQuery[i].getRelevantDocument(grade);
 		}
 	}
+    return set<string>();
 }
 
 
@@ -147,17 +148,3 @@ TrecQrel::getGrade(const string & docno,const string & queryid) {
 	}
 	return 0;
 }
-/*
-int main(int argc,char **argv)
-{
-CONFIG_TREC config;
-config.setup_config(string(argv[1]));
-TrecQrel *qrl =new  TrecQrel(config);
-set<string> rel = qrl->getRelevantDocument(string(argv[2]));
-cout<< "Queryid"<<string(argv[2])<<endl;
-for ( set<string>::iterator docs = rel.begin() ;docs != rel.end() ; docs++) {
-	cout<<"Relevant Document:\t"<<*docs<<endl;
-}
-//cout<<"IS Relevan"<<qrl->isRelevantDoc(argv[2],argv[3]) <<"Grade"<<qrl->getGrade(argv[2],argv[3])<<endl;
-}
-*/
