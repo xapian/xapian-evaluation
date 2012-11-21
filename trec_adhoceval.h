@@ -76,7 +76,7 @@ vector<string> queryNo;
 
 public:
 /** Intialize the statistics for evaluating the result*/
-void intialise();
+void initialise();
 
 /** Evaluate the given result file.*/
 void evaluate();
