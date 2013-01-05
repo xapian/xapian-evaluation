@@ -66,7 +66,7 @@ public:
 
 	set<string> getRelevantDocument(int grade,const string & queryid);
 	
-	/* Get the all relevant document ids 
+	/* Get all the relevant document ids 
 	 *  @return - set of all the relevant document 
      */
 

@@ -25,14 +25,13 @@
 
 using namespace std;
 
-bool 
-QRelInMemory::isRelevant(const string & docno) {
+bool
+QRelInMemory::isRelevant(const string & docno) const {
 	set<int>::iterator grades;
 	
 	for (grades=relGrade.begin() ;grades != relGrade.end() ;grades++ ) {
-		map<int,set<string> >::iterator docs = relGradeDocMap.find(*grades);
-		if ( docs != relGradeDocMap.end()) {
-			if(docs->second.find(docno) != docs->second.end())
+		if ( relGradeDocMap.find(*grades) != relGradeDocMap.end()) {
+			if(relGradeDocMap.find(*grades)->second.find(docno) != relGradeDocMap.find(*grades)->second.end())
 			return true;
 		}
 	}
@@ -40,11 +39,11 @@ return false;
 }
 
 int 
-QRelInMemory::getGrade(const string & docno) {
+QRelInMemory::getGrade(const string & docno) { 
 	set<int>::iterator grades;
 	
 	for (grades=relGrade.begin() ;grades != relGrade.end() ;grades++ ) {
-		map<int,set<string> >::iterator docs =relGradeDocMap.find(*grades);
+	    docs = relGradeDocMap.find(*grades);
 		if (docs != relGradeDocMap.end()) {
 			if(docs->second.find(docno) != docs->second.end()) {
 			return *grades;
@@ -79,7 +78,6 @@ QRelInMemory::insertRelDocument(const string & docno,const int & grade) {
 	relGrade.insert(grade);
     set<string> reldocs;
 	reldocs.insert(docno);
-	const int gd = grade;
 	relGradeDocMap[grade] = reldocs;
 	}
 	return true;
@@ -88,6 +86,7 @@ QRelInMemory::insertRelDocument(const string & docno,const int & grade) {
 bool 
 QRelInMemory::insertNonRelDocument(const string & docno) {
 	nonRelDocuments.insert(docno);
+    return true;
 }
 /*
 int main() {

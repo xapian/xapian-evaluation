@@ -116,7 +116,7 @@ public:
 	bool get_queryparsebigram() { return ((indexbigram.compare("true") == 0) && (queryparsebigram.compare("true") == 0));
 	}
 	
-	string get_weightingscheme() { return weightingscheme; }
+	bool use_weightingscheme(string scheme);
 
 	double get_bm25param_k1() { return bm25param_k1; }
 	double get_bm25param_k2() { return bm25param_k2; }

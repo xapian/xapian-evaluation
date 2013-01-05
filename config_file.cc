@@ -376,3 +376,9 @@ bool CONFIG_TREC::check_lmweight() {
 	}	
 	return true;
 }
+
+bool CONFIG_TREC::use_weightingscheme(string scheme) {
+
+   return  weightingscheme.compare(scheme) == 0? true :  false;
+
+}

@@ -129,7 +129,7 @@ if (data.size() == 7) {
 	vector<vector<Record> >::iterator it ;
 	vector<Record>::iterator recorditr;
 	int totalQuery = listofRelevantRetrieved.size();
-	//calculating statistics of number of relevent ,retreived 
+	//calculating statistics of number of relevent ,retrieved 
 	for (int itr = 0;itr < numberofEffQuery ;itr++) {
 		totalNumberofRetrieved += vecNumberofRetrieved[itr];
 		totalNumberofRelevant  += vecNumberofRelevant[itr];
@@ -175,9 +175,7 @@ if (data.size() == 7) {
 						precisioncurrent.insert( pair<int,double>(PRECISION_RANK[precisionRank],1.0));
 					}
 					else {
-						double precisionhere = precisionrankitr->second;
-						precisioncurrent.erase(PRECISION_RANK[precisionRank]);
-						precisioncurrent.insert( pair<int,double>(PRECISION_RANK[precisionRank],precisionhere+1.0));
+    						precisionrankitr->second += rec.precision;
 					}
 					precisionAtRankByQuery[currentQuery] = precisioncurrent;
 				}
@@ -192,9 +190,7 @@ if (data.size() == 7) {
 						precisioncurrent.insert( pair<int,double>(PRECISION_PERCENTAGES[precisionPercentage],rec.precision));
 					}
 					else {
-						double precisionhere = precisionrankitr->second;
-						precisioncurrent.erase(PRECISION_PERCENTAGES[precisionPercentage]);
-						precisioncurrent.insert( pair<int,double>(PRECISION_PERCENTAGES[precisionPercentage],precisionhere+rec.precision));
+    						precisionrankitr->second += rec.precision;
 					}
 					precisionAtRecallByQuery[currentQuery] = precisioncurrent;
 				

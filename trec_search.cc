@@ -145,16 +145,15 @@ int main(int argc, char **argv)
 	
 	// Give the query object to the enquire session
 	enquire.set_query(query);
-	if (config.get_weightingscheme().compare("bm25") == 0 )
+	if (config.use_weightingscheme("bm25"))
 	{
 		if (config.check_bm25() ) {
 			enquire.set_weighting_scheme(Xapian::BM25Weight(config.get_bm25param_k1(),config.get_bm25param_k2(),config.get_bm25param_k3(),config.get_bm25param_b(),config.get_bm25param_min_normlen()));
 		}
 		else {
-			cout<<"BM2 1"<<endl;
 			enquire.set_weighting_scheme(Xapian::BM25Weight());		   }
 	}
-	else if (config.get_weightingscheme().compare("trad") == 0 ) {
+	else if (config.use_weightingscheme("trad")) {
 		if ( config.check_trad()) {
 			enquire.set_weighting_scheme(Xapian::TradWeight(config.get_tradparam_k()));
 		}
@@ -162,7 +161,7 @@ int main(int argc, char **argv)
 			enquire.set_weighting_scheme(Xapian::TradWeight());
 		}
  	}
-	else if (config.get_weightingscheme().compare("lmweight") == 0) {
+	else if (config.use_weightingscheme("lmweight")) {
 		cout<<"Config Check LM"<<config.check_lmweight()<<endl;
 		if (config.check_lmweight()) {
 			enquire.set_weighting_scheme(Xapian::LMWeight(config.get_lmparam_log(),config.get_lmparam_select_smoothing(),config.get_lmparam_smoothing1(),config.get_lmparam_smoothing2(),config.get_lmparam_mixture()));
@@ -171,7 +170,7 @@ int main(int argc, char **argv)
 			enquire.set_weighting_scheme(Xapian::LMWeight());
 		}
 	}
-	else if (config.get_weightingscheme().compare("boolweight") == 0) {
+	else if (config.use_weightingscheme("boolweight")) {
 		enquire.set_weighting_scheme(Xapian::BoolWeight());
 	}
 	// Get the top n results of the query

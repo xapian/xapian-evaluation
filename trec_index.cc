@@ -358,7 +358,7 @@ static void index_file( const string &file,
 	  indexer.index_text(p.title);
 	  indexer.index_text(p.dump);
 	  indexer.index_text(p.keywords);
-      Xapian::termpos pos = 1;
+//      Xapian::termpos pos = 1;
 //	  cout<<"TITLE:\t"<<p.title<<"\nKEYWORDS: \t";
 //	  cout<<p.keywords<<"\nDUMP:\t"<<p.dump<<"\nSAMPLLE:\t"<<p.sample;
 //      pos = index_text( p.title, doc, stemmer, pos);

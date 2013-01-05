@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
- 19  */
+ */
 
 #ifndef _QRELINMEMORY_H_
 #define _QRELINMEMORY_H_
@@ -31,7 +31,7 @@ class QRelInMemory {
 
 public:
 
-	//Query identifier for which this class contains relevance jusdgement.
+	//Query identifier for which this class contains relevance judgement.
 	string queryid;
 	
 	//All the relevant grade avalilable for this query in assessement pool.
@@ -42,10 +42,12 @@ public:
 
 	//Document identifier of all the relevant document categorised by the grade.
 	map<int,set<string> > relGradeDocMap;
+    
+    //Iterator for the the docs. 
+    map<int,set<string> >::iterator docs; 
 
 	//Contructor of class.
-	QRelInMemory(string queryid) {
-	this->queryid = queryid;
+	QRelInMemory(const string &queryid_) :queryid(queryid_) {
 	}
 
 	/**
@@ -54,7 +56,7 @@ public:
 	 *  @param docno Document identifier to be checked for relevance
 	 * @return true if document is relevant,otherwise false.
 	*/
-	bool isRelevant(const string & docno);
+	bool isRelevant(const string & docno) const;
 
 	/**
 	 * Get the grades for the document.
