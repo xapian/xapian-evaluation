@@ -49,8 +49,8 @@ set<int>  numberofRelevantRetrived ;
 set<int> numberofRelevant  ;
 set<int>  numberofRetrived ;
 
-vector<vector<Record> > listofRetrieved;
-vector<vector<Record> > listofRelevantRetrieved;
+vector<vector<Record> *> listofRetrieved;
+vector<vector<Record> *> listofRelevantRetrieved;
 vector<int> vecNumberofRelevant;
 vector<int> vecNumberofRetrieved;
 vector<int> vecNumberofRelevantRetrieved;
@@ -70,63 +70,63 @@ int numberofRelevantRetrievedCounter = 0;
 vector<Record> *relevantRetrieved = new vector<Record>();
 vector<Record> *retrieved = new vector<Record>();
 while( resultfile.good() && !resultfile.eof() ) {
-getline(resultfile,str);
-vector<string> data;
-split(str,' ',data);
-if (data.size() == 7) {
-	//cout<<" data0 "<<data[0]<<" data1 "<<data[1]<<" data2 "<<data[2]<<" data3 "<<data[3]<<" data4 "<<data[4]<<" data5 "<<data[5]<<" data6 "<<data[6]<<" data7 "<<data.size()<<endl;
+    getline(resultfile,str);
+    vector<string> data;
+    split(str,' ',data);
+    if (data.size() == 7) {
+	    //cout<<" data0 "<<data[0]<<" data1 "<<data[1]<<" data2 "<<data[2]<<" data3 "<<data[3]<<" data4 "<<data[4]<<" data5 "<<data[5]<<" data6 "<<data[6]<<" data7 "<<data.size()<<endl;
 	//Query id for the Query.
-	int query = atoi(data[0].c_str());
-	std::stringstream inttostring;
-	inttostring << query;
-	string queryid = inttostring.str();
+    	int query = atoi(data[0].c_str());
+	    std::stringstream inttostring;
+    	inttostring << query;
+	    string queryid = inttostring.str();
 	
-	if(!qrel->existInQrel(queryid))
-		continue;
-	string docId = data[2];
-	int rank = atoi(data[4].c_str());
-//	cout<<"Rank"<<rank<<data[3]<<endl;
-	/** If Queryid have changed save stats to the final vectors
-	 * which store statistics of all read queries*/
-	if(previous.compare(queryid) != 0) {
-		if(effQueryCounter != 0) {
-			vecNumberofRetrieved.push_back(numberofRetrievedCounter);
-			vecNumberofRelevantRetrieved.push_back(numberofRelevantRetrievedCounter);
-		listofRetrieved.push_back(*retrieved);
-		listofRelevantRetrieved.push_back(*relevantRetrieved);
-		numberofRetrievedCounter = 0;
-		numberofRelevantRetrievedCounter = 0;
-//cout<<"\tTotal relevant retreived\t"<<relevantRetrieved->size()<<endl;
-		retrieved = new vector<Record>();
-		relevantRetrieved = new vector<Record>();
-		}
-	//cout<<"Insert QueryID:\t"<<queryid<<"\twith number of Relevant Docs:\t"<<qrel->getNumberofRelevant(queryid)<<"\tTotalRetreived\t"<<retrieved->size();
-	effQueryCounter++;
-	vecQueryNo.push_back(queryid);
-	vecNumberofRelevant.push_back(qrel->getNumberofRelevant(queryid));
-	}		
-	previous = queryid;
-	numberofRetrievedCounter++;
-	totalNumberofRetrieved++;
-	Record *currrec = new Record(queryid,docId,rank);
-	retrieved->push_back(*currrec);	
-	//adding relevant document to the relevant retreived set
-	if (qrel->isRelevantDoc(docId,queryid)) {
-		relevantRetrieved->push_back(*currrec);
-		//cout<<"Relevant Doc:\t"<<docId<<endl;
-	numberofRelevantRetrievedCounter++;
-	}
+    	if(!qrel->existInQrel(queryid))
+	    	continue;
+    	string docId = data[2];
+	    int rank = atoi(data[4].c_str());
+        //	cout<<"Rank"<<rank<<data[3]<<endl;
+	    /** If Queryid have changed save stats to the final vectors
+	     * which store statistics of all read queries*/
+    	if(previous.compare(queryid) != 0) {
+	    	if(effQueryCounter != 0) {
+		    	vecNumberofRetrieved.push_back(numberofRetrievedCounter);
+			    vecNumberofRelevantRetrieved.push_back(numberofRelevantRetrievedCounter);
+        		listofRetrieved.push_back(retrieved);
+	        	listofRelevantRetrieved.push_back(relevantRetrieved);
+		        numberofRetrievedCounter = 0;
+    		    numberofRelevantRetrievedCounter = 0;
+                //cout<<"\tTotal relevant retreived\t"<<relevantRetrieved->size()<<endl;
+	        	retrieved = new vector<Record>();
+		        relevantRetrieved = new vector<Record>();
+	    	}
+        	//cout<<"Insert QueryID:\t"<<queryid<<"\twith number of Relevant Docs:\t"<<qrel->getNumberofRelevant(queryid)<<"\tTotalRetreived\t"<<retrieved->size();
+	        effQueryCounter++;
+    	    vecQueryNo.push_back(queryid);
+    	    vecNumberofRelevant.push_back(qrel->getNumberofRelevant(queryid));
+    	}		
+	    previous = queryid;
+    	numberofRetrievedCounter++;
+	    totalNumberofRetrieved++;
+    	Record *currrec = new Record(queryid,docId,rank);
+	    retrieved->push_back(*currrec);	
+    	//adding relevant document to the relevant retreived set
+    	if (qrel->isRelevantDoc(docId,queryid)) {
+	    	relevantRetrieved->push_back(*currrec);
+		    //cout<<"Relevant Doc:\t"<<docId<<endl;
+	        numberofRelevantRetrievedCounter++;
+	    }
 
 	} //end of data checking if condition	
 }
 	vecNumberofRetrieved.push_back(numberofRetrievedCounter);
 	vecNumberofRelevantRetrieved.push_back(numberofRelevantRetrievedCounter);
-	listofRetrieved.push_back(*retrieved);
-	listofRelevantRetrieved.push_back(*relevantRetrieved);
+	listofRetrieved.push_back(retrieved);
+	listofRelevantRetrieved.push_back(relevantRetrieved);
 	resultfile.close();
 	queryNo.swap(vecQueryNo);
 	numberofEffQuery = effQueryCounter;
-	vector<vector<Record> >::iterator it ;
+	vector<vector<Record> * >::iterator it ;
 	vector<Record>::iterator recorditr;
 	int totalQuery = listofRelevantRetrieved.size();
 	//calculating statistics of number of relevent ,retrieved 
@@ -148,13 +148,13 @@ if (data.size() == 7) {
 	int currentQuery = 0;
 	//This forloop is equivalent to iterating Queries.
 	for (it = listofRelevantRetrieved.begin();it != listofRelevantRetrieved.end();it++) {
-		vector<Record> recordvec = *it;
+		vector<Record> *recordvec = *it;
 	    int docrank = 0;
 		ExactPrecision[currentQuery] = 0;
 		RPrecision[currentQuery] = 0;
-		int sizeofvector  = recordvec.size();
+		int sizeofvector  = recordvec->size();
 		// Iterating the ranklist(Record List of the Queries.
-		for (recorditr = recordvec.begin();recorditr != recordvec.end();recorditr++) {
+		for (recorditr = recordvec->begin();recorditr != recordvec->end();recorditr++) {
 			Record rec = *recorditr;
 			/** Incrementing Relevance Precision if relevant document 
 			is found at rank smaller than number of relevant document.
