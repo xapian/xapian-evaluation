@@ -216,90 +216,6 @@ p_plusminus(unsigned int c)
     return c == '+' || c == '-';
 }
 
-Xapian::termpos
-index_text(const string &s, Xapian::Document &doc, Xapian::Stem &stemmer,
-	   Xapian::termcount wdfinc, const string &prefix,
-	   Xapian::termpos pos)
-{
-    string rprefix = prefix;
-    // If we're using a multi-character prefix, make sure to add a colon when
-    // generating raw (R) terms as otherwise XFOO + Rterm will collide with
-    // XFOOR + term
-    if (rprefix.size() > 1 && rprefix[rprefix.size() - 1] != ':')
-	rprefix += ':';
-    rprefix += 'R';
-
-    AccentNormalisingItor j(s.begin());
-    const AccentNormalisingItor s_end(s.end());
-    while (true) {
-	AccentNormalisingItor first = j;
-	while (first != s_end && !isalnum(*first)) ++first;
-	if (first == s_end) break;
-	AccentNormalisingItor last;
-	string term;
-	if (isupper(*first)) {
-	    j = first;
-	    term = *j;
-	    while (++j != s_end && *j == '.' && ++j != s_end && isupper(*j)) {
-		term += *j;
-	    } 
-	    if (term.length() < 2 || (j != s_end && isalnum(*j))) {
-		term = "";
-	    }
-	    last = j;
-	}
-	if (term.empty()) {
-	    j = first;
-	    while (isalnum(*j)) {
-		term += *j;
-		++j;
-		if (j == s_end) break;
-		if (*j == '&') {
-		    AccentNormalisingItor next = j;
-		    ++next;
-		    if (next == s_end || !isalnum(*next)) break;
-		    term += '&';
-		    j = next;
-		}
-	    }
-	    string::size_type len = term.length();
-	    last = j;
-	    while (j != s_end && p_plusminus(*j)) {
-		term += *j;
-		++j;
-	    }
-	    if (j != s_end && isalnum(*j)) {
-		term.resize(len);
-	    } else {
-		last = j;
-	    }
-	}
-	if (term.length() <= MAX_PROB_TERM_LENGTH) {
-	    lowercase_term(term);
-	    if (isupper(*first)) {
-		if (pos != static_cast<Xapian::termpos>(-1)
-			// Not in GCC 2.95.2 numeric_limits<Xapian::termpos>::max()
-		   ) {
-			//cout<<"POSTING:\t"<<term<<"\t";
-		    doc.add_posting(rprefix + term, pos, wdfinc);
-		} else {
-			//cout<<"TERM:\t"<<term<<"\t";
-		    doc.add_term(rprefix + term, wdfinc);
-		}
-	    }
-
-	    term = stemmer(term);
-	    if (pos != static_cast<Xapian::termpos>(-1)
-		    // Not in GCC 2.95.2 numeric_limits<Xapian::termpos>::max()
-	       ) {
-		doc.add_posting(prefix + term, pos++, wdfinc);
-	    } else {
-		doc.add_term(prefix + term, wdfinc);
-	    }
-	}
-    }
-    return pos;
-}
 
 static void index_file( const string &file, 
 			CONFIG_TREC &config, 
@@ -339,14 +255,6 @@ static void index_file( const string &file,
 	  indexer.set_stemmer(stemmer);
       Xapian::SimpleStopper stopper;
 	  get_stopper(stopper,config);
-	  /*
-	  ifstream stopfile(config.get_stopsfile().c_str(),ifstream::in);
-	  while ( !stopfile.eof() ) {
-	  string stopword;
-	  getline(stopfile,stopword);
-	  stopper.add(stopword);
-	  }
-	  stopfile.close();*/
 	  indexer.set_stopper(&stopper);
 	  if ( config.get_indexbigram() ) {
 		indexer.set_bigrams(true);
@@ -358,21 +266,9 @@ static void index_file( const string &file,
 	  indexer.index_text(p.title);
 	  indexer.index_text(p.dump);
 	  indexer.index_text(p.keywords);
-//      Xapian::termpos pos = 1;
-//	  cout<<"TITLE:\t"<<p.title<<"\nKEYWORDS: \t";
-//	  cout<<p.keywords<<"\nDUMP:\t"<<p.dump<<"\nSAMPLLE:\t"<<p.sample;
-//      pos = index_text( p.title, doc, stemmer, pos);
-  //    pos = index_text( p.dump, doc, stemmer, pos + 1);
-//      pos = index_text( p.keywords, doc, stemmer, pos + 1);
-		
-      // index the document 
-//      Xapian::Document doc_stopsremoved = remove_stopwords( doc, sw_store );
-      //Xapian::Document stemdoc = stem_document( doc_stopsremoved ); 
       cout << "DOCID = " << p.title << endl;
-  //    doc_stopsremoved.set_data(p.title);  // set the data 
       cout<<"DOCID:\t"<<db.add_document(doc)<<"TERMLISTCOUNT"<<doc.termlist_count();
       cout<<"DOCADDED\n"<<doc.get_docid(); 
-      // record the total no of docs done
       totaldocs++;
       //if( (totaldocs % 10000) == 0 ) cout << "DOCUMENTS PROCESSED) " << totaldocs << endl;
     } // END if
