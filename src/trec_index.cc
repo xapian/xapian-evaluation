@@ -370,9 +370,9 @@ int main(int argc, char **argv)
 				gettimeofday( &finish_time, 0 );
 			
 				// print the total time, and average time per query - 
-				diff_time( finish_time, start_time, &timelapse );
-				cout << "Total time for " << totaldocs << " documents is " << time_real( timelapse ) << " secs, text size = " << ttextsize 
-						 << " mb" << endl;
+				//diff_time( finish_time, start_time, &timelapse );
+				//cout << "Total time for " << totaldocs << " documents is " << time_real( timelapse ) << " secs, text size = " << ttextsize 
+				//		 << " mb" << endl;
 				cout << "Total number of documents in the database is now " << db.get_doccount() << " docs" << endl;
 				
     } catch (const Xapian::Error &e) {

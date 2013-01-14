@@ -30,7 +30,6 @@
 #include <iostream>
 #include <string>
 #include <time.h>  
-#include "stopword.h"
 #include "split.h"
 #include "timer.h"
 
@@ -49,7 +48,7 @@ while ( !stopfile.eof() ) {
 	stopfile.close();
 }
 
-int load_query( std::ifstream & queryfile, int & topicno, SW_STORE sw_store, Xapian::Query & query, Xapian::Stem & stemmer ) {
+int load_query( std::ifstream & queryfile, int & topicno,Xapian::Query & query, Xapian::Stem & stemmer ) {
 // load a query and record its terms
 
 	if( queryfile.eof() ) return 0;
@@ -116,9 +115,6 @@ int main(int argc, char **argv)
     // open the transaction file
     std::ofstream transfile( config.get_transfile().c_str() ); 
 
-    // load the stop word list
-    SW_STORE sw_store;
-    Read_SW_File( (char *) config.get_stopsfile().c_str(), &sw_store );
 
     // count of no queries done
     int count=0;
@@ -134,7 +130,7 @@ int main(int argc, char **argv)
 
       // Build the query object
       Xapian::Query query;
-      int gotquery = load_query( queryfile, topicno, sw_store, query, stemmer );
+      int gotquery = load_query( queryfile, topicno, query, stemmer );
       
       if(gotquery && !queryfile.eof()) {
 	
