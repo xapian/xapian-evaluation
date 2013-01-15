@@ -30,6 +30,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #define MICROS 1000000       /* microsecs */
 #define MICROS_REAL 1000000.0       /* microsecs in float */
 
+
 float time_real( struct timeval t ) {
   /* convert struct timeval into a real time in one figure */
 
@@ -123,3 +124,4 @@ void Init_Cost( COST *cost ) {
   cost->wait.tv_usec = 0;
 
 } /* END Init_Cost */
+

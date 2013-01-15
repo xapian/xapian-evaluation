@@ -73,11 +73,10 @@ am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(includedir)"
 PROGRAMS = $(bin_PROGRAMS)
 am__objects_1 = config_file.$(OBJEXT) htmlparse.$(OBJEXT) \
 	stopword.$(OBJEXT) split.$(OBJEXT) qrelinmemory.$(OBJEXT) \
-	trec_qrel.$(OBJEXT)
+	trec_qrel.$(OBJEXT) timer.$(OBJEXT)
 am_trec_adhoceval_OBJECTS = trec_adhoceval.$(OBJEXT) $(am__objects_1)
 trec_adhoceval_OBJECTS = $(am_trec_adhoceval_OBJECTS)
 trec_adhoceval_LDADD = $(LDADD)
-trec_adhoceval_DEPENDENCIES = timer.o
 AM_V_lt = $(am__v_lt_$(V))
 am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
 am__v_lt_0 = --silent
@@ -89,14 +88,12 @@ am_trec_index_OBJECTS = trec_index.$(OBJEXT) $(am__objects_1) \
 	$(am__objects_2)
 trec_index_OBJECTS = $(am_trec_index_OBJECTS)
 trec_index_LDADD = $(LDADD)
-trec_index_DEPENDENCIES = timer.o
 am_trec_query_OBJECTS = trec_query.$(OBJEXT) $(am__objects_1)
 trec_query_OBJECTS = $(am_trec_query_OBJECTS)
 trec_query_LDADD = $(LDADD)
-trec_query_DEPENDENCIES = timer.o
 am_trec_search_OBJECTS = trec_search.$(OBJEXT) $(am__objects_1)
 trec_search_OBJECTS = $(am_trec_search_OBJECTS)
-trec_search_DEPENDENCIES = timer.o
+trec_search_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_$(V))
 am__v_P_ = $(am__v_P_$(AM_DEFAULT_VERBOSITY))
 am__v_P_0 = false
@@ -331,17 +328,15 @@ target_alias =
 top_build_prefix = ../
 top_builddir = ..
 top_srcdir = ..
-HELPERFILES = config_file.cc htmlparse.cc stopword.cc split.cc qrelinmemory.cc trec_qrel.cc
+HELPERFILES = config_file.cc htmlparse.cc stopword.cc split.cc qrelinmemory.cc trec_qrel.cc timer.c
 HELPERHEADERS = config_file.h htmlparse.h stopword.h split.h timer.h timerstruct.h qrelinmemory.h trec_qrel.h trec_eval.h trec_adhoceval.h
 GUNZIPPERFILES = crypt.c inflate.c unlzw.c unzip.c gzip.c unlzh.c unpack.c util.c
 ACLOCAL_AMFLAGS = -I m4
 AM_LDFLAGS = $(XAPIAN_LIBS)
-LDADD = timer.o
 AM_CPPFLAGS = -I$(srcdir)/../lib
 AM_CXXFLAGS = $(XAPIAN_CXXFLAGS)
 include_HEADERS = $(HELPERHEADERS)
 trec_search_SOURCES = trec_search.cc $(HELPERFILES)
-trec_search_LDADD = timer.o
 trec_index_SOURCES = trec_index.cc $(HELPERFILES) $(GUNZIPPERFILES)
 trec_query_SOURCES = trec_query.cc $(HELPERFILES)
 trec_adhoceval_SOURCES = trec_adhoceval.cc $(HELPERFILES)
@@ -455,6 +450,7 @@ include ./$(DEPDIR)/inflate.Po
 include ./$(DEPDIR)/qrelinmemory.Po
 include ./$(DEPDIR)/split.Po
 include ./$(DEPDIR)/stopword.Po
+include ./$(DEPDIR)/timer.Po
 include ./$(DEPDIR)/trec_adhoceval.Po
 include ./$(DEPDIR)/trec_index.Po
 include ./$(DEPDIR)/trec_qrel.Po
@@ -739,14 +735,6 @@ uninstall-am: uninstall-binPROGRAMS uninstall-includeHEADERS
 	mostlyclean-libtool pdf pdf-am ps ps-am tags tags-am uninstall \
 	uninstall-am uninstall-binPROGRAMS uninstall-includeHEADERS
 
-
-#noinst_PROGRAMS = timer
-#timer_SOURCES = timer.cpp
-#timer_CFLAGS = -c
-#timer_LINK = false
-
-timer.o: timer.c
-	 g++ -c timer.c -o timer.o
 
 clean :
 	rm -rf *.o  xapian-trec index-xapian-trec trec_index trec_search trec_query trec_adhoceval

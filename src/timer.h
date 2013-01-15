@@ -23,6 +23,9 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #include <sys/time.h>
 #include "timerstruct.h"       /* timer data structures */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 extern void diff_time( struct timeval finish, 
 		       struct timeval start,
@@ -49,3 +52,6 @@ extern void Print_Costs( COST costs );
 extern float time_real( struct timeval t );
 /* convert struct timeval into a real time in one figure */
 
+#ifdef __cplusplus
+}
+#endif
