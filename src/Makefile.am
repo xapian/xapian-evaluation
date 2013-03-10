@@ -6,7 +6,7 @@ GUNZIPPERFILES = crypt.c inflate.c unlzw.c unzip.c gzip.c unlzh.c unpack.c util.
 
 ACLOCAL_AMFLAGS = -I m4
 
-bin_PROGRAMS = trec_index trec_search trec_query trec_adhoceval
+bin_PROGRAMS = $(top_builddir)/bin/trec_index $(top_builddir)/bin/trec_search $(top_builddir)/bin/trec_query $(top_builddir)/bin/trec_adhoceval
 AM_LDFLAGS = $(XAPIAN_LIBS)
 AM_CPPFLAGS = -I$(srcdir)/../lib
 AM_CXXFLAGS = $(XAPIAN_CXXFLAGS)
@@ -14,14 +14,14 @@ include_HEADERS = $(HELPERHEADERS)
 
 LIBTOOL = @LIBTOOL@ $(QUIET:y=--quiet)
 
-trec_search_SOURCES = 	trec_search.cc $(HELPERFILES)
+__top_builddir__bin_trec_search_SOURCES = 	trec_search.cc $(HELPERFILES)
 			
-trec_index_SOURCES = trec_index.cc $(HELPERFILES) $(GUNZIPPERFILES)
+__top_builddir__bin_trec_index_SOURCES = trec_index.cc $(HELPERFILES) $(GUNZIPPERFILES)
 
 
-trec_query_SOURCES = trec_query.cc $(HELPERFILES)
+__top_builddir__bin_trec_query_SOURCES = trec_query.cc $(HELPERFILES)
 
-trec_adhoceval_SOURCES = trec_adhoceval.cc $(HELPERFILES)
+__top_builddir__bin_trec_adhoceval_SOURCES = trec_adhoceval.cc $(HELPERFILES)
 
 clean :
 	rm -rf *.o  xapian-trec index-xapian-trec trec_index trec_search trec_query trec_adhoceval
