@@ -22,6 +22,8 @@ User can index a collection using
 ::
  . ./trec_index configuration_file
 
+Find a sample config file in current directory names 'config'
+
 User need to compulsary configure textfile,db,stopfile parameters to be able to use index a collection.User need to set indexbigram parameter to true to be able to index bigrams while indexing to use bigram language model weighting scheme.
 
 Searching Topics file and creating run with evaluation module
