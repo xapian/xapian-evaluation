@@ -62,7 +62,6 @@ int load_query( std::ifstream & queryfile, int & topicno,Xapian::Query & query, 
 	get_stopper(stopper);
 	qp.set_stopper(&stopper);
 	qp.set_stemmer(stemmer);
-	qp.set_bigram(config.get_queryparsebigram());  
 	qp.set_stemming_strategy(Xapian::QueryParser::STEM_SOME);
 	query = qp.parse_query(line);
 	cout<<"Parsed Query is :\t"<<query.get_description()<<endl;
