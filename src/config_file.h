@@ -64,14 +64,6 @@ private:
 	//Parameters for Tras Weighting scheme.
 	double tradparam_k;
 
-	//Parameters for LMWeight Weighting Scheme.
-
-	double lmparam_log;
-	Xapian::Weight::type_smoothing lmparam_select_smoothing;
-	double lmparam_smoothing1;
-	double lmparam_smoothing2;
-	double lmparam_mixture;
-
 	// private access routines
 	void record_tag( string config_tag, string config_value );
 
@@ -89,7 +81,6 @@ public:
 	int check_search_config();
 	bool check_bm25();
 	bool check_trad();
-	bool check_lmweight();
 
 	// access routines
 	string get_textfile() { return textfile; }
@@ -126,17 +117,6 @@ public:
 
 	double get_tradparam_k() { return tradparam_k; }
 	
-	double get_lmparam_log() { return lmparam_log; }
-
-	Xapian::Weight::type_smoothing get_lmparam_select_smoothing() { return lmparam_select_smoothing; }
-
-	double get_lmparam_smoothing1() { return lmparam_smoothing1
-; }
-	
-	double get_lmparam_smoothing2() { return lmparam_smoothing2; }
-
-	double get_lmparam_mixture() { return lmparam_mixture; }
-
 
 }; // END class CONFIG
 

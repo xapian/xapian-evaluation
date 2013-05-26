@@ -150,46 +150,6 @@ void CONFIG_TREC::record_tag( string config_tag, string config_value ) {
 	found = 1;
   }
 
-  if (config_tag == "lmparam_log" ) {
-	lmparam_log = strtod(config_value.c_str(),NULL);
-	found = 1;
-  }
-
-  if (config_tag == "lmparam_smoothing1" ) {
-	lmparam_smoothing1 = strtod(config_value.c_str(),NULL);
-	found = 1;
-  }
-
-  if (config_tag == "lmparam_smoothing2" ) {
-	lmparam_smoothing2 = strtod(config_value.c_str(),NULL);
-	found = 1;
-  }
-
-  if (config_tag == "lmparam_mixture" ) {
-	lmparam_mixture = strtod(config_value.c_str(),NULL);
-	found = 1;
-  }
-
-  if (config_tag == "lmparam_select_smoothing" ) {
-	if (config_value.compare("TWO_STAGE_SMOOTHING") == 0 ) {
-		lmparam_select_smoothing = Xapian::Weight::TWO_STAGE_SMOOTHING;
-	found = 1;
-	}
-	if (config_value.compare("DIRICHLET_SMOOTHING") == 0 ) {
-		lmparam_select_smoothing = Xapian::Weight::DIRICHLET_SMOOTHING;
-	found = 1;
-	}
-	if (config_value.compare("ABSOLUTE_DISCOUNT_SMOOTHING") == 0 ) {
-		lmparam_select_smoothing = Xapian::Weight::ABSOLUTE_DISCOUNT_SMOOTHING;
-	found = 1;
-	}
-	if (config_value.compare("JELINEK_MERCER_SMOOTHING") == 0 ) {
-		lmparam_select_smoothing = Xapian::Weight::JELINEK_MERCER_SMOOTHING;
-	found = 1;
-	}
-  }
-  
-
   if( !found ) {
     cout << "ERROR: could not locate tag [" << config_tag << "] for value [" << config_value
 	 << "]" << endl;
@@ -225,10 +185,6 @@ void CONFIG_TREC::setup_config( string filename ) {
   bm25param_b = -1.0;
   bm25param_min_normlen = -1.0;
   tradparam_k = -1.0;
-  lmparam_log = -1.0;
-  lmparam_smoothing1 = -1.0;
-  lmparam_smoothing2 = -1.0;
-  lmparam_mixture = -1.0;
 
   std::ifstream configfile( filename.c_str() );
   
@@ -347,31 +303,6 @@ bool CONFIG_TREC::check_bm25() {
 bool CONFIG_TREC::check_trad() {
 //ensure that all the information or parameters requires by TradWeight are available.
 	if ( tradparam_k == -1.0 ) {
-		return false;
-	}	
-	return true;
-}
-
-bool CONFIG_TREC::check_lmweight() {
-//ensure that all the information or parameters requires by LMweight are available.
-	if ( lmparam_log == -1.0 ) {
-		cout<<"LOG"<<endl;
-		return false;
-	}	
-	if ( lmparam_smoothing1 == -1.0 ) {
-		cout<<"Smoothign1"<<endl;
-		return false;
-	}	
-	if ( lmparam_smoothing2 == -1.0 ) {
-		cout<<"Smoothgin2"<<endl;
-		return false;
-	}	
-	if ( lmparam_mixture == -1.0 ) {
-		cout<<"Mixture"<<endl;
-		return false;
-	}	
-	if ( lmparam_select_smoothing == NULL) {
-		cout<<"typesmoothing"<<endl;
 		return false;
 	}	
 	return true;
