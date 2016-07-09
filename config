@@ -1,15 +1,9 @@
-textfile /home/gaurav/Work/en.docs.2011/
+textfile /home/vivek/Downloads/FIREData/2011/en.docs.2011/en_BDNews24/1/
 language english
-db /home/gaurav/Work/xapiantrec/index_withstopword1
-resultsfile /home/gaurav/Work/xapiantrec/testindexingwithstopword
-transfile /home/gaurav/Work/xapiantrec/transactionindexingwithstopword1
-topicfile /home/gaurav/Work/xapiantrec/queries_english1
-queryfile /home/gaurav/Work/xapiantrec/query_withstopword
-relfile /home/gaurav/Work/xapiantrec/en_qrel1
+db /home/vivek/Downloads/FIREData/2011/en.docs.2011/index_business/
 runname xapiantrecwithstopword
-stopsfile stopfile
-noresults 200
-evaluationfiles /home/gaurav/Work/xapiantrec/evaluationwithstopword
+stopsfile /home/vivek/Downloads/FIREData/2011/en.docs.2011/stopwords.txt
+noresults 300
 indexbigram true
 queryparsebigram true
 weightingscheme lmweight
@@ -17,4 +11,3 @@ lmparam_log  0.0
 lmparam_select_smoothing TWO_STAGE_SMOOTHING
 lmparam_smoothing1 0.9
 lmparam_smoothing2 2000.0
-lmparam_mixture 1.0

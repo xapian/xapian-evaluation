@@ -256,9 +256,6 @@ static void index_file( const string &file,
       Xapian::SimpleStopper stopper;
 	  get_stopper(stopper,config);
 	  indexer.set_stopper(&stopper);
-	  if ( config.get_indexbigram() ) {
-		indexer.set_bigrams(true);
-	  }
       // Add postings for terms to the document
       Xapian::Document doc;
 	  doc.set_data(p.title);
@@ -355,7 +352,7 @@ int main(int argc, char **argv)
     // Catch any Xapian::Error exceptions thrown
     try {
         // Make the database
-        Xapian::WritableDatabase db(Xapian::Brass::open(trec_config.get_db().c_str(), Xapian::DB_CREATE_OR_OPEN));
+        Xapian::WritableDatabase db("/home/vivek/Downloads/FIREData/2011/en.docs.2011/index_business/", Xapian::DB_CREATE_OR_OPEN);
 
 				struct timeval start_time, finish_time, timelapse;   /* timing variables */
 
