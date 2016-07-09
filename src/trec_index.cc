@@ -256,9 +256,6 @@ static void index_file( const string &file,
       Xapian::SimpleStopper stopper;
 	  get_stopper(stopper,config);
 	  indexer.set_stopper(&stopper);
-	  if ( config.get_indexbigram() ) {
-		indexer.set_bigrams(true);
-	  }
       // Add postings for terms to the document
       Xapian::Document doc;
 	  doc.set_data(p.title);
