@@ -352,7 +352,7 @@ int main(int argc, char **argv)
     // Catch any Xapian::Error exceptions thrown
     try {
         // Make the database
-        Xapian::WritableDatabase db("/home/vivek/Downloads/FIREData/2011/en.docs.2011/index_business/", Xapian::DB_CREATE_OR_OPEN);
+        Xapian::WritableDatabase db(Xapian::Chert::open(trec_config.get_db().c_str(), Xapian::DB_CREATE_OR_OPEN));
 
 				struct timeval start_time, finish_time, timelapse;   /* timing variables */
 
