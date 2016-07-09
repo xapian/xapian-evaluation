@@ -62,7 +62,6 @@ int load_query( std::ifstream & queryfile, int & topicno,Xapian::Query & query, 
 	get_stopper(stopper);
 	qp.set_stopper(&stopper);
 	qp.set_stemmer(stemmer);
-	qp.set_bigram(config.get_queryparsebigram());  
 	qp.set_stemming_strategy(Xapian::QueryParser::STEM_SOME);
 	query = qp.parse_query(line);
 	cout<<"Parsed Query is :\t"<<query.get_description()<<endl;
@@ -160,7 +159,7 @@ int main(int argc, char **argv)
 	else if (config.use_weightingscheme("lmweight")) {
 		cout<<"Config Check LM"<<config.check_lmweight()<<endl;
 		if (config.check_lmweight()) {
-			enquire.set_weighting_scheme(Xapian::LMWeight(config.get_lmparam_log(),config.get_lmparam_select_smoothing(),config.get_lmparam_smoothing1(),config.get_lmparam_smoothing2(),config.get_lmparam_mixture()));
+			enquire.set_weighting_scheme(Xapian::LMWeight(config.get_lmparam_log(),config.get_lmparam_select_smoothing(),config.get_lmparam_smoothing1(),config.get_lmparam_smoothing2()));
 		}
 		else {
 			enquire.set_weighting_scheme(Xapian::LMWeight());

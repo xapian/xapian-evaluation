@@ -257,7 +257,7 @@ static void index_file( const string &file,
 	  get_stopper(stopper,config);
 	  indexer.set_stopper(&stopper);
 	  if ( config.get_indexbigram() ) {
-		indexer.set_bigrams(true);
+		//indexer.set_bigrams(true);
 	  }
       // Add postings for terms to the document
       Xapian::Document doc;
@@ -355,7 +355,7 @@ int main(int argc, char **argv)
     // Catch any Xapian::Error exceptions thrown
     try {
         // Make the database
-        Xapian::WritableDatabase db(Xapian::Brass::open(trec_config.get_db().c_str(), Xapian::DB_CREATE_OR_OPEN));
+        Xapian::WritableDatabase db(Xapian::Chert::open(trec_config.get_db().c_str(), Xapian::DB_CREATE_OR_OPEN));
 
 				struct timeval start_time, finish_time, timelapse;   /* timing variables */
 
