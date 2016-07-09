@@ -156,15 +156,6 @@ int main(int argc, char **argv)
 			enquire.set_weighting_scheme(Xapian::TradWeight());
 		}
  	}
-	else if (config.use_weightingscheme("lmweight")) {
-		cout<<"Config Check LM"<<config.check_lmweight()<<endl;
-		if (config.check_lmweight()) {
-			enquire.set_weighting_scheme(Xapian::LMWeight(config.get_lmparam_log(),config.get_lmparam_select_smoothing(),config.get_lmparam_smoothing1(),config.get_lmparam_smoothing2(),config.get_lmparam_mixture()));
-		}
-		else {
-			enquire.set_weighting_scheme(Xapian::LMWeight());
-		}
-	}
 	else if (config.use_weightingscheme("boolweight")) {
 		enquire.set_weighting_scheme(Xapian::BoolWeight());
 	}
