@@ -189,6 +189,35 @@ void CONFIG_TREC::record_tag( string config_tag, string config_value ) {
 	}
   }
   
+  if (config_tag == "bm25plusparam_k1" ) {
+	bm25plusparam_k1 = strtod(config_value.c_str(),NULL);
+	found = 1;
+  }
+
+  if (config_tag == "bm25plusparam_k2" ) {
+	bm25plusparam_k2 = strtod(config_value.c_str(),NULL);
+	found = 1;
+  }
+
+  if (config_tag == "bm25plusparam_k3" ) {
+	bm25plusparam_k3 = strtod(config_value.c_str(),NULL);
+	found = 1;
+  }
+
+  if (config_tag == "bm25plusparam_b" ) {
+	bm25plusparam_b = strtod(config_value.c_str(),NULL);
+	found = 1;
+  }
+
+  if (config_tag == "bm25plusparam_min_normlen" ) {
+	bm25plusparam_min_normlen = strtod(config_value.c_str(),NULL);
+	found = 1;
+  }
+  
+  if (config_tag == "bm25plusparam_delta" ) {
+  	bm25plusparam_delta = strtod(config_value.c_str(),NULL);
+  	found = 1;
+  }
 
   if( !found ) {
     cout << "ERROR: could not locate tag [" << config_tag << "] for value [" << config_value
@@ -224,6 +253,12 @@ void CONFIG_TREC::setup_config( string filename ) {
   bm25param_k3 = -1.0;
   bm25param_b = -1.0;
   bm25param_min_normlen = -1.0;
+  bm25plusparam_k1 = -1.0;
+  bm25plusparam_k2 = -1.0;
+  bm25plusparam_k3 = -1.0;
+  bm25plusparam_b = -1.0;
+  bm25plusparam_min_normlen = -1.0;
+  bm25plusparam_delta = -1.0;
   tradparam_k = -1.0;
   lmparam_log = -1.0;
   lmparam_smoothing1 = -1.0;
@@ -376,6 +411,30 @@ bool CONFIG_TREC::check_lmweight() {
 	}	
 	return true;
 }
+
+bool CONFIG_TREC::check_bm25plus() {
+//ensure that all the information or parameters requires by BM25 are available.
+	if ( bm25plusparam_k1 == -1.0 ) {
+		return false;
+	}	
+	if ( bm25plusparam_k2 == -1.0 ) {
+		return false;
+	}	
+	if ( bm25plusparam_k3 == -1.0 ) {
+		return false;
+	}	
+	if ( bm25plusparam_b == -1.0 ) {
+		return false;
+	}	
+	if ( bm25plusparam_min_normlen == -1.0 ) {
+		return false;
+	}
+	if ( bm25plusparam_delta == -1.0 ) {
+		return false;
+	}	
+	return true;
+}
+
 
 bool CONFIG_TREC::use_weightingscheme(string scheme) {
 
