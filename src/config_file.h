@@ -60,7 +60,15 @@ private:
 	double bm25param_k3;
 	double bm25param_b;
 	double bm25param_min_normlen;
-	
+
+	//Parameters for BM25+ Weighting Scheme.
+	double bm25plusparam_k1;
+	double bm25plusparam_k2;
+	double bm25plusparam_k3;
+	double bm25plusparam_b;
+	double bm25plusparam_min_normlen;
+	double bm25plusparam_delta;
+
 	//Parameters for Tras Weighting scheme.
 	double tradparam_k;
 
@@ -90,6 +98,7 @@ public:
 	bool check_bm25();
 	bool check_trad();
 	bool check_lmweight();
+	bool check_bm25plus();
 
 	// access routines
 	string get_textfile() { return textfile; }
@@ -123,6 +132,13 @@ public:
 	double get_bm25param_k3() { return bm25param_k3; }
 	double get_bm25param_b()  { return bm25param_b;  }
 	double get_bm25param_min_normlen() { return bm25param_min_normlen; }
+
+	double get_bm25plusparam_k1() { return bm25plusparam_k1; }
+	double get_bm25plusparam_k2() { return bm25plusparam_k2; }
+	double get_bm25plusparam_k3() { return bm25plusparam_k3; }
+	double get_bm25plusparam_b()  { return bm25plusparam_b;  }
+	double get_bm25plusparam_min_normlen() { return bm25plusparam_min_normlen; }
+	double get_bm25plusparam_delta() { return bm25plusparam_delta; }
 
 	double get_tradparam_k() { return tradparam_k; }
 	
