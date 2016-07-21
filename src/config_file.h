@@ -102,6 +102,7 @@ public:
 	bool check_trad();
 	bool check_lmweight();
 	bool check_bm25plus();
+	bool check_pl2();
 
 	// access routines
 	string get_textfile() { return textfile; }
