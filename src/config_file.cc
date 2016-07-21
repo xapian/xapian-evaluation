@@ -441,6 +441,13 @@ bool CONFIG_TREC::check_bm25plus() {
 	return true;
 }
 
+bool CONFIG_TREC::check_pl2() {
+//make sure that parameters required by PL2 are available.
+	if ( pl2param_c == -1.0 ) {
+		return false;
+	}
+	return true;
+}
 
 bool CONFIG_TREC::use_weightingscheme(string scheme) {
 
