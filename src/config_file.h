@@ -69,6 +69,9 @@ private:
 	double bm25plusparam_min_normlen;
 	double bm25plusparam_delta;
 
+	//Parameters for PL2 Weighting Scheme.
+	double pl2param_c;
+
 	//Parameters for Tras Weighting scheme.
 	double tradparam_k;
 
