@@ -219,6 +219,11 @@ void CONFIG_TREC::record_tag( string config_tag, string config_value ) {
   	found = 1;
   }
 
+  if (config_tag == "pl2param_c") {
+	pl2param_c = strtof(config_value.c_str(), NULL);
+	found = 1;
+  }
+
   if( !found ) {
     cout << "ERROR: could not locate tag [" << config_tag << "] for value [" << config_value
 	 << "]" << endl;
