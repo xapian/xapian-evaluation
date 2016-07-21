@@ -176,6 +176,14 @@ int main(int argc, char **argv)
 		else {
 			enquire.set_weighting_scheme(Xapian::BM25PlusWeight());		   }
 	}
+	else if (config.use_weightingscheme("pl2"))
+	{
+		if (config.check_pl2()) {
+			enquire.set_weighting_scheme(Xapian::PL2Weight(config.get_pl2param_c()));
+		} else {
+			enquire.set_weighting_scheme(Xapian::PL2Weight());
+		}
+	}
 	// Get the top n results of the query
 	Xapian::MSet matches = enquire.get_mset( 0, config.get_noresults() );
 								
