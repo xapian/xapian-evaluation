@@ -144,6 +144,8 @@ public:
 	double get_bm25plusparam_min_normlen() { return bm25plusparam_min_normlen; }
 	double get_bm25plusparam_delta() { return bm25plusparam_delta; }
 
+	double get_pl2param_c() { return pl2param_c; }
+
 	double get_tradparam_k() { return tradparam_k; }
 	
 	double get_lmparam_log() { return lmparam_log; }
