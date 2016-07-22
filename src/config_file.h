@@ -79,6 +79,8 @@ private:
 	double lmparam_smoothing1;
 	double lmparam_smoothing2;
 	double lmparam_mixture;
+	double lmparam_delta;
+	bool lmparam_enable_dirplus;
 
 	// private access routines
 	void record_tag( string config_tag, string config_value );
@@ -141,18 +143,14 @@ public:
 	double get_bm25plusparam_delta() { return bm25plusparam_delta; }
 
 	double get_tradparam_k() { return tradparam_k; }
-	
+
 	double get_lmparam_log() { return lmparam_log; }
-
 	Xapian::Weight::type_smoothing get_lmparam_select_smoothing() { return lmparam_select_smoothing; }
-
-	double get_lmparam_smoothing1() { return lmparam_smoothing1
-; }
-	
+	double get_lmparam_smoothing1() { return lmparam_smoothing1; }	
 	double get_lmparam_smoothing2() { return lmparam_smoothing2; }
-
 	double get_lmparam_mixture() { return lmparam_mixture; }
-
+	double get_lmparam_delta() { return lmparam_delta; }
+	bool get_lmparam_enable_dirplus() { return lmparam_enable_dirplus; }
 
 }; // END class CONFIG
 

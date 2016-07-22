@@ -159,7 +159,7 @@ int main(int argc, char **argv)
 	else if (config.use_weightingscheme("lmweight")) {
 		cout<<"Config Check LM"<<config.check_lmweight()<<endl;
 		if (config.check_lmweight()) {
-			enquire.set_weighting_scheme(Xapian::LMWeight(config.get_lmparam_log(),config.get_lmparam_select_smoothing(),config.get_lmparam_smoothing1(),config.get_lmparam_smoothing2()));
+			enquire.set_weighting_scheme(Xapian::LMWeight(config.get_lmparam_log(),config.get_lmparam_select_smoothing(),config.get_lmparam_smoothing1(),config.get_lmparam_smoothing2(),config.get_lmparam_delta(),config.get_lmparam_enable_dirplus()));
 		}
 		else {
 			enquire.set_weighting_scheme(Xapian::LMWeight());
@@ -167,14 +167,6 @@ int main(int argc, char **argv)
 	}
 	else if (config.use_weightingscheme("boolweight")) {
 		enquire.set_weighting_scheme(Xapian::BoolWeight());
-	}
-	else if (config.use_weightingscheme("bm25plus"))
-	{
-		if (config.check_bm25plus()) {
-			enquire.set_weighting_scheme(Xapian::BM25PlusWeight(config.get_bm25plusparam_k1(),config.get_bm25plusparam_k2(),config.get_bm25plusparam_k3(),config.get_bm25plusparam_b(),config.get_bm25plusparam_min_normlen(), config.get_bm25plusparam_delta()));
-		}
-		else {
-			enquire.set_weighting_scheme(Xapian::BM25PlusWeight());		   }
 	}
 	// Get the top n results of the query
 	Xapian::MSet matches = enquire.get_mset( 0, config.get_noresults() );
