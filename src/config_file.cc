@@ -219,6 +219,16 @@ void CONFIG_TREC::record_tag( string config_tag, string config_value ) {
   	found = 1;
   }
 
+  if (config_tag == "pl2plusparam_c" ) {
+	pl2plusparam_c = strtod(config_value.c_str(), NULL);
+	found = 1;
+  }
+
+  if (config_tag == "pl2plusparam_delta" ) {
+	pl2plusparam_delta = strtod(config_value.c_str(), NULL);
+	found = 1;
+  }
+
   if( !found ) {
     cout << "ERROR: could not locate tag [" << config_tag << "] for value [" << config_value
 	 << "]" << endl;
@@ -259,6 +269,8 @@ void CONFIG_TREC::setup_config( string filename ) {
   bm25plusparam_b = -1.0;
   bm25plusparam_min_normlen = -1.0;
   bm25plusparam_delta = -1.0;
+  pl2plusparam_c = -1.0;
+  pl2plusparam_delta = -1.0;
   tradparam_k = -1.0;
   lmparam_log = -1.0;
   lmparam_smoothing1 = -1.0;
@@ -435,6 +447,16 @@ bool CONFIG_TREC::check_bm25plus() {
 	return true;
 }
 
+bool CONFIG::check_pl2plus() {
+// make sure that all PL2+ parameters are available.
+	if ( pl2plusparam_c == -1.0 ) {
+		return false;
+	}
+	if ( pl2plusparam_delta == -1.0 ) {
+		return false;
+	}
+	return true;
+}
 
 bool CONFIG_TREC::use_weightingscheme(string scheme) {
 
