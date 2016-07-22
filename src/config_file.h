@@ -69,6 +69,10 @@ private:
 	double bm25plusparam_min_normlen;
 	double bm25plusparam_delta;
 
+	//Parameters for PL2+ Weighting Scheme.
+	double pl2plusparam_c;
+	double pl2plusparam_delta;
+
 	//Parameters for Tras Weighting scheme.
 	double tradparam_k;
 
@@ -99,6 +103,7 @@ public:
 	bool check_trad();
 	bool check_lmweight();
 	bool check_bm25plus();
+	bool check_pl2plus();
 
 	// access routines
 	string get_textfile() { return textfile; }
@@ -140,14 +145,16 @@ public:
 	double get_bm25plusparam_min_normlen() { return bm25plusparam_min_normlen; }
 	double get_bm25plusparam_delta() { return bm25plusparam_delta; }
 
+	double get_pl2plusparam_c() { return pl2plusparam_c; }
+	double get_pl2plusparam_delta() { return pl2plusparam_delta; }
+
 	double get_tradparam_k() { return tradparam_k; }
 	
 	double get_lmparam_log() { return lmparam_log; }
 
 	Xapian::Weight::type_smoothing get_lmparam_select_smoothing() { return lmparam_select_smoothing; }
 
-	double get_lmparam_smoothing1() { return lmparam_smoothing1
-; }
+	double get_lmparam_smoothing1() { return lmparam_smoothing1; }
 	
 	double get_lmparam_smoothing2() { return lmparam_smoothing2; }
 
