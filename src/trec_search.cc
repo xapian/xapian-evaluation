@@ -168,6 +168,14 @@ int main(int argc, char **argv)
 	else if (config.use_weightingscheme("boolweight")) {
 		enquire.set_weighting_scheme(Xapian::BoolWeight());
 	}
+	else if (config.use_weightingscheme("bm25plus"))
+	{
+		if (config.check_bm25plus()) {
+			enquire.set_weighting_scheme(Xapian::BM25PlusWeight(config.get_bm25plusparam_k1(),config.get_bm25plusparam_k2(),config.get_bm25plusparam_k3(),config.get_bm25plusparam_b(),config.get_bm25plusparam_min_normlen(), config.get_bm25plusparam_delta()));
+		}
+		else {
+			enquire.set_weighting_scheme(Xapian::BM25PlusWeight());		   }
+	}
 	// Get the top n results of the query
 	Xapian::MSet matches = enquire.get_mset( 0, config.get_noresults() );
 								
