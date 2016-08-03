@@ -189,12 +189,12 @@ void CONFIG_TREC::record_tag( string config_tag, string config_value ) {
 	}
   }
 
-  if (config_tag == "lmparam_delta" ) {
+  if (config_tag == "dirparam_delta" ) {
 	lmparam_delta = strtod(config_value.c_str(), NULL);
 	found = 1;
   }
 
-  if (config_tag == "lmparam_enable_dirplus" ) {
+  if (config_tag == "enable_dirplus" ) {
 	lmparam_enable_dirplus = strtod(config_value.c_str(), NULL);
 	found = 1;
   }
