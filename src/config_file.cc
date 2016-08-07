@@ -25,6 +25,7 @@
 #include <fstream>
 #include <algorithm>
 #include <string>
+#include <cstring>
 #include <xapian.h>
 #include "config_file.h"
 #include "split.h" 
@@ -219,6 +220,21 @@ void CONFIG_TREC::record_tag( string config_tag, string config_value ) {
   	found = 1;
   }
 
+  if (config_tag == "normalizations" ) {
+	normalizations = config_value;
+	found = 1;
+  }
+
+  if (config_tag == "pivplusparam_slope" ) {
+	pivplusparam_slope = strtod(config_value.c_str(),NULL);
+	found = 1;
+  }
+
+  if (config_tag == "pivplusparam_delta" ) {
+	pivplusparam_delta = strtod(config_value.c_str(),NULL);
+	found = 1;
+  }
+
   if( !found ) {
     cout << "ERROR: could not locate tag [" << config_tag << "] for value [" << config_value
 	 << "]" << endl;
@@ -264,6 +280,9 @@ void CONFIG_TREC::setup_config( string filename ) {
   lmparam_smoothing1 = -1.0;
   lmparam_smoothing2 = -1.0;
   lmparam_mixture = -1.0;
+  normalizations = "ntn";
+  pivplusparam_slope = -1.0;
+  pivplusparam_delta = -1.0;
 
   std::ifstream configfile( filename.c_str() );
   
@@ -432,6 +451,23 @@ bool CONFIG_TREC::check_bm25plus() {
 	if ( bm25plusparam_delta == -1.0 ) {
 		return false;
 	}	
+	return true;
+}
+
+bool CONFIG_TREC::check_tfidf() {
+//ensure that all the information or parameters requires by TfIdf are available.
+	if (normalizations.length() != 3 ||
+	!strchr("nbslP", normalizations[0]) ||
+	!strchr("ntpfsP", normalizations[1]) ||
+	!strchr("nP", normalizations[2])) {
+		return false;
+	}
+	if (pivplusparam_slope == -1.0) {
+		return false;
+	}
+	if (pivplusparam_delta == -1.0) {
+		return false;
+	}
 	return true;
 }
 

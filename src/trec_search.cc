@@ -176,6 +176,14 @@ int main(int argc, char **argv)
 		else {
 			enquire.set_weighting_scheme(Xapian::BM25PlusWeight());		   }
 	}
+	else if (config.use_weightingscheme("tfidf"))
+	{
+		if (config.check_tfidf()) {
+			enquire.set_weighting_scheme(Xapian::TfIdfWeight(config.get_normalizations(), config.get_pivplusparam_slope(), config.get_pivplusparam_delta()));
+		} else {
+			enquire.set_weighting_scheme(Xapian::TfIdfWeight());
+		}
+	}
 	// Get the top n results of the query
 	Xapian::MSet matches = enquire.get_mset( 0, config.get_noresults() );
 								

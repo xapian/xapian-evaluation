@@ -80,6 +80,12 @@ private:
 	double lmparam_smoothing2;
 	double lmparam_mixture;
 
+	// Parameters for TfIdf Weighting Scheme
+
+	string normalizations;
+	double pivplusparam_slope;
+	double pivplusparam_delta;
+
 	// private access routines
 	void record_tag( string config_tag, string config_value );
 
@@ -99,6 +105,7 @@ public:
 	bool check_trad();
 	bool check_lmweight();
 	bool check_bm25plus();
+	bool check_tfidf();
 
 	// access routines
 	string get_textfile() { return textfile; }
@@ -146,13 +153,15 @@ public:
 
 	Xapian::Weight::type_smoothing get_lmparam_select_smoothing() { return lmparam_select_smoothing; }
 
-	double get_lmparam_smoothing1() { return lmparam_smoothing1
-; }
+	double get_lmparam_smoothing1() { return lmparam_smoothing1; }
 	
 	double get_lmparam_smoothing2() { return lmparam_smoothing2; }
 
 	double get_lmparam_mixture() { return lmparam_mixture; }
 
+	string get_normalizations() { return normalizations; }
+	double get_pivplusparam_slope() { return pivplusparam_slope; }
+	double get_pivplusparam_delta () { return pivplusparam_delta; }
 
 }; // END class CONFIG
 
