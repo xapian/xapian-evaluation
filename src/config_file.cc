@@ -280,7 +280,7 @@ void CONFIG_TREC::setup_config( string filename ) {
   lmparam_smoothing1 = -1.0;
   lmparam_smoothing2 = -1.0;
   lmparam_mixture = -1.0;
-  normalizations = "ntn";
+  normalizations = string();
   pivplusparam_slope = -1.0;
   pivplusparam_delta = -1.0;
 
