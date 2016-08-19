@@ -264,7 +264,7 @@ void CONFIG_TREC::setup_config( string filename ) {
   bm25plusparam_b = -1.0;
   bm25plusparam_min_normlen = -1.0;
   bm25plusparam_delta = -1.0;
-  pl2param_c = 1.0;
+  pl2param_c = -1.0;
   tradparam_k = -1.0;
   lmparam_log = -1.0;
   lmparam_smoothing1 = -1.0;
