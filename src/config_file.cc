@@ -187,16 +187,10 @@ void CONFIG_TREC::record_tag( string config_tag, string config_value ) {
 		lmparam_select_smoothing = Xapian::Weight::JELINEK_MERCER_SMOOTHING;
 	found = 1;
 	}
-  }
-
-  if (config_tag == "dirparam_delta" ) {
-	lmparam_delta = strtod(config_value.c_str(), NULL);
+	if (config_value.compare("DIRICHLET_PLUS_SMOOTHING") == 0 ) {
+		lmparam_select_smoothing = Xapian::Weight::JELINEK_MERCER_SMOOTHING;
 	found = 1;
-  }
-
-  if (config_tag == "enable_dirplus" ) {
-	lmparam_enable_dirplus = strtod(config_value.c_str(), NULL);
-	found = 1;
+	}
   }
 
   if (config_tag == "bm25plusparam_k1" ) {

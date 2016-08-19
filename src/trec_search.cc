@@ -159,7 +159,7 @@ int main(int argc, char **argv)
 	else if (config.use_weightingscheme("lmweight")) {
 		cout<<"Config Check LM"<<config.check_lmweight()<<endl;
 		if (config.check_lmweight()) {
-			enquire.set_weighting_scheme(Xapian::LMWeight(config.get_lmparam_log(),config.get_lmparam_select_smoothing(),config.get_lmparam_smoothing1(),config.get_lmparam_smoothing2(),config.get_lmparam_delta(),config.get_lmparam_enable_dirplus()));
+			enquire.set_weighting_scheme(Xapian::LMWeight(config.get_lmparam_log(),config.get_lmparam_select_smoothing(),config.get_lmparam_smoothing1(),config.get_lmparam_smoothing2()));
 		}
 		else {
 			enquire.set_weighting_scheme(Xapian::LMWeight());
