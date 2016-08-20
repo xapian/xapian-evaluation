@@ -188,7 +188,7 @@ void CONFIG_TREC::record_tag( string config_tag, string config_value ) {
 	found = 1;
 	}
 	if (config_value.compare("DIRICHLET_PLUS_SMOOTHING") == 0 ) {
-		lmparam_select_smoothing = Xapian::Weight::JELINEK_MERCER_SMOOTHING;
+		lmparam_select_smoothing = Xapian::Weight::DIRICHLET_PLUS_SMOOTHING;
 	found = 1;
 	}
   }
