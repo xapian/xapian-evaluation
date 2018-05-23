@@ -355,7 +355,7 @@ int main(int argc, char **argv)
     // Catch any Xapian::Error exceptions thrown
     try {
         // Make the database
-        Xapian::WritableDatabase db(Xapian::Chert::open(trec_config.get_db().c_str(), Xapian::DB_CREATE_OR_OPEN));
+        Xapian::WritableDatabase db(trec_config.get_db().c_str(), Xapian::DB_CREATE_OR_OPEN);
 
 				struct timeval start_time, finish_time, timelapse;   /* timing variables */
 
@@ -364,7 +364,7 @@ int main(int argc, char **argv)
 
 				// index the text collection
 				index_directory( trec_config.get_textfile(), trec_config, db, sw_store );
-				db.flush();
+				db.commit();
 
 				// start the timer
 				gettimeofday( &finish_time, 0 );
