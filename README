@@ -74,7 +74,7 @@ Configurable Parameters:
 
 Parameters to be configured using for BM25 Weighting Scheme
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-**All parameter need to be configured to call customized constructor.Please refer generated documentation for value of parameters. at http://xapian.org/docs/**
+**All parameter need to be configured to call customized constructor.Please refer generated documentation for value of parameters. at https://xapian.org/docs/**
 
 	 - bm25param_k1
 	 - bm25param_k2
@@ -90,7 +90,7 @@ Parameters for Tras Weighting scheme.
 Parameters for LMWeight Weighting Scheme
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-**All parameters need to be configured to call customized constructor.Please refer generated docs for value of parameter at http://xapian.org/docs/**
+**All parameters need to be configured to call customized constructor.Please refer generated docs for value of parameter at https://xapian.org/docs/**
 
 	 - lmparam_log
 	 - lmparam_smoothing1

@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([xapian-evaluation], [1.3.0], [http://xapian.org/bugs])
+AC_INIT([xapian-evaluation], [1.3.0], [https://xapian.org/bugs])
 AC_PREREQ([2.64])
 
 AM_INIT_AUTOMAKE([1.10.1 -Wportability tar-ustar])
