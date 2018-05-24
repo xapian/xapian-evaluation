@@ -36,7 +36,7 @@
 #include "config_file.h"
 #include "indextext.h"
 #include <ctype.h>
-#include <malloc.h>
+#include <stdlib.h>
 #include <signal.h>
 #include <math.h>
 #include <errno.h>
