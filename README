@@ -24,7 +24,7 @@ User can index a collection using
 
 Find a sample config file in current directory names 'config'
 
-User need to compulsary configure textfile,db,stopfile parameters to be able to use index a collection.User need to set indexbigram parameter to true to be able to index bigrams while indexing to use bigram language model weighting scheme.
+User need to compulsory configure textfile,db,stopfile parameters to be able to use index a collection.User need to set indexbigram parameter to true to be able to index bigrams while indexing to use bigram language model weighting scheme.
 
 Searching Topics file and creating run with evaluation module
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -34,7 +34,7 @@ User can search a collection using index build to create a run with queries in t
  ./trec_query configuration_file;
  ./trec_search configuration_file
 
-User need to compulsary configure queryfile ,topicfile, stopfile to search using a topic file,needs to set queryparserbigram to true to be able to add bigrams in query object formed by bigram.
+User need to compulsory configure queryfile, topicfile, stopfile to search using a topic file,needs to set queryparserbigram to true to be able to add bigrams in query object formed by bigram.
 
 Evaluating the run.
 ^^^^^^^^^^^^^^^^^^^
@@ -43,7 +43,7 @@ User need to run to get the evaluation result for your run.
 ::
  ./trec_adhoceval configuration_file
 
-Its compulsary to set relfile,runfile for using this option.
+It's compulsory to set relfile,runfile for using this option.
 
 Configuring evaluation module
 ------------------------------
@@ -82,7 +82,7 @@ Parameters to be configured using for BM25 Weighting Scheme
 	 - bm25param_b
 	 - bm25param_min_normlen
 	
-Parameters for Tras Weighting scheme.
+Parameters for Trad Weighting scheme.
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 	 - tradparam_k
