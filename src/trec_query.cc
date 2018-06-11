@@ -111,50 +111,52 @@ int iswordbreak( char c ) {
  
 } /* END iswordbreak */ 
 
-void get_chars( char buffer[], int size,  int *curpos,  char saved_chars[KW_SIZE] ) { 
-  /* get each character for a word */ 
+void get_chars(char buffer[], int size, int *curpos,
+		char saved_chars[KW_SIZE]) {
+    /* get each character for a word */
  
-  int found = FALSE;              /* condition for a found word */ 
-  register int cur_char;          /* pos of char in current word */ 
+    int found = FALSE;              /* condition for a found word */
+    register int cur_char;          /* pos of char in current word */
  
-  /* loop until end of word found */ 
-  for( cur_char = 0; cur_char < KW_SIZE && !found; cur_char++ )  
-    { 
-      if ( isspace(buffer[*curpos])  )  
-	{ 
-	  found = 1; 
-	  break; 
-	} 
-      else if ( buffer[*curpos] == '\0' )  
-	{ 
-	  found = 1; 
-	  *curpos += 1; 
-	  break; 
-	} 
-      else 
-	{ /* got a saveable character */
-	  saved_chars[cur_char] = buffer[*curpos]; 
-	  *curpos += 1; 
-	} /*END if*/ 
-    } /*END for*/ 
+    /* loop until end of word found */
+    for (cur_char = 0; cur_char < KW_SIZE && !found; ++cur_char) {
+	if (isspace(buffer[*curpos])) {
+	    found = 1;
+	    break;
+	} else if (buffer[*curpos] == '\0' || buffer[*curpos] == '>') {
+	    found = 1;
+	    if (buffer[*curpos] == '>') {
+		saved_chars[cur_char] = buffer[*curpos];
+		++cur_char;
+	    }
+	    *curpos += 1;
+	    break;
+	} else if (buffer[*curpos] == '<' && cur_char != 0) {
+	    found = 1;
+	    ++cur_char;
+	    break;
+	} else { /* got a saveable character */
+	    saved_chars[cur_char] = buffer[*curpos];
+	    *curpos += 1;
+	} /* END if */
+    } /* END for */
     
-  fold_word( saved_chars, cur_char ); /* case fold the word */ 
+    fold_word(saved_chars, cur_char); /* case fold the word */
  
-  /* deal with appostr. (mostly <string>'s really) */ 
-  if( cur_char >= 2 )  
-    { 
-      if( saved_chars[cur_char-2] == '\'' || saved_chars[cur_char-2] == '\"' ) 
-	{ 
-	  saved_chars[cur_char-2] = saved_chars[cur_char-1]; 
-	  saved_chars[cur_char-1] = '\0'; 
-	}  
-      else 
-	saved_chars[cur_char] = '\0'; 
-    } /* END if */ 
-  else 
-    saved_chars[cur_char] = '\0'; 
-  
-} /* END get_chars */ 
+    /* deal with appostr. (mostly <string>'s really) */
+    if (cur_char >= 2) {
+	if (saved_chars[cur_char - 2] == '\'' ||
+	   saved_chars[cur_char - 2] == '\"') {
+
+	    saved_chars[cur_char - 2] = saved_chars[cur_char - 1];
+	    saved_chars[cur_char - 1] = '\0';
+	} else {
+	    saved_chars[cur_char] = '\0';
+	} /* END if */
+    } else {
+	saved_chars[cur_char] = '\0';
+    }
+} /* END get_chars */
  
 void get_word( char buffer[], int size, char word[KW_SIZE], int *curpos ) { 
   /* get a word from a page */ 
