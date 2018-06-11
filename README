@@ -73,7 +73,8 @@ Configurable Parameters:
 	 - querytype    - type of query
 	 			(Input) The default value here is set to 'n' denoting 'normal'
 	 - queryfile    - path/filename of query file to be ran and searched
-	 			(Output) Gives a file, which would contain queries to be run, and evaluated.
+	 			(Output) Gives a file, which would contain queries to be run, 
+				and evaluated.
 	 - resultsfile  - path/filename of results file(run file)
 	 			(Output) Gives a file which would contain a file of results.
 	 - transfile    - path/filename of transaction file
@@ -95,7 +96,8 @@ Configurable Parameters:
 	 			(Input) A name for the run (used to generate the relfile). 
 	 - nterms       - no of terms to pick from the topic
 	 - stopsfile    -  path/filename of the stopword file
-	 			(Input) a filepath containing all stop words, one word a line, without parantheses.
+	 			(Input) a filepath containing all stop words, one word a line, 
+				without parantheses.
 	 - evaluationfiles - path/filename of the evaluation files(where evaluation result is stored).
 	 - indexbigram  - Index Bigram in the index.
 	 			(Input) boolean true/false to index bigrams or not.
