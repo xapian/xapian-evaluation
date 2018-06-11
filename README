@@ -20,30 +20,42 @@ Indexing Collection with evaluation Module.
 
 User can index a collection using
 ::
- . ./trec_index configuration_file
+ . ./trec_index <configuration_file>
 
 Find a sample config file in current directory names 'config'
 
-User need to compulsary configure textfile,db,stopfile parameters to be able to use index a collection.User need to set indexbigram parameter to true to be able to index bigrams while indexing to use bigram language model weighting scheme.
+Users need to compulsary configure:
+	1. textfile
+	2. db
+	3. stopfile 
+as parameters to be able to use index a collection. 
+Users need to set indexbigram parameter to true to be able to index bigrams while indexing to use a bigram language model weighting scheme.
 
 Searching Topics file and creating run with evaluation module
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 User can search a collection using index build to create a run with queries in topic file.
 ::
- ./trec_query configuration_file;
- ./trec_search configuration_file
+ ./trec_query <configuration_file>
+ ./trec_search <configuration_file>
 
-User need to compulsary configure queryfile ,topicfile, stopfile to search using a topic file,needs to set queryparserbigram to true to be able to add bigrams in query object formed by bigram.
+User need to compulsary configure 
+	1.queryfile
+	2.topicfile
+	3.stopfile 
+to search using a topic file,needs to set queryparserbigram to true to be able to add bigrams in query object formed by bigram.
 
 Evaluating the run.
 ^^^^^^^^^^^^^^^^^^^
 
 User need to run to get the evaluation result for your run.
 ::
- ./trec_adhoceval configuration_file
+ ./trec_adhoceval <configuration_file>
 
-Its compulsary to set relfile,runfile for using this option.
+Its compulsary to "set" 
+	1. relfile
+	2. runfile 
+for using this option.
 
 Configuring evaluation module
 ------------------------------
@@ -51,30 +63,50 @@ Configuring evaluation module
 Configurable Parameters:
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-	 - textfile     - path/filename of text file to be indexed for evaluation
-	 - language     - corpus language to be indexed for stemming 
-	 - db           - path of database which is index of above textfile
+	 - textfile     - path/filename of the folder to be indexed for evaluation 
+	 			(Input) to the folder, which contains docs to be indexed.
+	 - language     - corpus language to be indexed for stemming (Input)
+	 			(Input) of the language used for stemming.
+	 - db           - path of database which is index of above textfile 
+	 			(Output) where your db would be stored, containing indexed values after running
+				./trec_index <configuration_file>
 	 - querytype    - type of query
+	 			(Input) The default value here is set to 'n' denoting 'normal'
 	 - queryfile    - path/filename of query file to be ran and searched
+	 			(Output) Gives a file, which would contain queries to be run, and evaluated.
 	 - resultsfile  - path/filename of results file(run file)
+	 			(Output) Gives a file which would contain a file of results.
 	 - transfile    - path/filename of transaction file
-	 - noresults    - no of results to save in results log file
+	 			(Input) Required input in the case where one is using BM25. 
+	 - noresults    - no of results to save in results log file. 
+	 			(Input) 
 	 - const_k1     - value for K1 constant (BM25)
+	 			(Input) Required input in the case where one is using BM25. 
 	 - const_b      - value for B constant (BM25)
-	 - topicfile    - path/filename of topic file for which relevance judgement file is available
+	 			(Input) Required input in the case where one is using BM25. 
+	 - topicfile    - path/filename of topic file for which relevance 
+	 		  judgement file is available
+			  	(Input) Topics file path as an input. 
 	 - topicfields  - fields of topic to use from topic file in evaluation
+	 			(Input) 
 	 - relfile      - path/filename of relevance judgements file
+	 			(Input) The qrel file, containing relevance of each query. 
 	 - runname      - name of the evaluation run
+	 			(Input) A name for the run (used to generate the relfile). 
 	 - nterms       - no of terms to pick from the topic
-	 - stopsfile    -  name of the stopword file
+	 - stopsfile    -  path/filename of the stopword file
+	 			(Input) a filepath containing all stop words, one word a line, without parantheses.
 	 - evaluationfiles - path/filename of the evaluation files(where evaluation result is stored).
 	 - indexbigram  - Index Bigram in the index.
+	 			(Input) boolean true/false to index bigrams or not.
 	 - queryparsebigram -  Parse and add bigrams to the Query.
+	 			(Input) boolean.
 	 - weightingscheme - which weighting scheme to select(bm25,lmweight,trad,boolweight)
+	 			(Input) 
 
 Parameters to be configured using for BM25 Weighting Scheme
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-**All parameter need to be configured to call customized constructor.Please refer generated documentation for value of parameters. at http://xapian.org/docs/**
+**All parameter need to be configured to call customized constructor.Please refer generated documentation for value of parameters. at https://xapian.org/docs/**
 
 	 - bm25param_k1
 	 - bm25param_k2
@@ -90,7 +122,7 @@ Parameters for Tras Weighting scheme.
 Parameters for LMWeight Weighting Scheme
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-**All parameters need to be configured to call customized constructor.Please refer generated docs for value of parameter at http://xapian.org/docs/**
+**All parameters need to be configured to call customized constructor.Please refer generated docs for value of parameter at https://xapian.org/docs/**
 
 	 - lmparam_log
 	 - lmparam_smoothing1
