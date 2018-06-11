@@ -41,6 +41,7 @@
 #include <math.h>
 #include <errno.h>
 #include <cstring>
+#include <stdio.h>
 
 using namespace Xapian;
 using namespace std;
