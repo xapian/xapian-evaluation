@@ -405,7 +405,7 @@ bool CONFIG_TREC::check_lmweight() {
 		cout<<"Mixture"<<endl;
 		return false;
 	}	
-	if ( lmparam_select_smoothing == NULL) {
+	if ( lmparam_select_smoothing == 0) {
 		cout<<"typesmoothing"<<endl;
 		return false;
 	}	
