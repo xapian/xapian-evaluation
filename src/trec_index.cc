@@ -232,7 +232,7 @@ static void index_file( const string &file,
   Xapian::Stem stemmer( config.get_language() );
   int uncolen;
 
-  uncolen = decompress_bundle( (u_char*)file.c_str(), (u_char *) chamber, CHAMBER_SIZE);
+  uncolen = decompress_bundle(file.c_str(), chamber, CHAMBER_SIZE);
   cout << "DEBUG) decompresses file done, size = " << uncolen << endl;
 	
   // accumulate the text size read in

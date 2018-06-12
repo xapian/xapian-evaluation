@@ -2,7 +2,6 @@
 
 HELPERFILES = config_file.cc htmlparse.cc stopword.cc split.cc qrelinmemory.cc trec_qrel.cc timer.c
 HELPERHEADERS = config_file.h htmlparse.h stopword.h split.h timer.h timerstruct.h qrelinmemory.h trec_qrel.h trec_eval.h trec_adhoceval.h
-GUNZIPPERFILES = crypt.c inflate.c unlzw.c unzip.c gzip.c unlzh.c unpack.c util.c
 
 ACLOCAL_AMFLAGS = -I m4
 
@@ -16,8 +15,9 @@ LIBTOOL = @LIBTOOL@ $(QUIET:y=--quiet)
 
 __top_builddir__bin_trec_search_SOURCES = 	trec_search.cc $(HELPERFILES)
 			
-__top_builddir__bin_trec_index_SOURCES = trec_index.cc $(HELPERFILES) $(GUNZIPPERFILES)
+__top_builddir__bin_trec_index_SOURCES = trec_index.cc $(HELPERFILES)
 
+__top_builddir__bin_trec_index_LDADD = -lz
 
 __top_builddir__bin_trec_query_SOURCES = trec_query.cc $(HELPERFILES)
 
