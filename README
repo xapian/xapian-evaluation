@@ -8,7 +8,7 @@ Buiding Evaluation Module
 
 User needs to build Evaluation module on their system after cloning the source repository. This can be done using
 ::
- autoreconfig -fiv
+ autoreconf -fiv
  ./configure
  make
  sudo make install
