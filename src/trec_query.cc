@@ -116,7 +116,7 @@ void get_chars(char buffer[], int size, int *curpos,
     /* get each character for a word */
  
     int found = FALSE;              /* condition for a found word */
-    register int cur_char;          /* pos of char in current word */
+    int cur_char;                   /* pos of char in current word */
  
     /* loop until end of word found */
     for (cur_char = 0; cur_char < KW_SIZE && !found; ++cur_char) {
