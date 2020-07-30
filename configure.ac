@@ -52,6 +52,9 @@ CXXFLAGS="$CXXFLAGS $XAPIAN_CXXFLAGS"
 dnl Check for headers.
 AC_CHECK_HEADERS([fcntl.h sys/time.h unistd.h utime.h])
 
+dnl Restore CXXFLAGS to those the user specified or autoconf defaulted to.
+CXXFLAGS=$save_CXXFLAGS
+
 dnl **************************
 dnl * Build the output files *
 dnl **************************

@@ -3,21 +3,16 @@
 HELPERFILES = config_file.cc htmlparse.cc stopword.cc split.cc qrelinmemory.cc trec_qrel.cc timer.c
 HELPERHEADERS = config_file.h htmlparse.h stopword.h split.h timer.h timerstruct.h qrelinmemory.h trec_qrel.h trec_eval.h trec_adhoceval.h
 
-ACLOCAL_AMFLAGS = -I m4
-
 bin_PROGRAMS = $(top_builddir)/bin/trec_index $(top_builddir)/bin/trec_search $(top_builddir)/bin/trec_query $(top_builddir)/bin/trec_adhoceval
-AM_LDFLAGS = $(XAPIAN_LIBS)
-AM_CPPFLAGS = -I$(srcdir)/../lib
+LDADD = $(XAPIAN_LIBS)
 AM_CXXFLAGS = $(XAPIAN_CXXFLAGS)
 include_HEADERS = $(HELPERHEADERS)
-
-LIBTOOL = @LIBTOOL@ $(QUIET:y=--quiet)
 
 __top_builddir__bin_trec_search_SOURCES = 	trec_search.cc $(HELPERFILES)
 			
 __top_builddir__bin_trec_index_SOURCES = trec_index.cc $(HELPERFILES)
 
-__top_builddir__bin_trec_index_LDADD = -lz
+__top_builddir__bin_trec_index_LDADD = $(LDADD) -lz
 
 __top_builddir__bin_trec_query_SOURCES = trec_query.cc $(HELPERFILES)
 
