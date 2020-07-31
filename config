@@ -1,6 +1,6 @@
-textfile /home/vivek/Downloads/FIREData/2011/en.docs.2011/en_BDNews24/
+textfile FIREData/2011/en.docs.2011/en_BDNews24/
 language english
-db /home/vivek/Downloads/index_bm25plus/
+db index_bm25plus/
 runname xapiantrecwithstopwordbm25plus
 stopsfile stopwords.txt
 noresults 200
@@ -15,6 +15,6 @@ bm25plusparam_min_normlen 0.5
 bm25plusparam_delta 1.0
 topicfile en.topics.126-175.2011.txt
 queryfile en_query_run_1.txt
-relfile /home/vivek/Downloads/en.qrels.126-175.2011.txt
-resultsfile /home/vivek/Downloads/en_result_file_1_bm25plus.txt
-transfile /home/vivek/Downloads/en.transaction_file_1_bm25plus.txt
+relfile en.qrels.126-175.2011.txt
+resultsfile en_result_file_1_bm25plus.txt
+transfile en.transaction_file_1_bm25plus.txt
