@@ -86,10 +86,10 @@ public:
 	string get_evaluationsfile() { return evaluationfiles; }
 	string get_weightingscheme() const { return weightingscheme; }
 
-	bool get_indexbigram() { return (indexbigram.compare("true") == 0);
-	}
+	bool get_indexbigram() { return indexbigram == "true"; }
 
-	bool get_queryparsebigram() { return ((indexbigram.compare("true") == 0) && (queryparsebigram.compare("true") == 0));
+	bool get_queryparsebigram() {
+	    return indexbigram == "true" && queryparsebigram == "true";
 	}
 }; // END class CONFIG
 

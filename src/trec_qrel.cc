@@ -37,7 +37,7 @@ TrecQrel::getQueryIds() {
 set<string> 
 TrecQrel::getRelevantDocument(int grade,const string &queryid) {
 	for (int i = 0; i < getNumberofQueries(); i++) {
-		if ( qrelPerQuery[i].queryid.compare(queryid) == 0) {
+		if (qrelPerQuery[i].queryid == queryid) {
 		return qrelPerQuery[i].getRelevantDocument(grade);
 		}
 	}
@@ -59,7 +59,7 @@ TrecQrel::getAllRelevantDocument() {
 set<string> 
 TrecQrel::getRelevantDocument(const string & queryid) {
 	for ( int i = 0 ;i <  getNumberofQueries(); i++) {
-		if ( qrelPerQuery[i].queryid.compare(queryid) == 0 ) {
+		if (qrelPerQuery[i].queryid == queryid) {
 		return qrelPerQuery[i].getAllRelevantDocument();
 		}
 	}
@@ -70,7 +70,7 @@ TrecQrel::getRelevantDocument(const string & queryid) {
 int 
 TrecQrel::getNumberofRelevant(const string & queryid) {
 	for ( int i = 0 ;i <  getNumberofQueries(); i++) {
-		if ( qrelPerQuery[i].queryid.compare(queryid) == 0) {
+		if (qrelPerQuery[i].queryid == queryid) {
 		return qrelPerQuery[i].getAllRelevantDocument().size();
 		}
 	}
@@ -121,7 +121,7 @@ TrecQrel::loadQRelFile() {
 bool
 TrecQrel::existInQrel(const string & queryid) {
 	for (int i = 0;i < getNumberofQueries();i++) {
-		if (qrelPerQuery[i].queryid.compare(queryid) == 0) {
+		if (qrelPerQuery[i].queryid == queryid) {
 		return true;
 		}
 	}
@@ -131,7 +131,7 @@ TrecQrel::existInQrel(const string & queryid) {
 bool
 TrecQrel::isRelevantDoc(const string  & docno,const string & queryid) {
 	for (int i = 0;i < getNumberofQueries();i++) {
-		if (qrelPerQuery[i].queryid.compare(queryid) == 0) {
+		if (qrelPerQuery[i].queryid == queryid) {
 		//cout<<"query in relevant:\t"<<qrelPerQuery[i].queryid<<endl;
 		return qrelPerQuery[i].isRelevant(docno);
 		}
@@ -142,7 +142,7 @@ TrecQrel::isRelevantDoc(const string  & docno,const string & queryid) {
 int 
 TrecQrel::getGrade(const string & docno,const string & queryid) {
 	for (int i = 0;i < getNumberofQueries();i++) {
-		if (qrelPerQuery[i].queryid.compare(queryid) == 0) {
+		if (qrelPerQuery[i].queryid == queryid) {
 		return qrelPerQuery[i].getGrade(docno);
 		}
 	}

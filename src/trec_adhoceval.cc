@@ -88,7 +88,7 @@ while( resultfile.good() && !resultfile.eof() ) {
         //	cout<<"Rank"<<rank<<data[3]<<endl;
 	    /** If Queryid have changed save stats to the final vectors
 	     * which store statistics of all read queries*/
-    	if(previous.compare(queryid) != 0) {
+	if (previous != queryid) {
 	    	if(effQueryCounter != 0) {
 		    	vecNumberofRetrieved.push_back(numberofRetrievedCounter);
 			    vecNumberofRelevantRetrieved.push_back(numberofRelevantRetrievedCounter);
