@@ -49,7 +49,6 @@ using namespace std;
 
 #define ENDDOC "</DOC>"
 
-static const unsigned int MAX_URL_LENGTH = 240;
 // chamber (from hashbld) is where the input bundles are decompressed.
 #define CHAMBER_SIZE 30000000
 char chamber[CHAMBER_SIZE];

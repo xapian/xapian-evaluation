@@ -32,12 +32,7 @@
 using namespace Xapian;
 using namespace std;
 
-/* #define MAXPATH 100    maximum pathlength */
-#define NO_OF_FILES 0  /* no of file to process in every directory */
-#define START_FROM 0    /* which file to start from */
 #define SW_FILE "stop.words"
-#define LINE_SIZE 80       /* maximum size of a line in a document */
-#define MAXPATH 100
 
 /* chamber (from hashbld) is where the input bundles are decompressed.*/
 #define CHAMBER_SIZE 10000000
