@@ -231,6 +231,49 @@ static void
 index_directory(const string& dir,
                 CONFIG_TREC& config,
                 Xapian::WritableDatabase& db,
+                Xapian::TermGenerator& indexer);
+
+static void
+index_directory_entry(const string& file,
+                      CONFIG_TREC& config,
+                      Xapian::WritableDatabase& db,
+                      Xapian::TermGenerator& indexer)
+{
+    struct stat statbuf;
+    if (stat(file.c_str(), &statbuf) == -1) {
+        cout << "Can't stat \"" << file << "\" - skipping\n";
+        return;
+    }
+
+    if (S_ISDIR(statbuf.st_mode)) {
+        // file is a directory
+        try {
+            index_directory(file, config, db, indexer);
+        }
+        catch (...) {
+            cout << "Caught unknown exception in index_directory, rethrowing" << endl;
+            throw;
+        }
+        return;
+    }
+
+    if (S_ISREG(statbuf.st_mode)) {
+        // file is a regular indexable text file
+        string ext;
+        string::size_type dot = file.find_last_of('.');
+        if (dot != string::npos) ext = file.substr(dot + 1);
+
+        index_file(file, config, db, indexer);
+        return;
+    }
+
+    cout << "Not a regular file \"" << file << "\" - skipping\n";
+}
+
+static void
+index_directory(const string& dir,
+                CONFIG_TREC& config,
+                Xapian::WritableDatabase& db,
                 Xapian::TermGenerator& indexer)
 {
     DIR *d;
@@ -245,44 +288,16 @@ index_directory(const string& dir,
 	return;
     }
     while ((ent = readdir(d)) != NULL) {
-	struct stat statbuf;
 	// ".", "..", and other hidden files
 	if (ent->d_name[0] == '.') continue;
 	string file = dir;
 	if (!file.empty() && file[file.size() - 1] != '/') file += '/';
 	file += ent->d_name;
-	if (stat(file.c_str(), &statbuf) == -1) {
-	    cout << "Can't stat \"" << file << "\" - skipping\n";
-	    continue;
-	} // END if
-
-	if (S_ISDIR(statbuf.st_mode)) {
-	    // file is a directory
-	    try {
-                index_directory(file, config, db, indexer);
-	    }
-	    catch (...) {
-		cout << "Caught unknown exception in index_directory, rethrowing" << endl;
-		throw;
-	    }
-	    continue;
-	} // END if
-
-	if (S_ISREG(statbuf.st_mode)) {
-	    // file is a regular indexable text file
-	    string ext;
-	    string::size_type dot = file.find_last_of('.');
-	    if (dot != string::npos) ext = file.substr(dot + 1);
-
-            index_file(file, config, db, indexer);
-	    continue;
-	} // END if
-
-	cout << "Not a regular file \"" << file << "\" - skipping\n";
+	index_directory_entry(file, config, db, indexer);
     }
-    closedir(d);
 
-} // END index_directory
+    closedir(d);
+}
 
 int main(int argc, char **argv)
 {
@@ -323,7 +338,10 @@ int main(int argc, char **argv)
         gettimeofday( &start_time, 0 );
 
         // index the text collection
-        index_directory(trec_config.get_textfile(), trec_config, db, indexer);
+        index_directory_entry(trec_config.get_textfile(),
+                              trec_config,
+                              db,
+                              indexer);
         db.commit();
 
         // start the timer
