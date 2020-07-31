@@ -96,11 +96,11 @@ while( resultfile.good() && !resultfile.eof() ) {
 	        	listofRelevantRetrieved.push_back(relevantRetrieved);
 		        numberofRetrievedCounter = 0;
     		    numberofRelevantRetrievedCounter = 0;
-                //cout<<"\tTotal relevant retreived\t"<<relevantRetrieved->size()<<endl;
+                //cout<<"\tTotal relevant retrieved\t"<<relevantRetrieved->size()<<endl;
 	        	retrieved = new vector<Record>();
 		        relevantRetrieved = new vector<Record>();
 	    	}
-        	//cout<<"Insert QueryID:\t"<<queryid<<"\twith number of Relevant Docs:\t"<<qrel->getNumberofRelevant(queryid)<<"\tTotalRetreived\t"<<retrieved->size();
+        	//cout<<"Insert QueryID:\t"<<queryid<<"\twith number of Relevant Docs:\t"<<qrel->getNumberofRelevant(queryid)<<"\tTotalRetrieved\t"<<retrieved->size();
 	        effQueryCounter++;
     	    vecQueryNo.push_back(queryid);
     	    vecNumberofRelevant.push_back(qrel->getNumberofRelevant(queryid));
@@ -110,7 +110,7 @@ while( resultfile.good() && !resultfile.eof() ) {
 	    totalNumberofRetrieved++;
     	Record *currrec = new Record(queryid,docId,rank);
 	    retrieved->push_back(*currrec);	
-    	//adding relevant document to the relevant retreived set
+    	//adding relevant document to the relevant retrieved set
     	if (qrel->isRelevantDoc(docId,queryid)) {
 	    	relevantRetrieved->push_back(*currrec);
 		    //cout<<"Relevant Doc:\t"<<docId<<endl;
@@ -129,7 +129,7 @@ while( resultfile.good() && !resultfile.eof() ) {
 	vector<vector<Record> * >::iterator it ;
 	vector<Record>::iterator recorditr;
 	int totalQuery = listofRelevantRetrieved.size();
-	//calculating statistics of number of relevent ,retrieved 
+	//calculating statistics of number of relevant, retrieved
 	for (int itr = 0;itr < numberofEffQuery ;itr++) {
 		totalNumberofRetrieved += vecNumberofRetrieved[itr];
 		totalNumberofRelevant  += vecNumberofRelevant[itr];
@@ -209,7 +209,7 @@ while( resultfile.good() && !resultfile.eof() ) {
 	currentQuery++;
 	}
 
-	// Merge the precision at rank for the all Queries to get accumlated results.
+	// Merge the precision at rank for the all Queries to get accumulated results.
 	for ( int precisionRank = 0;precisionRank < 14;precisionRank++) {
 		double rankPrecision = 0.0;
 		for ( int queryitr = 0; queryitr < numberofEffQuery;queryitr++ ) {
@@ -219,7 +219,7 @@ while( resultfile.good() && !resultfile.eof() ) {
 		precisionAtRank.insert( pair<int,double>(PRECISION_RANK[precisionRank],rankPrecision));
 	}
 	
-	// Merge the precision at recall values for all the queries to get accumlate results.	
+	// Merge the precision at recall values for all the queries to get accumulate results.
 	for ( int precisionPercentage = 0;precisionPercentage < 11;precisionPercentage++) {
 		double recallPrecision = 0.0;
 		for ( int queryitr = 0; queryitr < numberofEffQuery;queryitr++ ) {

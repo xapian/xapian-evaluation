@@ -60,7 +60,7 @@ public:
 
     /* Get the relevant document ids for a Query  and of particular grade
      *	@param grade - Integer grade for which  relevant document need to be returned.
-     *	@param queryid - Queryid of query for which the documents ned to be returned.
+     *	@param queryid - Queryid of query for which the documents need to be returned.
 	 *  @return - set of the relevant document for query queryid and grade grade
      */
 
@@ -73,7 +73,7 @@ public:
 	set<string> getAllRelevantDocument();
     
 	/* Get the relevant document ids for a given Query 
-     *	@param queryid - Queryid of query for which the documents ned to be returned.
+     *	@param queryid - Queryid of query for which the documents need to be returned.
 	 *  @return - set of the relevant document for query queryid from all grades
      */
 	
@@ -97,7 +97,7 @@ public:
 	void loadQRelFile();	
 
 	/**
-	 * Check whether Query with given identifier exist in relvance assessment
+	 * Check whether Query with given identifier exist in relevance assessment
 	 * @param queryid - identifier of the Query.
 	 * @return true if the query exist in assessment pool,false otherwise.
 	 */
@@ -105,7 +105,7 @@ public:
 	bool existInQrel(const string & queryid);
 	
 	/**
-	 * Checks if the document is relvant or not for the query given by the query identifier.
+	 * Checks if the document is relevant or not for the query given by the query identifier.
 	 * @param queryid - Identifier for the query.
 	 * @param docno - Identifier for the document to be checked for relevant or not.
 	 * @return true if document is relevant for the given query.

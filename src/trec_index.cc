@@ -334,7 +334,7 @@ static void index_directory( const string &dir, CONFIG_TREC & config, Xapian::Wr
 int main(int argc, char **argv)
 {
 
-    // check for proper useage of program 
+    // check for proper usage of program
     if(argc < 2) {
         cout << "usage: " << argv[0] << " <config file>" << endl;
         exit(1);

@@ -51,7 +51,7 @@ using namespace std;
 		double recall;
 
 		/**
-		 * create a record of retreived document
+		 * create a record of retrieved document
 		 * @param _queryNo
 		 * @param _docNo
 		 * @param _rank
@@ -135,7 +135,7 @@ class TrecEval {
 	/**
 	 * Write the evaluation result to the standard output 
 	 * And to the file given in configuration.
-	 * This function is also needs to be implemented mandatorily.
+	 * All Subclasses must implement this method.
 	 */
 	virtual void writeEvaluationResult() = 0;
 

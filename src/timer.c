@@ -2,7 +2,7 @@
    Date: 9 December 1996
    Description: timing routines 
    Copyright: A.MacFarlane
-	 Altered 27/2/2007 for terabtye web efficiency experiments
+	 Altered 27/2/2007 for terabyte web efficiency experiments
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

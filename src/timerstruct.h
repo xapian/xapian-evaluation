@@ -2,7 +2,7 @@
    Date: 9 December 1996
    Description: structure for timing routines 
    Copyright: A. MacFarlane (1996)
-	 Altered 27/2/2007 for terabtye web efficiency experiments
+	 Altered 27/2/2007 for terabyte web efficiency experiments
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ typedef struct cost {
   struct timeval io;       /* input/output */
   struct timeval cpu;      /* cpu cost */
   struct timeval mar;      /* cost of marshalling */
-  struct timeval comms;    /* comunication costs */
+  struct timeval comms;    /* communication costs */
   struct timeval wait;     /* delay costs */
   struct timeval prev;     /* total time at previous node - 
 								 					 		for calc comms time */

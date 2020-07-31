@@ -34,7 +34,7 @@ public:
 	//Query identifier for which this class contains relevance judgement.
 	string queryid;
 	
-	//All the relevant grade avalilable for this query in assessement pool.
+	//All the relevant grade available for this query in assessment pool.
 	set<int> relGrade;
 	
 	//Document identifier of all the document which are Non-relevant for the Query
@@ -43,10 +43,10 @@ public:
 	//Document identifier of all the relevant document categorised by the grade.
 	map<int,set<string> > relGradeDocMap;
     
-    //Iterator for the the docs. 
+    //Iterator for the docs.
     map<int,set<string> >::iterator docs; 
 
-	//Contructor of class.
+	//Constructor of class.
 	QRelInMemory(const string &queryid_) :queryid(queryid_) {
 	}
 
@@ -75,7 +75,7 @@ public:
 	/** 
 	 * Get all the relevant document for this query from relevance assessment with a particular grade
 	 * @param grade grade for which relevance assessment to return
-	 * @return Set of Document ids of all the relevant docids for the query for a particlar grade.
+	 * @return Set of Document ids of all the relevant docids for the query for a particular grade.
 	*/
 
 	set<string> getRelevantDocument(const int & grade) const;

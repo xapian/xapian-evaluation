@@ -29,7 +29,7 @@ class AdhocEvaluation : public TrecEval {
 
 protected:
 
-/** Maximum number of document retreived for a query.*/
+/** Maximum number of document retrieved for a query.*/
 
 int maxNumberRetrieved;
 
@@ -40,15 +40,15 @@ int maxNumberRetrieved;
 
 int numberofEffQuery;
 
-/* Total number of document reterived .*/
+/* Total number of document retrieved .*/
 
 int totalNumberofRetrieved;
 
-/** Total number of revelant document in the qrel file*/
+/** Total number of relevant document in the qrel file*/
 
 int totalNumberofRelevant;
 
-/** The total number of relevant document retreived in the task*/
+/** The total number of relevant document retrieved in the task*/
 
 int totalNumberofRelevantRetrieved;
 
@@ -74,7 +74,7 @@ vector<string> queryNo;
 
 
 public:
-/** Intialize the statistics for evaluating the result*/
+/** Initialise the statistics for evaluating the result*/
 void initialise();
 
 /** Evaluate the given result file.*/

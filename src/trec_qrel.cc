@@ -97,7 +97,7 @@ TrecQrel::loadQRelFile() {
 	while ( !fqrels.eof() ) {
 	if( currentquery != atoi(data[0].c_str()) ) {
 		qrelPerQuery.push_back(*qrelquery);
-//		cout<< "New Query Found in Qrel FIle :\t"<<data[0]<<endl;
+//		cout<< "New Query Found in Qrel File :\t"<<data[0]<<endl;
 		currentquery = atoi(data[0].c_str());
     	std::stringstream itostring;
 	    itostring << currentquery;

@@ -33,7 +33,7 @@
 #define FALSE 0            /* a condition is false */
 #define IDENTICAL 0        /* two words are equal in strcmp */
 #define LATER 1            /* 1 word is lexico.  later than another */
-#define EARLIER -1         /* 1 word is lexico.  ealier than another */
+#define EARLIER -1         /* 1 word is lexico.  earlier than another */
 #define NL '\n'            /* newline marker */
 #define KW_SIZE 80         /* maximum size of a keyword */
 
@@ -66,7 +66,7 @@ void Read_Extra_SWord( FILE *f_id, char word[KW_SIZE] ) {
 
 void Read_SW_File( char sw_file[], SW_STORE * sw_store ) { 
   /* read stop word file into  stop word store
-     version which goes directly to the file, with need for specifiying dir */ 
+     version which goes directly to the file, with need for specifying dir */
 
   FILE *swf_id;	/* file id for stopword file */ 
   int i; 
