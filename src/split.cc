@@ -24,7 +24,6 @@
 #include <algorithm>
 #include <iostream>
 #include <string>
-#include "stopword.h"
 #include "split.h"
 
 using namespace Xapian;

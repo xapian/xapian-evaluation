@@ -28,6 +28,9 @@
 #include <xapian.h>
 using namespace std;
 
+/* maximum size of a keyword */
+#define KW_SIZE 80
+
 class CONFIG_TREC {
 
 private:

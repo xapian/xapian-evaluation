@@ -24,6 +24,7 @@
 #include <xapian.h>
 #include <algorithm>
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <sys/types.h>
 #include <dirent.h>
@@ -32,7 +33,6 @@
 #include <getopt.h>
 #include <fcntl.h>
 #include "htmlparse.h"
-#include "stopword.h"
 #include "config_file.h"
 #include "indextext.h"
 #include <ctype.h>
@@ -197,20 +197,12 @@ void check_code( char word[KW_SIZE], int *code ) {
 } /* END check_code */
 
 void clean_word( char word[KW_SIZE] ) {
-
 	int i;
 	int curpos;
-	char cleanedword[KW_SIZE];
-
-
-	Init_str( cleanedword, KW_SIZE );
 
 	for( i=0, curpos=0; i < strlen(word); i++ ) {
-		if(isalnum(word[i])) cleanedword[curpos++] = word[i];
+		if(isalnum(word[i])) word[curpos++] = word[i];
 	} /* END for */
-
-	strcpy( word, cleanedword );
-
 } /* END clean_word */
 
 
@@ -249,7 +241,7 @@ void Init_QUERY( QUERY *q ) {
 	int i;
 
 	for( i=0; i < MAX_KEYWORDS; i++ ) {
-		Init_str( q->term_set[i], KW_SIZE );
+		memset(q->term_set[i], 0, KW_SIZE);
 		q->weights[i] = 0.0;
 	} /* END for */
 	q->nwords = 0;
@@ -297,33 +289,15 @@ char topic_stops[NTOPICSTOPS][KW_SIZE] = {
 "quotes","substantive","unless","find","finds", "identify", "identified","identfies", "evidence",
 "continue","define","determine", "determined", "discussing", "references", "reference" };
 
-int stopped_word( char word[KW_SIZE],  SW_STORE sw_store ) {
-/* returns 1 if word is a stop word or frequent topic word, 0 otherwise */
-
-	int found=0;
-	int i;
-
-	/* check for frequent topic words */
-	for( i=0; i < NTOPICSTOPS && !found; i++ ) {
-		if( strcmp( word, topic_stops[i] ) == 0 ) found=1;
-	} /* END */
-
-	/* check for main stops */
-	if (!found) found = IsStopWord( sw_store, word );
-
-	return found;
-
-} /* END if */
-
-void Save_Word( char word[KW_SIZE], QUERY *q,  SW_STORE sw_store ) {
 /* save a word in a query, iff it isn't already there */
-
-	if( !Isin_query( word, q ) && !stopped_word( word, sw_store ) ) {
-		strcpy( q->term_set[q->nwords], word );
-		q->nwords += 1;
-	} /* END if */
-
-} /* END Save_Word */
+static void
+Save_Word(char word[KW_SIZE], QUERY *q, Xapian::Stopper& stopper)
+{
+    if (!Isin_query(word, q) && !stopper(word)) {
+        strcpy( q->term_set[q->nwords], word );
+        q->nwords += 1;
+    }
+}
 
 void create_queries( CONFIG_TREC & config ) {
 
@@ -340,7 +314,6 @@ void create_queries( CONFIG_TREC & config ) {
   int curpos=0;
   int terms_to_save;
   int save_word=0;
-  SW_STORE sw_store;
 
   terms_to_save = config.get_nterms();  /* number of terms to save */
 
@@ -366,7 +339,13 @@ void create_queries( CONFIG_TREC & config ) {
   } // END if
   cout << "QUERY) query file name is: " <<  config.get_queryfile().c_str() << endl;
 
-  Read_SW_File( (char *) config.get_stopsfile().c_str(), &sw_store );
+  ifstream words(config.get_stopsfile().c_str());
+  Xapian::SimpleStopper stopper{istream_iterator<string>(words),
+                                istream_iterator<string>()};
+  // Add topic stops.
+  for (int i = 0; i != NTOPICSTOPS; ++i) {
+      stopper.add(topic_stops[i]);
+  }
 
   /* iniatisation */
   Init_QUERY( &q );
@@ -374,7 +353,7 @@ void create_queries( CONFIG_TREC & config ) {
 
   while( curpos < topic_size ) {
 
-    Init_str( word, KW_SIZE );
+    memset(word, 0, KW_SIZE);
     get_word( topics, BIG_BUFFER, word, &curpos );
     check_code( word, &code );
     clean_word( word );
@@ -423,11 +402,10 @@ void create_queries( CONFIG_TREC & config ) {
 	else save_word=0;
       }
       break;
-    default :  /* save the word if required */
-      {
-	if( save_word ) Save_Word( word, &q, sw_store );
-      }
-    } /* END switch */
+    default:  /* save the word if required */
+      if (save_word) Save_Word(word, &q, stopper);
+      break;
+    }
   } /* END while */
 
 } /* END create_queries( */

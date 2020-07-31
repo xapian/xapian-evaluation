@@ -38,7 +38,6 @@
 #include <string.h>
 #include <fcntl.h>
 #include "htmlparse.h"
-#include "stopword.h"
 #include "config_file.h"
 #include "indextext.h"
 #include "P98_gzip.h"
@@ -169,47 +168,6 @@ string get_document( int & curpos, int uncolen ) {
 
 } // END get_document
 
-Xapian::Document  remove_stopwords( Xapian::Document doc, SW_STORE & sw_store ) {
-// take a list of keywords and remove
-
-  Xapian::Document wordlist;
-  char word[100];
-
-  for( TermIterator t = doc.termlist_begin(); t != doc.termlist_end();  t++ ) {
-    for( int i=0; i < (*t).size(); i++ ) word[i] = (*t)[i];
-    if(!IsStopWord( sw_store, word )) wordlist.add_term( *t );
-
-  } // END for
-
-  return wordlist;
-
-} // END remove_stopwords
-
-Xapian::Document stem_document( Xapian::Document & doc ) {
-
-  Stem stemmer("english");
-  Xapian::Document wordlist;
-
-  for( TermIterator t = doc.termlist_begin(); t != doc.termlist_end();  t++ ) {
-    wordlist.add_term(stemmer(*t) );
-
-  } // END for
-
-  return wordlist;
-
-
-} // END stem_document
-
-void get_stopper(Xapian::SimpleStopper &stopper,CONFIG_TREC &config ) {
-ifstream stopfile(config.get_stopsfile().c_str(),ifstream::in);
-while ( !stopfile.eof() ) {
-	string stopword;
-	getline(stopfile,stopword);
-	stopper.add(stopword);
-	}
-	stopfile.close();
-}
-
 inline static bool
 p_plusminus(unsigned int c)
 {
@@ -217,10 +175,12 @@ p_plusminus(unsigned int c)
 }
 
 
-static void index_file( const string &file,
-			CONFIG_TREC &config,
-			Xapian::WritableDatabase & db,
-			SW_STORE sw_store ) {
+static void
+index_file(const string& file,
+           CONFIG_TREC& config,
+           Xapian::WritableDatabase& db,
+           Xapian::TermGenerator& indexer)
+{
   // index a file containing a number of SGML/HTML documents
 
   if (file.empty()) {
@@ -229,7 +189,6 @@ static void index_file( const string &file,
   } else cout << "Indexing [" << file << "]" << endl;
 
   int curpos=0;
-  Xapian::Stem stemmer( config.get_language() );
   int uncolen;
 
   uncolen = decompress_bundle(file.c_str(), chamber, CHAMBER_SIZE);
@@ -251,14 +210,6 @@ static void index_file( const string &file,
       SGMLParser p;
       p.parse_html(rawdoc);
 
-	  Xapian::TermGenerator indexer;
-	  indexer.set_stemmer(stemmer);
-      Xapian::SimpleStopper stopper;
-	  get_stopper(stopper,config);
-	  indexer.set_stopper(&stopper);
-	  if ( config.get_indexbigram() ) {
-		//indexer.set_bigrams(true);
-	  }
       // Add postings for terms to the document
       Xapian::Document doc;
 	  doc.set_data(p.title);
@@ -277,8 +228,11 @@ static void index_file( const string &file,
 
 } // END index_file
 
-static void index_directory( const string &dir, CONFIG_TREC & config, Xapian::WritableDatabase & db,
-			     SW_STORE sw_store )
+static void
+index_directory(const string& dir,
+                CONFIG_TREC& config,
+                Xapian::WritableDatabase& db,
+                Xapian::TermGenerator& indexer)
 {
     DIR *d;
     struct dirent *ent;
@@ -306,7 +260,7 @@ static void index_directory( const string &dir, CONFIG_TREC & config, Xapian::Wr
 	if (S_ISDIR(statbuf.st_mode)) {
 	    // file is a directory
 	    try {
-		index_directory( file, config, db, sw_store );
+                index_directory(file, config, db, indexer);
 	    }
 	    catch (...) {
 		cout << "Caught unknown exception in index_directory, rethrowing" << endl;
@@ -321,7 +275,7 @@ static void index_directory( const string &dir, CONFIG_TREC & config, Xapian::Wr
 	    string::size_type dot = file.find_last_of('.');
 	    if (dot != string::npos) ext = file.substr(dot + 1);
 
-	    index_file( file, config, db, sw_store );
+            index_file(file, config, db, indexer);
 	    continue;
 	} // END if
 
@@ -348,32 +302,39 @@ int main(int argc, char **argv)
       exit(1);
     }
 
-    SW_STORE sw_store;
-		string stopsfilename = trec_config.get_stopsfile();
-    Read_SW_File( (char *) stopsfilename.c_str(), &sw_store );
-
     // Catch any Xapian::Error exceptions thrown
     try {
+        Xapian::TermGenerator indexer;
+        Xapian::Stem stemmer(trec_config.get_language());
+        indexer.set_stemmer(stemmer);
+        ifstream words(trec_config.get_stopsfile().c_str());
+        Xapian::SimpleStopper stopper{istream_iterator<string>(words),
+                                      istream_iterator<string>()};
+        indexer.set_stopper(&stopper);
+        if (trec_config.get_indexbigram()) {
+            //indexer.set_bigrams(true);
+        }
+
         // Make the database
         Xapian::WritableDatabase db(trec_config.get_db().c_str(), Xapian::DB_CREATE_OR_OPEN);
 
-				struct timeval start_time, finish_time, timelapse;   /* timing variables */
+        struct timeval start_time, finish_time, timelapse;   /* timing variables */
 
-				// start the timer
-				gettimeofday( &start_time, 0 );
+        // start the timer
+        gettimeofday( &start_time, 0 );
 
-				// index the text collection
-				index_directory( trec_config.get_textfile(), trec_config, db, sw_store );
-				db.commit();
+        // index the text collection
+        index_directory(trec_config.get_textfile(), trec_config, db, indexer);
+        db.commit();
 
-				// start the timer
-				gettimeofday( &finish_time, 0 );
+        // start the timer
+        gettimeofday( &finish_time, 0 );
 
-				// print the total time, and average time per query -
-				//diff_time( finish_time, start_time, &timelapse );
-				//cout << "Total time for " << totaldocs << " documents is " << time_real( timelapse ) << " secs, text size = " << ttextsize
-				//		 << " mb" << endl;
-				cout << "Total number of documents in the database is now " << db.get_doccount() << " docs" << endl;
+        // print the total time, and average time per query -
+        //diff_time( finish_time, start_time, &timelapse );
+        //cout << "Total time for " << totaldocs << " documents is " << time_real( timelapse ) << " secs, text size = " << ttextsize
+        //		 << " mb" << endl;
+        cout << "Total number of documents in the database is now " << db.get_doccount() << " docs" << endl;
 
     } catch (const Xapian::Error &e) {
 	cout << "Exception: " << e.get_msg() << endl;

@@ -27,7 +27,6 @@
 #include <stdlib.h>
 #include "htmlparse.h"
 #include "P98_gzip.h"
-#include "stopword.h"
 #include "indextext.h"
 
 using namespace Xapian;
@@ -220,21 +219,17 @@ string get_document( string & text, int & curpos, int uncolen ) {
 
 } // get_document
 
-Xapian::Document  remove_stopwords( Xapian::Document doc, SW_STORE & sw_store ) {
 // take a list of keywords and remove
-
-  Xapian::Document wordlist;
-  char word[100];
-
-  for( TermIterator t = doc.termlist_begin(); t != doc.termlist_end();  t++ ) {
-    for( int i=0; i < (*t).size(); i++ ) word[i] = (*t)[i];
-    if(!IsStopWord( sw_store, word )) wordlist.add_term( *t );
-
-  } // END for
-
-  return wordlist;
-
-} // END remove_stopwords
+Xapian::Document
+remove_stopwords(Xapian::Document doc, Xapian::Stopper& stopper)
+{
+    Xapian::Document wordlist;
+    for (TermIterator t = doc.termlist_begin(); t != doc.termlist_end(); ++t) {
+        if (!stopper(*t))
+            wordlist.add_term(*t);
+    }
+    return wordlist;
+}
 
 Xapian::Document stem_document( Xapian::Document & doc ) {
 
@@ -242,7 +237,7 @@ Xapian::Document stem_document( Xapian::Document & doc ) {
   Xapian::Document wordlist;
 
   for( TermIterator t = doc.termlist_begin(); t != doc.termlist_end();  t++ ) {
-    wordlist.add_term(stemmer.stem_word(*t) );
+    wordlist.add_term(stemmer(*t));
 
   } // END for
 
@@ -256,9 +251,13 @@ Xapian::Document stem_document( Xapian::Document & doc ) {
 /*                Process one compressed bundle                       */
 /**********************************************************************/
 
-static int processfile(string fp, Xapian::WritableDatabase &db, SW_STORE & sw_store ) {
-  /* A file believed to be a compressed doc bundle has been encountered.  It's
-     full path is fp. It is to be decompressed and processed as requested. */
+/* A file believed to be a compressed doc bundle has been encountered.  Its
+   full path is fp. It is to be decompressed and processed as requested. */
+static void
+processfile(string fp,
+            Xapian::WritableDatabase& db,
+            Xapian::Stopper& stopper)
+{
 
   int uncolen;
   int pointer=0;
@@ -279,7 +278,7 @@ static int processfile(string fp, Xapian::WritableDatabase &db, SW_STORE & sw_st
 
     // index the document
     index_text(p.keywords, newdoc );
-    Xapian::Document doc_stopsremoved = remove_stopwords( newdoc, sw_store );
+    Xapian::Document doc_stopsremoved = remove_stopwords(newdoc, stopper);
     Xapian::Document stemdoc = stem_document( doc_stopsremoved );
     stemdoc.set_data(p.docno);  // set the data
     db.add_document(stemdoc);
@@ -289,8 +288,10 @@ static int processfile(string fp, Xapian::WritableDatabase &db, SW_STORE & sw_st
 
 } /* END processfile */
 
-static void index_directory( const string &dir, Xapian::WritableDatabase & db,
-			     SW_STORE sw_store )
+static void
+index_directory(const string& dir,
+                Xapian::WritableDatabase& db,
+                Xapian::Stopper& stopper)
 {
     DIR *d;
     struct dirent *ent;
@@ -318,7 +319,7 @@ static void index_directory( const string &dir, Xapian::WritableDatabase & db,
 	if (S_ISDIR(statbuf.st_mode)) {
 	    // file is a directory
 	    try {
-		index_directory( file,  db, sw_store );
+                index_directory(file, db, stopper);
 	    }
 	    catch (...) {
 		cout << "Caught unknown exception in index_directory, rethrowing" << endl;
@@ -333,7 +334,7 @@ static void index_directory( const string &dir, Xapian::WritableDatabase & db,
 	    string::size_type dot = file.find_last_of('.');
 	    if (dot != string::npos) ext = file.substr(dot + 1);
 
-	    processfile( file, db, sw_store );
+            processfile(file, db, stopper);
 	    continue;
 	} // END if
 
@@ -356,17 +357,16 @@ int main (int argc, char *argv[]) {
 
   // Catch any Error exceptions thrown
   try {
+        /* load the stopword list */
+        ifstream words(SW_FILE);
+        Xapian::SimpleStopper stopper{istream_iterator<string>(words),
+                                      istream_iterator<string>()};
 
-    /* load the stopword list */
-    SW_STORE sw_store;
-    Read_SW_File( SW_FILE, &sw_store );
+        /* set up xapian indexing */
+        Xapian::WritableDatabase db(argv[1], Xapian::DB_CREATE_OR_OPEN);
 
-    /* set up xapian indexing */
-    Xapian::WritableDatabase db(argv[1], Xapian::DB_CREATE_OR_OPEN);
-
-    /* scan the directories/files and put them in an index */
-    index_directory( argv[1],  db, sw_store );
-
+        /* scan the directories/files and put them in an index */
+        index_directory(argv[1], db, stopper);
   } catch (const Error &error) {
     cout << "Exception: "  << error.get_msg() << endl;
     exit(1);
