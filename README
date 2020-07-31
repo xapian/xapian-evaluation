@@ -8,6 +8,7 @@ Buiding Evaluation Module
 
 User needs to build Evaluation module on their system after cloning the source repository. This can be done using
 ::
+
  autoreconf -fiv
  ./configure
  make
@@ -30,7 +31,8 @@ Indexing Collection with evaluation Module
 
 User can index a collection using
 ::
- . ./trec_index <configuration_file>
+
+ trec_index config
 
 Find a sample config file in current directory names 'config'
 
@@ -41,8 +43,9 @@ Searching Topics file and creating run with evaluation module
 
 User can search a collection using index build to create a run with queries in topic file.
 ::
- ./trec_query <configuration_file>
- ./trec_search <configuration_file>
+
+ trec_query config
+ trec_search config
 
 User need to compulsory configure queryfile, topicfile and stopsfile to search using a topic file, needs to set queryparserbigram to true to be able to add bigrams in query object formed by bigram.
 
@@ -51,7 +54,8 @@ Evaluating the run
 
 User needs to run to get the evaluation result for your run.
 ::
- ./trec_adhoceval configuration_file
+
+ trec_adhoceval config
 
 It's compulsory to set relfile and runfile for using this option.
 
@@ -80,7 +84,7 @@ Configurable Parameters:
 	 - evaluationfiles - (OUTPUT) path/filename of the evaluation files(where evaluation result is stored).
 	 - indexbigram  - (INPUT) Index Bigram in the index.
 	 - queryparsebigram -(INPUT) Parse and add bigrams to the Query.
-	 - weightingscheme - (INPUT) which weighting scheme to select(bm25, lmweight, tradweight, boolweight)
+	 - weightingscheme - (INPUT) which weighting scheme to select(bm25, lmweight, trad, boolweight)
 
 Parameters to be configured for using BM25 Weighting Scheme
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
