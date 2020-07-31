@@ -55,8 +55,6 @@ using namespace std;
 #define DESC 4
 #define NARR 5
 #define SAVETERM 6
-#define TRUE 1
-#define FALSE 0
 
 
 typedef struct query {
@@ -115,16 +113,16 @@ void get_chars(char buffer[], int size, int *curpos,
 		char saved_chars[KW_SIZE]) {
     /* get each character for a word */
 
-    int found = FALSE;              /* condition for a found word */
+    bool found = false;             /* condition for a found word */
     int cur_char;                   /* pos of char in current word */
 
     /* loop until end of word found */
     for (cur_char = 0; cur_char < KW_SIZE && !found; ++cur_char) {
 	if (isspace(buffer[*curpos])) {
-	    found = 1;
+	    found = true;
 	    break;
 	} else if (buffer[*curpos] == '\0' || buffer[*curpos] == '>') {
-	    found = 1;
+	    found = true;
 	    if (buffer[*curpos] == '>') {
 		saved_chars[cur_char] = buffer[*curpos];
 		++cur_char;
@@ -132,7 +130,7 @@ void get_chars(char buffer[], int size, int *curpos,
 	    *curpos += 1;
 	    break;
 	} else if (buffer[*curpos] == '<' && cur_char != 0) {
-	    found = 1;
+	    found = true;
 	    ++cur_char;
 	    break;
 	} else { /* got a saveable character */
