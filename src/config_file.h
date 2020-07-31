@@ -25,7 +25,7 @@
 #define _CONFIG_H_
 
 #include <string>
-#include <xapian.h>
+
 using namespace std;
 
 /* maximum size of a keyword */

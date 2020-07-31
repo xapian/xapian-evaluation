@@ -20,6 +20,7 @@
 #include "trec_adhoceval.h"
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include "split.h"
 
 using namespace std;

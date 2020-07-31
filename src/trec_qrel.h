@@ -18,17 +18,13 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  19  */
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <string>
-#include <fcntl.h>
 #include <iostream>
 #include <fstream>
 #include "config_file.h"
 #include <set>
 #include <vector>
 #include "qrelinmemory.h"
-#include <sstream>
 
 using namespace std;
 

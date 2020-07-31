@@ -20,8 +20,8 @@
 
 #include "trec_eval.h"
 #include "config_file.h"
-#include <set>
 #include <map>
+#include <vector>
 
 using namespace std;
 

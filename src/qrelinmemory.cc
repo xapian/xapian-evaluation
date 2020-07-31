@@ -21,7 +21,6 @@
 
 #include "qrelinmemory.h"
 #include <iostream>
-#include "config_file.h"
 
 using namespace std;
 

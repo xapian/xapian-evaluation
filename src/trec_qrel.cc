@@ -22,6 +22,8 @@
 #include "split.h"
 #include "qrelinmemory.h"
 
+#include <sstream>
+
 using namespace std;
 
 set<string>

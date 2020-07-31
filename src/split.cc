@@ -19,14 +19,10 @@
  * -----END-LICENCE-----
  */
 
-#include <fstream>
-#include <xapian.h>
 #include <algorithm>
-#include <iostream>
 #include <string>
 #include "split.h"
 
-using namespace Xapian;
 using namespace std;
 
 void clear_apos(  string & data ) {

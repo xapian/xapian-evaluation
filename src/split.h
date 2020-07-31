@@ -1,4 +1,4 @@
-/* split.: split a string routine
+/* split.h: split a string routine
  *
  * ----START-LICENCE----
  *
@@ -24,8 +24,8 @@
 #define _SPLIT_H_
 
 #include <string>
-using namespace std;
+#include <vector>
 
-extern void split( const string &s, char c, vector<string> &res);
+extern void split(const std::string& s, char c, std::vector<std::string>& res);
 
 #endif

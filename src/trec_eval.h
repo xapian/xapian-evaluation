@@ -26,8 +26,6 @@
 #include <stdlib.h>
 #include <string>
 #include "config_file.h"
-#include <set>
-#include <sstream>
 #include "trec_qrel.h"
 
 using namespace std;
