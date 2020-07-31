@@ -362,7 +362,7 @@ int main (int argc, char *argv[]) {
     Read_SW_File( SW_FILE, &sw_store );
 
     /* set up xapian indexing */
-    Xapian::WritableDatabase db(Xapian::Flint::open(argv[1], Xapian::DB_CREATE_OR_OPEN));
+    Xapian::WritableDatabase db(argv[1], Xapian::DB_CREATE_OR_OPEN);
 
     /* scan the directories/files and put them in an index */
     index_directory( argv[1],  db, sw_store );
