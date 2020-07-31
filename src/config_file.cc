@@ -72,14 +72,6 @@ void CONFIG_TREC::record_tag( string config_tag, string config_value ) {
     noresults = atoi(config_value.c_str());
     found = 1;
   } // END if
-  if( config_tag == "const_k1" ) {
-    const_k1 = atof(config_value.c_str());
-    found = 1;
-  } // END if
-  if( config_tag == "const_b" ) {
-    const_b = atof(config_value.c_str());
-    found = 1;
-  } // END if
   if( config_tag == "topicfile" ) {
     topicfile = config_value;
     found = 1;
@@ -120,105 +112,6 @@ void CONFIG_TREC::record_tag( string config_tag, string config_value ) {
 	found = 1;
   }
 
-  if (config_tag == "bm25param_k1" ) {
-	bm25param_k1 = strtod(config_value.c_str(),NULL);
-	found = 1;
-  }
-
-  if (config_tag == "bm25param_k2" ) {
-	bm25param_k2 = strtod(config_value.c_str(),NULL);
-	found = 1;
-  }
-
-  if (config_tag == "bm25param_k3" ) {
-	bm25param_k3 = strtod(config_value.c_str(),NULL);
-	found = 1;
-  }
-
-  if (config_tag == "bm25param_b" ) {
-	bm25param_b = strtod(config_value.c_str(),NULL);
-	found = 1;
-  }
-
-  if (config_tag == "bm25param_min_normlen" ) {
-	bm25param_min_normlen = strtod(config_value.c_str(),NULL);
-	found = 1;
-  }
-
-  if (config_tag == "tradparam_k" ) {
-	tradparam_k = strtod(config_value.c_str(),NULL);
-	found = 1;
-  }
-
-  if (config_tag == "lmparam_log" ) {
-	lmparam_log = strtod(config_value.c_str(),NULL);
-	found = 1;
-  }
-
-  if (config_tag == "lmparam_smoothing1" ) {
-	lmparam_smoothing1 = strtod(config_value.c_str(),NULL);
-	found = 1;
-  }
-
-  if (config_tag == "lmparam_smoothing2" ) {
-	lmparam_smoothing2 = strtod(config_value.c_str(),NULL);
-	found = 1;
-  }
-
-  if (config_tag == "lmparam_mixture" ) {
-	lmparam_mixture = strtod(config_value.c_str(),NULL);
-	found = 1;
-  }
-
-  if (config_tag == "lmparam_select_smoothing" ) {
-	if (config_value.compare("TWO_STAGE_SMOOTHING") == 0 ) {
-		lmparam_select_smoothing = Xapian::Weight::TWO_STAGE_SMOOTHING;
-	found = 1;
-	}
-	if (config_value.compare("DIRICHLET_SMOOTHING") == 0 ) {
-		lmparam_select_smoothing = Xapian::Weight::DIRICHLET_SMOOTHING;
-	found = 1;
-	}
-	if (config_value.compare("ABSOLUTE_DISCOUNT_SMOOTHING") == 0 ) {
-		lmparam_select_smoothing = Xapian::Weight::ABSOLUTE_DISCOUNT_SMOOTHING;
-	found = 1;
-	}
-	if (config_value.compare("JELINEK_MERCER_SMOOTHING") == 0 ) {
-		lmparam_select_smoothing = Xapian::Weight::JELINEK_MERCER_SMOOTHING;
-	found = 1;
-	}
-  }
-  
-  if (config_tag == "bm25plusparam_k1" ) {
-	bm25plusparam_k1 = strtod(config_value.c_str(),NULL);
-	found = 1;
-  }
-
-  if (config_tag == "bm25plusparam_k2" ) {
-	bm25plusparam_k2 = strtod(config_value.c_str(),NULL);
-	found = 1;
-  }
-
-  if (config_tag == "bm25plusparam_k3" ) {
-	bm25plusparam_k3 = strtod(config_value.c_str(),NULL);
-	found = 1;
-  }
-
-  if (config_tag == "bm25plusparam_b" ) {
-	bm25plusparam_b = strtod(config_value.c_str(),NULL);
-	found = 1;
-  }
-
-  if (config_tag == "bm25plusparam_min_normlen" ) {
-	bm25plusparam_min_normlen = strtod(config_value.c_str(),NULL);
-	found = 1;
-  }
-  
-  if (config_tag == "bm25plusparam_delta" ) {
-  	bm25plusparam_delta = strtod(config_value.c_str(),NULL);
-  	found = 1;
-  }
-
   if( !found ) {
     cout << "ERROR: could not locate tag [" << config_tag << "] for value [" << config_value
 	 << "]" << endl;
@@ -237,8 +130,6 @@ void CONFIG_TREC::setup_config( string filename ) {
   resultsfile = "trec.log";      // path/filename of results file
   transfile = "transaction.log";  // transaction log file (timings etc)
   noresults = 1000;              // no of results to save in results log file
-  const_k1 = 1.2;                // value for K1 constant (BM25)
-  const_b = 0.75;                // value for B constant (BM25)
   topicfile = "noneassigned";    // path/filename of topic file
   topicfields = "t";             // fields of topic to use from topic file: default title
   relfile= "noneassigned";       // path/filename of relevance judgements file
@@ -248,22 +139,6 @@ void CONFIG_TREC::setup_config( string filename ) {
   indexbigram = "false";   // Default value of index bigram
   queryparsebigram = "false"; //Default value of parse bigram in query.
   weightingscheme = "noneassigned";
-  bm25param_k1 = -1.0;
-  bm25param_k2 = -1.0;
-  bm25param_k3 = -1.0;
-  bm25param_b = -1.0;
-  bm25param_min_normlen = -1.0;
-  bm25plusparam_k1 = -1.0;
-  bm25plusparam_k2 = -1.0;
-  bm25plusparam_k3 = -1.0;
-  bm25plusparam_b = -1.0;
-  bm25plusparam_min_normlen = -1.0;
-  bm25plusparam_delta = -1.0;
-  tradparam_k = -1.0;
-  lmparam_log = -1.0;
-  lmparam_smoothing1 = -1.0;
-  lmparam_smoothing2 = -1.0;
-  lmparam_mixture = -1.0;
 
   std::ifstream configfile( filename.c_str() );
   
@@ -358,86 +233,3 @@ int CONFIG_TREC::check_search_config( ) {
 	return 1;
 	
 } // END check_search_config
-
-bool CONFIG_TREC::check_bm25() {
-//ensure that all the information or parameters requires by BM25 are available.
-	if ( bm25param_k1 == -1.0 ) {
-		return false;
-	}	
-	if ( bm25param_k2 == -1.0 ) {
-		return false;
-	}	
-	if ( bm25param_k3 == -1.0 ) {
-		return false;
-	}	
-	if ( bm25param_b == -1.0 ) {
-		return false;
-	}	
-	if ( bm25param_min_normlen == -1.0 ) {
-		return false;
-	}	
-	return true;
-}
-
-bool CONFIG_TREC::check_trad() {
-//ensure that all the information or parameters requires by TradWeight are available.
-	if ( tradparam_k == -1.0 ) {
-		return false;
-	}	
-	return true;
-}
-
-bool CONFIG_TREC::check_lmweight() {
-//ensure that all the information or parameters requires by LMweight are available.
-	if ( lmparam_log == -1.0 ) {
-		cout<<"LOG"<<endl;
-		return false;
-	}	
-	if ( lmparam_smoothing1 == -1.0 ) {
-		cout<<"Smoothign1"<<endl;
-		return false;
-	}	
-	if ( lmparam_smoothing2 == -1.0 ) {
-		cout<<"Smoothgin2"<<endl;
-		return false;
-	}	
-	if ( lmparam_mixture == -1.0 ) {
-		cout<<"Mixture"<<endl;
-		return false;
-	}	
-	if ( lmparam_select_smoothing == 0) {
-		cout<<"typesmoothing"<<endl;
-		return false;
-	}	
-	return true;
-}
-
-bool CONFIG_TREC::check_bm25plus() {
-//ensure that all the information or parameters requires by BM25 are available.
-	if ( bm25plusparam_k1 == -1.0 ) {
-		return false;
-	}	
-	if ( bm25plusparam_k2 == -1.0 ) {
-		return false;
-	}	
-	if ( bm25plusparam_k3 == -1.0 ) {
-		return false;
-	}	
-	if ( bm25plusparam_b == -1.0 ) {
-		return false;
-	}	
-	if ( bm25plusparam_min_normlen == -1.0 ) {
-		return false;
-	}
-	if ( bm25plusparam_delta == -1.0 ) {
-		return false;
-	}	
-	return true;
-}
-
-
-bool CONFIG_TREC::use_weightingscheme(string scheme) {
-
-   return  weightingscheme.compare(scheme) == 0? true :  false;
-
-}

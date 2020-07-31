@@ -6,13 +6,7 @@ stopsfile stopwords.txt
 noresults 200
 indexbigram true
 queryparsebigram true
-weightingscheme bm25plus
-bm25plusparam_k1 1.0
-bm25plusparam_k2 0
-bm25plusparam_k3 1.0
-bm25plusparam_b 0.5
-bm25plusparam_min_normlen 0.5
-bm25plusparam_delta 1.0
+weightingscheme bm25plus 1.0 0 1.0 0.5 0.5 1.0
 topicfile en.topics.126-175.2011.txt
 queryfile en_query_run_1.txt
 relfile en.qrels.126-175.2011.txt
