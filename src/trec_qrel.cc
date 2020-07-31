@@ -3,16 +3,16 @@
  *
  * Copyright 2012 Gaurav Arora
  *
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License as 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
@@ -24,7 +24,7 @@
 
 using namespace std;
 
-set<string> 
+set<string>
 TrecQrel::getQueryIds() {
 	set<string> queryids;
 	for ( int i = 0;i < getNumberofQueries();i++) {
@@ -34,7 +34,7 @@ TrecQrel::getQueryIds() {
 }
 
 
-set<string> 
+set<string>
 TrecQrel::getRelevantDocument(int grade,const string &queryid) {
 	for (int i = 0; i < getNumberofQueries(); i++) {
 		if (qrelPerQuery[i].queryid == queryid) {
@@ -45,7 +45,7 @@ TrecQrel::getRelevantDocument(int grade,const string &queryid) {
 }
 
 
-set<string> 
+set<string>
 TrecQrel::getAllRelevantDocument() {
 	set<string> reldocuments;
 	for ( int i = 0 ;i <  getNumberofQueries(); i++) {
@@ -56,7 +56,7 @@ TrecQrel::getAllRelevantDocument() {
 }
 
 
-set<string> 
+set<string>
 TrecQrel::getRelevantDocument(const string & queryid) {
 	for ( int i = 0 ;i <  getNumberofQueries(); i++) {
 		if (qrelPerQuery[i].queryid == queryid) {
@@ -67,7 +67,7 @@ TrecQrel::getRelevantDocument(const string & queryid) {
 	return rel;
 }
 
-int 
+int
 TrecQrel::getNumberofRelevant(const string & queryid) {
 	for ( int i = 0 ;i <  getNumberofQueries(); i++) {
 		if (qrelPerQuery[i].queryid == queryid) {
@@ -78,12 +78,12 @@ TrecQrel::getNumberofRelevant(const string & queryid) {
 
 }
 
-int 
+int
 TrecQrel::getNumberofQueries() {
 	return qrelPerQuery.size();
 }
 
-void 
+void
 TrecQrel::loadQRelFile() {
 	string line;
 	if ( !fqrels.eof())
@@ -139,7 +139,7 @@ TrecQrel::isRelevantDoc(const string  & docno,const string & queryid) {
 	return false;
 }
 
-int 
+int
 TrecQrel::getGrade(const string & docno,const string & queryid) {
 	for (int i = 0;i < getNumberofQueries();i++) {
 		if (qrelPerQuery[i].queryid == queryid) {

@@ -1,19 +1,19 @@
 /* @file qrelinmemory.cc
- * @abstract Implementation file of class which store Qrel file In memory 
+ * @abstract Implementation file of class which store Qrel file In memory
  *	         for access during evaluation of resultfile.
  *
  * Copyright 2012 Gaurav Arora
  *
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License as 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
@@ -28,7 +28,7 @@ using namespace std;
 bool
 QRelInMemory::isRelevant(const string & docno) const {
 	set<int>::iterator grades;
-	
+
 	for (grades=relGrade.begin() ;grades != relGrade.end() ;grades++ ) {
 		if ( relGradeDocMap.find(*grades) != relGradeDocMap.end()) {
 			if(relGradeDocMap.find(*grades)->second.find(docno) != relGradeDocMap.find(*grades)->second.end())
@@ -38,10 +38,10 @@ QRelInMemory::isRelevant(const string & docno) const {
 return false;
 }
 
-int 
-QRelInMemory::getGrade(const string & docno) { 
+int
+QRelInMemory::getGrade(const string & docno) {
 	set<int>::iterator grades;
-	
+
 	for (grades=relGrade.begin() ;grades != relGrade.end() ;grades++ ) {
 	    docs = relGradeDocMap.find(*grades);
 		if (docs != relGradeDocMap.end()) {
@@ -53,23 +53,23 @@ QRelInMemory::getGrade(const string & docno) {
 return 0;
 }
 
-set<string> 
+set<string>
 QRelInMemory::getAllRelevantDocument() const {
 	set<int>::iterator grades;
-	set<string> reldocs;	
-	for (grades=relGrade.begin() ;grades != relGrade.end() ;grades++ ) {	
+	set<string> reldocs;
+	for (grades=relGrade.begin() ;grades != relGrade.end() ;grades++ ) {
 			set<string> docs = relGradeDocMap.find(*grades)->second;
 			reldocs.insert(docs.begin(),docs.end());
 	}
 	return reldocs;
 }
 
-set<string> 
+set<string>
 QRelInMemory::getRelevantDocument(const int & grade) const {
 	return relGradeDocMap.find(grade)->second;
 }
 
-bool 
+bool
 QRelInMemory::insertRelDocument(const string & docno,const int & grade) {
 	if (relGrade.find(grade) != relGrade.end()) {
 	map<int,set<string> >::iterator docs =	relGradeDocMap.find(grade);
@@ -83,7 +83,7 @@ QRelInMemory::insertRelDocument(const string & docno,const int & grade) {
 	return true;
 }
 
-bool 
+bool
 QRelInMemory::insertNonRelDocument(const string & docno) {
 	nonRelDocuments.insert(docno);
     return true;

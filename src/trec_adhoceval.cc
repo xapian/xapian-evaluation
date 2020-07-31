@@ -3,16 +3,16 @@
  *
  * Copyright 2012 Gaurav Arora
  *
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License as 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
@@ -27,7 +27,7 @@ using namespace std;
 static const int PRECISION_RANK[] = {1,2,3,4,5,10,15,20,30,50,100,200,500,1000};
 static const int PRECISION_PERCENTAGES[] = {0,10,20,30,40,50,60,70,80,90,100};
 
-void 
+void
 AdhocEvaluation::initialise() {
 
 	maxNumberRetrieved = configobj.get_noresults();
@@ -37,7 +37,7 @@ AdhocEvaluation::initialise() {
 	totalNumberofRetrieved = 0;
 	totalNumberofRelevant = 0;
 	totalNumberofRelevantRetrieved = 0;
-	meanAveragePrecision = 0; 
+	meanAveragePrecision = 0;
 }
 
 
@@ -80,7 +80,7 @@ while( resultfile.good() && !resultfile.eof() ) {
 	    std::stringstream inttostring;
     	inttostring << query;
 	    string queryid = inttostring.str();
-	
+
     	if(!qrel->existInQrel(queryid))
 	    	continue;
     	string docId = data[2];
@@ -104,12 +104,12 @@ while( resultfile.good() && !resultfile.eof() ) {
 	        effQueryCounter++;
     	    vecQueryNo.push_back(queryid);
     	    vecNumberofRelevant.push_back(qrel->getNumberofRelevant(queryid));
-    	}		
+    	}
 	    previous = queryid;
     	numberofRetrievedCounter++;
 	    totalNumberofRetrieved++;
     	Record *currrec = new Record(queryid,docId,rank);
-	    retrieved->push_back(*currrec);	
+	    retrieved->push_back(*currrec);
     	//adding relevant document to the relevant retrieved set
     	if (qrel->isRelevantDoc(docId,queryid)) {
 	    	relevantRetrieved->push_back(*currrec);
@@ -117,7 +117,7 @@ while( resultfile.good() && !resultfile.eof() ) {
 	        numberofRelevantRetrievedCounter++;
 	    }
 
-	} //end of data checking if condition	
+	} //end of data checking if condition
 }
 	vecNumberofRetrieved.push_back(numberofRetrievedCounter);
 	vecNumberofRelevantRetrieved.push_back(numberofRelevantRetrievedCounter);
@@ -156,7 +156,7 @@ while( resultfile.good() && !resultfile.eof() ) {
 		// Iterating the ranklist(Record List of the Queries.
 		for (recorditr = recordvec->begin();recorditr != recordvec->end();recorditr++) {
 			Record rec = *recorditr;
-			/** Incrementing Relevance Precision if relevant document 
+			/** Incrementing Relevance Precision if relevant document
 			is found at rank smaller than number of relevant document.
 			*/
 			if (rec.getRank() < vecNumberofRelevant[currentQuery]) {
@@ -166,7 +166,7 @@ while( resultfile.good() && !resultfile.eof() ) {
 			ExactPrecision[currentQuery]  += (double)(docrank+1)/(double)(rec.getRank()+1);
 			rec.precision  += (double)(docrank+1)/(double)(rec.getRank()+1);
 			rec.recall += (double) (docrank+1) / vecNumberofRelevant[currentQuery];
-		
+
 			for ( int precisionRank = 0;precisionRank < 14;precisionRank++) {
 				if (rec.getRank()  < PRECISION_RANK[precisionRank]) {
 					map<int,double> precisioncurrent = precisionAtRankByQuery[currentQuery];
@@ -193,16 +193,16 @@ while( resultfile.good() && !resultfile.eof() ) {
     						precisionrankitr->second += rec.precision;
 					}
 					precisionAtRecallByQuery[currentQuery] = precisioncurrent;
-				
+
 			}
 			}
 			docrank++;
 		}
 	// Dividing by number of relevant for average of particular Query.
-	ExactPrecision[currentQuery] /= (double)(vecNumberofRelevant[currentQuery]+1);	
-	RPrecision[currentQuery] /= (double)(vecNumberofRelevant[currentQuery]+1);	
-	
-	
+	ExactPrecision[currentQuery] /= (double)(vecNumberofRelevant[currentQuery]+1);
+	RPrecision[currentQuery] /= (double)(vecNumberofRelevant[currentQuery]+1);
+
+
 	// Summing Precision of all queries for final Average Precisions.
 	meanAveragePrecision +=  ExactPrecision[currentQuery];
 	meanRelevantPrecision +=  RPrecision[currentQuery];
@@ -218,7 +218,7 @@ while( resultfile.good() && !resultfile.eof() ) {
 		rankPrecision /= numberofEffQuery;
 		precisionAtRank.insert( pair<int,double>(PRECISION_RANK[precisionRank],rankPrecision));
 	}
-	
+
 	// Merge the precision at recall values for all the queries to get accumulate results.
 	for ( int precisionPercentage = 0;precisionPercentage < 11;precisionPercentage++) {
 		double recallPrecision = 0.0;

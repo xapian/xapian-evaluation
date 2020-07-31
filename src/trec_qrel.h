@@ -3,16 +3,16 @@
  *
  * Copyright 2012 Gaurav Arora
  *
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License as 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
@@ -38,11 +38,11 @@ protected:
 	ifstream fqrels;
 
 public:
-	
+
 	vector<QRelInMemory> qrelPerQuery;
 
 	int totalNumberofRelevantDocs;
-	
+
 	TrecQrel(CONFIG_TREC & config) {
 	string reljudgement = config.get_relfile().c_str();
 	fqrels.open(reljudgement.c_str(), ifstream::in);
@@ -52,9 +52,9 @@ public:
 	}
 	loadQRelFile();
 	}
-	
+
 	/*  To get Query ids of all the queries present in relevance judgement pool.
- 	 *  @return query ids of queries in pool 
+ 	 *  @return query ids of queries in pool
 	*/
 	set<string> getQueryIds();
 
@@ -65,18 +65,18 @@ public:
      */
 
 	set<string> getRelevantDocument(int grade,const string & queryid);
-	
-	/* Get all the relevant document ids 
-	 *  @return - set of all the relevant document 
+
+	/* Get all the relevant document ids
+	 *  @return - set of all the relevant document
      */
 
 	set<string> getAllRelevantDocument();
-    
-	/* Get the relevant document ids for a given Query 
+
+	/* Get the relevant document ids for a given Query
      *	@param queryid - Queryid of query for which the documents need to be returned.
 	 *  @return - set of the relevant document for query queryid from all grades
      */
-	
+
 	set<string> getRelevantDocument(const string & queryid);
 
 	/* Get number of relevant document for the query.
@@ -89,28 +89,28 @@ public:
 	/* Get total number of queries in the pool.
 	 * @return Number of  query in the pool.
 	 */
-	
+
 	int getNumberofQueries();
-	
+
 	//Load the QRel file in the InMemory Datastructures.
 
-	void loadQRelFile();	
+	void loadQRelFile();
 
 	/**
 	 * Check whether Query with given identifier exist in relevance assessment
 	 * @param queryid - identifier of the Query.
 	 * @return true if the query exist in assessment pool,false otherwise.
 	 */
-	
+
 	bool existInQrel(const string & queryid);
-	
+
 	/**
 	 * Checks if the document is relevant or not for the query given by the query identifier.
 	 * @param queryid - Identifier for the query.
 	 * @param docno - Identifier for the document to be checked for relevant or not.
 	 * @return true if document is relevant for the given query.
 	 */
-	
+
 	 bool isRelevantDoc(const string & docno,const string & queryid);
 
 	/**

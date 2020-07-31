@@ -29,7 +29,7 @@
 
 using namespace Xapian;
 using namespace std;
- 
+
 void clear_apos(  string & data ) {
 // clear " from data
 

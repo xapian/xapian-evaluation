@@ -3,17 +3,17 @@
  * ----START-LICENCE----
  * Copyright 2003 Andy MacFarlane, City University
  * Copyright 2012 Gaurav Arora
- * 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License as 
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
@@ -27,7 +27,7 @@
 #include <string>
 #include <xapian.h>
 #include "config_file.h"
-#include "split.h" 
+#include "split.h"
 
 using namespace Xapian;
 using namespace std;
@@ -96,12 +96,12 @@ void CONFIG_TREC::record_tag( string config_tag, string config_value ) {
 	evaluationfiles = config_value;
     found = 1;
   } // END if
-  
+
   if (config_tag == "indexbigram" ) {
 	indexbigram = config_value;
     found = 1;
   } //END if
- 
+
   if (config_tag == "queryparsebigram" ) {
 	queryparsebigram = config_value;
 	found = 1;
@@ -116,7 +116,7 @@ void CONFIG_TREC::record_tag( string config_tag, string config_value ) {
     cout << "ERROR: could not locate tag [" << config_tag << "] for value [" << config_value
 	 << "]" << endl;
   } // END if
- 	 
+
 } // END record_tag
 
 void CONFIG_TREC::setup_config( string filename ) {
@@ -141,21 +141,21 @@ void CONFIG_TREC::setup_config( string filename ) {
   weightingscheme = "noneassigned";
 
   std::ifstream configfile( filename.c_str() );
-  
+
   if( !configfile ) {
     cerr << "ERROR: you must specify a valid configuration file name" << endl;
     exit(0);
   } //else cout << "CONFIG) Opened configuration file: " << filename << endl;
 
   while( !configfile.eof() ) {
-    
+
     // read in lines from the configuration file
-    string data; 
+    string data;
     //  the tag
     string config_tag;
     // get the value
     string config_value;
-    
+
     // identify and save information from the configuration file
     if( !configfile.eof() ) {
       configfile >> data;
@@ -163,13 +163,13 @@ void CONFIG_TREC::setup_config( string filename ) {
       configfile >> data;
       config_value = data;
       //cout << "GOT) values [" << config_tag << "] and [" << config_value << "]" << endl;
-      
+
       // record the tag
       if( !configfile.eof() ) record_tag( config_tag, config_value );
     } // END if
-    
+
   } // END while
-  
+
 } // END setup_config
 
 int CONFIG_TREC::check_query_config() {
@@ -191,9 +191,9 @@ int CONFIG_TREC::check_query_config() {
 		cerr << "ERROR: you must specify the db path" << endl;
 		return 0;
 	} // END if
-	
+
 	return 1;
-	
+
 } // END check_query_config
 
 int CONFIG_TREC::check_index_config( ) {
@@ -208,14 +208,14 @@ int CONFIG_TREC::check_index_config( ) {
 		cerr << "ERROR: you must specify the db path" << endl;
 		return 0;
 	} // END if
-	
+
  if( textfile == "noneassigned" ) {
 		cerr << "ERROR: you must specify the db path" << endl;
 		return 0;
 	} // END if
 
 	return 1;
-	
+
 } // END check_index_config
 
 int CONFIG_TREC::check_search_config( ) {
@@ -231,5 +231,5 @@ int CONFIG_TREC::check_search_config( ) {
 	} // END if
 
 	return 1;
-	
+
 } // END check_search_config

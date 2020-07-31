@@ -1,7 +1,7 @@
 /*
 **  xapian-trec.cc
 **
-**  AM 8/11/2006 
+**  AM 8/11/2006
 **  An example TREC search mechanism using Xapian
 **
 */
@@ -25,12 +25,12 @@ int main (int argc, char *argv[]) {
     cerr << "USAGE: xapian-trec <database> <query file> <results file>  <run id>  \n";
     exit(0);
   } // END if
- 
+
   // Catch any Error exceptions thrown
   try {
 
     /* set up xapian search and term handling */
-    Database db(argv[1]); 
+    Database db(argv[1]);
     Enquire enquire(db);
     Stem stemmer("english");
 
@@ -43,7 +43,7 @@ int main (int argc, char *argv[]) {
 
     // iterate through query file until none left
     while(!query_file.eof()) {
-      string topic_no;		 // the topic number of a given query 
+      string topic_no;		 // the topic number of a given query
 
       /* get the line */
       char ch;
@@ -64,7 +64,7 @@ int main (int argc, char *argv[]) {
       vector<string> stemmed_terms;
       for( ; termiter != terms.end(); termiter++)
 					 stemmed_terms.push_back(stemmer(*termiter));
-    
+
       /* create the query and get the results for it */
       Query query(Query::OP_OR, stemmed_terms.begin(), stemmed_terms.end());
       enquire.set_query(query);

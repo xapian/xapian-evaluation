@@ -247,21 +247,21 @@ HtmlParser::parse_html(const string &body)
     string::const_iterator start = body.begin();
 
     while (1) {
-					
+
 	// Skip through until we find an HTML tag, a comment, or the end of
 	// document.  Ignore isolated occurences of `<' which don't start
 	// a tag or comment
 	string::const_iterator p = start;
 	while (1) {
-				
+
 	    p = find(p, body.end(), '<');
 	    if (p == body.end()) break;
 	    char ch = *(p + 1);
 	    // tag, closing tag, comment (or SGML declaration), or PHP
 	    if (isalpha(ch) || ch == '/' || ch == '!' || ch == '?') break;
-	    p++; 
+	    p++;
 	}
-	 		
+
 
 	// process text up to start of tag
 	if (p > start) {
@@ -269,11 +269,11 @@ HtmlParser::parse_html(const string &body)
 	    decode_entities(text);
 	    process_text(text);
 	}
-	 		
+
 	if (p == body.end()) break;
 
 	start = p + 1;
-   
+
 	if (start == body.end()) break;
 
 	if (*start == '!') {
@@ -290,7 +290,7 @@ HtmlParser::parse_html(const string &body)
 		// look for -->
 		while (p != body.end() && (*(p - 1) != '-' || *(p - 2) != '-'))
 		    p = find(p + 1, body.end(), '>');
-			
+
 		// If we found --> skip to there, otherwise
 		// skip to the first > we found (as Netscape does)
 		if (p != body.end()) start = p;
@@ -320,62 +320,62 @@ HtmlParser::parse_html(const string &body)
 		closing = 1;
 		start = find_if(start + 1, body.end(), p_notwhitespace);
 	    }
-	      
+
 	    p = start;
 	    start = find_if(start, body.end(), p_nottag);
-			
+
 	    string tag = body.substr(p - body.begin(), start - p);
-			
+
 	    // convert tagname to lowercase
 	    for (string::iterator i = tag.begin(); i != tag.end(); i++)
 		*i = tolower(*i);
-	       
+
 	    if (closing) {
-				 
+
 				 closing_tag(tag);
-		   	 
+
 				 /* ignore any bogus parameters on closing tags */
 				 p = find(start, body.end(), '>');
 				 if (p == body.end()) break;
 				 start = p + 1;
 	    } else {
-			
+
 		while (start < body.end() && *start != '>') {
 		    string name, value;
-				
+
 		    p = find_if(start, body.end(), p_whitespaceeqgt);
 
 		    name = body.substr(start - body.begin(), p - start);
 
 		    p = find_if(p, body.end(), p_notwhitespace);
-		
+
 		    start = p;
 		    if (start != body.end() && *start == '=') {
 			int quote;
-		  
+
 			start = find_if(start + 1, body.end(), p_notwhitespace);
-						
+
 			p = body.end();
-			  
+
 			quote = *start;
 			if (quote == '"' || quote == '\'') {
 			    start++;
 			    p = find(start, body.end(), quote);
 			}
-			   
+
 			if (p == body.end()) {
 			    // unquoted or no closing quote
 			    p = find_if(start, body.end(), p_whitespacegt);
-			    
+
 			    value = body.substr(start - body.begin(), p - start);
 
 			    start = find_if(p, body.end(), p_notwhitespace);
 			} else {
 			    value = body.substr(start - body.begin(), p - start);
 			}
-		     
+
 			if (name.size()) {
-			 
+
 			    // convert parameter name to lowercase
 			    string::iterator i;
 			    for (i = name.begin(); i != name.end(); i++)
@@ -389,7 +389,7 @@ HtmlParser::parse_html(const string &body)
 		}
 		opening_tag(tag, Param);
 		Param.clear();
-							
+
 		if (start != body.end() && *start == '>') ++start;
 	    }
 	}

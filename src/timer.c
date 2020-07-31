@@ -1,6 +1,6 @@
 /* File: timer.c
    Date: 9 December 1996
-   Description: timing routines 
+   Description: timing routines
    Copyright: A.MacFarlane
 	 Altered 27/2/2007 for terabyte web efficiency experiments
 
@@ -15,7 +15,7 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
-Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  
+Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 */
 
@@ -42,11 +42,11 @@ float time_real( struct timeval t ) {
 
 } /* END time_real */
 
-void diff_time( struct timeval finish, 
-				struct timeval start, 
+void diff_time( struct timeval finish,
+				struct timeval start,
 				struct timeval *cost ){
 
-  /* calculate the difference in time between start and finish (in whole and 
+  /* calculate the difference in time between start and finish (in whole and
      decimal parts) */
   if( finish.tv_usec < start.tv_usec )
     {
@@ -95,7 +95,7 @@ void accumcost( COST *cur_cost, COST new_cost ) {
   accumtime( &cur_cost->mar,   new_cost.mar );
   accumtime( &cur_cost->comms, new_cost.comms );
   accumtime( &cur_cost->wait,  new_cost.wait );
- 
+
 } /* END accumcost */
 
 void Print_Costs( COST cost ) {

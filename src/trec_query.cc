@@ -3,16 +3,16 @@
  * ----START-LICENCE----
  * Copyright 2003 Andy MacFarlane, City University
  *
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License as 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
@@ -69,55 +69,55 @@ typedef struct query {
 
 } QUERY;
 
-void skip_spaces( char page[], int size, int *curpos ) { 
-  /* skip any number of spaces/irrelevant chars in rows/cols */ 
-   
-  /* find an alpha numeric character */ 
+void skip_spaces( char page[], int size, int *curpos ) {
+  /* skip any number of spaces/irrelevant chars in rows/cols */
+
+  /* find an alpha numeric character */
   while( page[*curpos] != '\0' &&
-	 !isalnum( page[*curpos] ) && !(page[*curpos] == '<')) {  
-      *curpos += 1; 
-  } /*END while*/ 
- 
-} /*END skip_spaces*/ 
+	 !isalnum( page[*curpos] ) && !(page[*curpos] == '<')) {
+      *curpos += 1;
+  } /*END while*/
 
-void fold_word( char string[], int len ) { 
-  /* case fold a word */ 
- 
-  int i; 
- 
-  for( i= 0; i < len; i++ ) 
-     string[i] = tolower( string[i] ); 
- 
-} /* END fold_word */ 
- 
-int iswordbreak( char c ) { 
-  /* see if there is a break in the middle of a word, such as a hyper 
-     less than sign etc, if so return true else false - version2 */ 
-  /* note: used for the chamber: ignores <> chars for tag processing */ 
+} /*END skip_spaces*/
 
-  if( c >= 0 && c <= '-' ) 
-    return 1; 
-  if( c >= '[' && c <= '`' ) 
-    return 1; 
-  if( c >= '{' && c <= '~' ) 
-    return 1; 
-  if( c >= ':' && c <= ';' ) 
-    return 1; 
-  if( c >= '=' && c <= '@' ) 
-    return 1; 
-  if( c == '/'  ) 
-    return 1; 
- return 0; 
- 
-} /* END iswordbreak */ 
+void fold_word( char string[], int len ) {
+  /* case fold a word */
+
+  int i;
+
+  for( i= 0; i < len; i++ )
+     string[i] = tolower( string[i] );
+
+} /* END fold_word */
+
+int iswordbreak( char c ) {
+  /* see if there is a break in the middle of a word, such as a hyper
+     less than sign etc, if so return true else false - version2 */
+  /* note: used for the chamber: ignores <> chars for tag processing */
+
+  if( c >= 0 && c <= '-' )
+    return 1;
+  if( c >= '[' && c <= '`' )
+    return 1;
+  if( c >= '{' && c <= '~' )
+    return 1;
+  if( c >= ':' && c <= ';' )
+    return 1;
+  if( c >= '=' && c <= '@' )
+    return 1;
+  if( c == '/'  )
+    return 1;
+ return 0;
+
+} /* END iswordbreak */
 
 void get_chars(char buffer[], int size, int *curpos,
 		char saved_chars[KW_SIZE]) {
     /* get each character for a word */
- 
+
     int found = FALSE;              /* condition for a found word */
     int cur_char;                   /* pos of char in current word */
- 
+
     /* loop until end of word found */
     for (cur_char = 0; cur_char < KW_SIZE && !found; ++cur_char) {
 	if (isspace(buffer[*curpos])) {
@@ -140,9 +140,9 @@ void get_chars(char buffer[], int size, int *curpos,
 	    *curpos += 1;
 	} /* END if */
     } /* END for */
-    
+
     fold_word(saved_chars, cur_char); /* case fold the word */
- 
+
     /* deal with appostr. (mostly <string>'s really) */
     if (cur_char >= 2) {
 	if (saved_chars[cur_char - 2] == '\'' ||
@@ -157,24 +157,24 @@ void get_chars(char buffer[], int size, int *curpos,
 	saved_chars[cur_char] = '\0';
     }
 } /* END get_chars */
- 
-void get_word( char buffer[], int size, char word[KW_SIZE], int *curpos ) { 
-  /* get a word from a page */ 
- 
-  /*skip any number of spaces/irrelevant chars in rows/cols*/ 
-  skip_spaces( buffer, size, curpos  ); 
- 
-  /* now get each character from the line */ 
-  get_chars( buffer, size, curpos, word ); 
-  word[KW_SIZE-1] = '\0';  /*max size keyword to record */ 
-} /*END get_word*/ 
+
+void get_word( char buffer[], int size, char word[KW_SIZE], int *curpos ) {
+  /* get a word from a page */
+
+  /*skip any number of spaces/irrelevant chars in rows/cols*/
+  skip_spaces( buffer, size, curpos  );
+
+  /* now get each character from the line */
+  get_chars( buffer, size, curpos, word );
+  word[KW_SIZE-1] = '\0';  /*max size keyword to record */
+} /*END get_word*/
 
 void check_code( char word[KW_SIZE], int *code ) {
 
 	*code = SAVETERM; /* assume it's a saveable term */
 
 	if( strncmp( word,"<top>",4) == 0 )
-		*code = -1;  
+		*code = -1;
 	if( strncmp( word,"<num>",5) == 0 )
 		*code = TOPIC_NUMBER;
 	if( strncmp( word,"</num>",5) == 0 )
@@ -208,7 +208,7 @@ void clean_word( char word[KW_SIZE] ) {
 	for( i=0, curpos=0; i < strlen(word); i++ ) {
 		if(isalnum(word[i])) cleanedword[curpos++] = word[i];
 	} /* END for */
-	
+
 	strcpy( word, cleanedword );
 
 } /* END clean_word */
@@ -228,15 +228,15 @@ void find_field_status( char arg[], int *use_title, int *use_desc, int *use_narr
       break;
     case 'n' : *use_narr=1; foundone=1;
       break;
-      //default : 
-    } // END switch 
+      //default :
+    } // END switch
   } /* END for */
 
   if( foundone ) {
     if(*use_title) fprintf(stderr,"FIELD) you have requested the use of the title field\n");
     if(*use_desc) fprintf(stderr,"FIELD) you have requested the use of the description field\n");
     if(*use_narr) fprintf(stderr,"FIELD) you have requested the use of the narrative field\n");
-    
+
   } else {
     fprintf(stderr,"ERROR - invalid TREC field entered [%s] please try again\n", arg );
   } /* END if */
@@ -267,7 +267,7 @@ void Save_QUERY( FILE *qd, QUERY q ) {
 		fprintf(stderr, "%s ", q.term_set[i] );
 	} /* END if */
 	fprintf( qd, "\n" );
-	fprintf( stderr, "}\n" ); 
+	fprintf( stderr, "}\n" );
 
 } /* END Save_QUERY */
 
@@ -338,7 +338,7 @@ void create_queries( CONFIG_TREC & config ) {
   char topics[BIG_BUFFER];
   int topic_size=0;
   int curpos=0;
-  int terms_to_save;  
+  int terms_to_save;
   int save_word=0;
   SW_STORE sw_store;
 
@@ -346,7 +346,7 @@ void create_queries( CONFIG_TREC & config ) {
 
   /* find out what type of search you want the user wants */
   find_field_status( (char *) config.get_topicfields().c_str(), &use_title, &use_desc, &use_narr );
-  
+
   /* open the files for manipulation */
   cout << "QUERY) topic file name is " << config.get_topicfile().c_str() << endl;
   topic_fd = fopen( config.get_topicfile().c_str(), "r" );
@@ -358,14 +358,14 @@ void create_queries( CONFIG_TREC & config ) {
     topics[topic_size] = fgetc(topic_fd);
   } // END for
   fclose( topic_fd );
-  
+
   query_fd = fopen( config.get_queryfile().c_str(), "w" );
   if(!query_fd) {
-    cout << "ERROR - can't open file [" << config.get_queryfile().c_str()  << "] for writing" << endl; 
+    cout << "ERROR - can't open file [" << config.get_queryfile().c_str()  << "] for writing" << endl;
     std::exit(0);
   } // END if
   cout << "QUERY) query file name is: " <<  config.get_queryfile().c_str() << endl;
-  
+
   Read_SW_File( (char *) config.get_stopsfile().c_str(), &sw_store );
 
   /* iniatisation */
@@ -429,7 +429,7 @@ void create_queries( CONFIG_TREC & config ) {
       }
     } /* END switch */
   } /* END while */
-  
+
 } /* END create_queries( */
 
 int main(int argc, char **argv)
@@ -440,16 +440,16 @@ int main(int argc, char **argv)
     cout << "usage: " << argv[0] << " <config file>" << endl;
     std::exit(1);
   }
-    
+
   // Catch any Xapian::Error exceptions thrown
   try {
 
     CONFIG_TREC config;
-    config.setup_config( string(argv[1]) ); 
+    config.setup_config( string(argv[1]) );
     config.check_query_config();
-    
+
     create_queries( config );
-    
+
   } catch(const Xapian::Error &error) {
     cout << "Exception: "  << error.get_msg() << endl;
   }

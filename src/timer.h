@@ -15,7 +15,7 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
-Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  
+Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 */
 
@@ -27,13 +27,13 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 extern "C" {
 #endif
 
-extern void diff_time( struct timeval finish, 
+extern void diff_time( struct timeval finish,
 		       struct timeval start,
 		       struct timeval *cost );
-/* calculate the difference in time between start and finish (in whole and 
+/* calculate the difference in time between start and finish (in whole and
    decimal parts) */
 
-extern void accumtime( struct timeval *current, 
+extern void accumtime( struct timeval *current,
 		       struct timeval newv );
 /* accumulate time from new into current */
 

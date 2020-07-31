@@ -1,7 +1,7 @@
 /*
 **  index-xapian-trec.cc
 **
-**  AM 6/12/2006 
+**  AM 6/12/2006
 **  Internal use only: for xapian paper experiments
 **
 */
@@ -26,7 +26,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "htmlparse.h"
-#include "P98_gzip.h"  
+#include "P98_gzip.h"
 #include "stopword.h"
 #include "indextext.h"
 
@@ -42,7 +42,7 @@ using namespace std;
 
 /* chamber (from hashbld) is where the input bundles are decompressed.*/
 #define CHAMBER_SIZE 10000000
-char chamber[CHAMBER_SIZE]; 
+char chamber[CHAMBER_SIZE];
 
 class TrecHtmlParser : public HtmlParser {
     public:
@@ -84,7 +84,7 @@ TrecHtmlParser::opening_tag(const string &tag, const map<string,string> &p)
     }
     cout << ">\n";
 #endif
-    
+
     if (tag == "meta") {
 	map<string, string>::const_iterator i, j;
 	if ((i = p.find("content")) != p.end()) {
@@ -151,7 +151,7 @@ p_plusminus(unsigned int c)
 
 void index_text(const string &s, Xapian::Document &doc )
 {
- 
+
     AccentNormalisingItor j(s.begin());
     const AccentNormalisingItor s_end(s.end());
     while (true) {
@@ -165,7 +165,7 @@ void index_text(const string &s, Xapian::Document &doc )
 	    term = *j;
 	    while (++j != s_end && *j == '.' && ++j != s_end && isupper(*j)) {
 		term += *j;
-	    } 
+	    }
 	    if (term.length() < 2 || (j != s_end && isalnum(*j))) {
 		term = "";
 	    }
@@ -200,7 +200,7 @@ void index_text(const string &s, Xapian::Document &doc )
 	if (term.length() <= MAX_PROB_TERM_LENGTH) {
 	    lowercase_term(term);
 	    doc.add_term( term );
- 
+
 	}
     }
 
@@ -215,21 +215,21 @@ string get_document( string & text, int & curpos, int uncolen ) {
     document += chamber[i];
   document += "</DOC>";
   curpos += document.length();
-  
+
   return document;
 
 } // get_document
 
 Xapian::Document  remove_stopwords( Xapian::Document doc, SW_STORE & sw_store ) {
-// take a list of keywords and remove 
+// take a list of keywords and remove
 
   Xapian::Document wordlist;
   char word[100];
-	
+
   for( TermIterator t = doc.termlist_begin(); t != doc.termlist_end();  t++ ) {
     for( int i=0; i < (*t).size(); i++ ) word[i] = (*t)[i];
     if(!IsStopWord( sw_store, word )) wordlist.add_term( *t );
-    
+
   } // END for
 
   return wordlist;
@@ -243,45 +243,45 @@ Xapian::Document stem_document( Xapian::Document & doc ) {
 
   for( TermIterator t = doc.termlist_begin(); t != doc.termlist_end();  t++ ) {
     wordlist.add_term(stemmer.stem_word(*t) );
-    
+
   } // END for
 
   return wordlist;
 
 
-} // END stem_document 
+} // END stem_document
 
 
 /**********************************************************************/
 /*                Process one compressed bundle                       */
 /**********************************************************************/
 
-static int processfile(string fp, Xapian::WritableDatabase &db, SW_STORE & sw_store ) { 
-  /* A file believed to be a compressed doc bundle has been encountered.  It's 
+static int processfile(string fp, Xapian::WritableDatabase &db, SW_STORE & sw_store ) {
+  /* A file believed to be a compressed doc bundle has been encountered.  It's
      full path is fp. It is to be decompressed and processed as requested. */
-  
-  int uncolen; 
+
+  int uncolen;
   int pointer=0;
 
-  // uncompress the file 
-  cout << "Processing" << fp <<  "\n"; 
+  // uncompress the file
+  cout << "Processing" << fp <<  "\n";
   uncolen = decompress_bundle(fp.c_str(), chamber, CHAMBER_SIZE);
 
-  // index the file in Xapian 
+  // index the file in Xapian
   do {
-    
+
     Xapian::Document newdoc;
 
-    // parse the document 
+    // parse the document
     string text = get_document( text, pointer, uncolen );
     TrecHtmlParser p;
     p.parse_html(text);
- 
-    // index the document 
+
+    // index the document
     index_text(p.keywords, newdoc );
     Xapian::Document doc_stopsremoved = remove_stopwords( newdoc, sw_store );
-    Xapian::Document stemdoc = stem_document( doc_stopsremoved ); 
-    stemdoc.set_data(p.docno);  // set the data 
+    Xapian::Document stemdoc = stem_document( doc_stopsremoved );
+    stemdoc.set_data(p.docno);  // set the data
     db.add_document(stemdoc);
 
   } while( pointer < uncolen );
@@ -353,7 +353,7 @@ int main (int argc, char *argv[]) {
     cerr << "USAGE: index-xapian-trec <database> \n";
     exit(0);
   } // END if
- 
+
   // Catch any Error exceptions thrown
   try {
 

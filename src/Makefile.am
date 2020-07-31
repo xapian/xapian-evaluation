@@ -9,7 +9,7 @@ AM_CXXFLAGS = $(XAPIAN_CXXFLAGS)
 include_HEADERS = $(HELPERHEADERS)
 
 __top_builddir__bin_trec_search_SOURCES = 	trec_search.cc $(HELPERFILES)
-			
+
 __top_builddir__bin_trec_index_SOURCES = trec_index.cc $(HELPERFILES)
 
 __top_builddir__bin_trec_index_LDADD = $(LDADD) -lz
