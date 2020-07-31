@@ -1,7 +1,7 @@
 # Makefile for Ad-hoc batch TREC index and search
 
 HELPERFILES = config_file.cc htmlparse.cc stopword.cc split.cc qrelinmemory.cc trec_qrel.cc timer.c
-HELPERHEADERS = config_file.h htmlparse.h stopword.h split.h timer.h timerstruct.h qrelinmemory.h trec_qrel.h trec_eval.h trec_adhoceval.h
+HELPERHEADERS = config_file.h htmlparse.h indextext.h stopword.h split.h symboltab.h timer.h timerstruct.h P98_gzip.h qrelinmemory.h trec_qrel.h trec_eval.h trec_adhoceval.h
 
 bin_PROGRAMS = $(top_builddir)/bin/trec_index $(top_builddir)/bin/trec_search $(top_builddir)/bin/trec_query $(top_builddir)/bin/trec_adhoceval
 LDADD = $(XAPIAN_LIBS)
