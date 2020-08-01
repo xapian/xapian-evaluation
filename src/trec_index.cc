@@ -213,7 +213,7 @@ index_file(const string& file,
 }
 
 static void
-index_directory(const string& dir,
+index_directory(const string& path,
                 CONFIG_TREC& config,
                 Xapian::WritableDatabase& db,
                 Xapian::TermGenerator& indexer);
@@ -256,26 +256,23 @@ index_directory_entry(const string& file,
 }
 
 static void
-index_directory(const string& dir,
+index_directory(const string& path,
                 CONFIG_TREC& config,
                 Xapian::WritableDatabase& db,
                 Xapian::TermGenerator& indexer)
 {
-    DIR *d;
-    struct dirent *ent;
-    string path = dir;
+    //cout << "[Entering directory " << path << "]" << endl;
 
-    //cout << "[Entering directory " << dir << "]" << endl;
-
-    d = opendir(path.c_str());
+    DIR* d = opendir(path.c_str());
     if (d == NULL) {
 	cout << "Can't open directory \"" << path << "\" - skipping\n";
 	return;
     }
+    dirent* ent;
     while ((ent = readdir(d)) != NULL) {
 	// ".", "..", and other hidden files
 	if (ent->d_name[0] == '.') continue;
-	string file = dir;
+	string file = path;
 	if (!file.empty() && file[file.size() - 1] != '/') file += '/';
 	file += ent->d_name;
 	index_directory_entry(file, config, db, indexer);
