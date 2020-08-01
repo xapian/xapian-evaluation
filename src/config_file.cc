@@ -31,92 +31,86 @@
 
 using namespace std;
 
-void CONFIG_TREC::record_tag( string config_tag, string config_value ) {
+void
+CONFIG_TREC::handle_item(const string& name, const string& value)
+{
+    if (name == "textfile") {
+        textfile = value;
+        return;
+    }
+    if (name == "stopsfile") {
+        stopsfile = value;
+        return;
+    }
+    if (name == "language") {
+        language = value;
+        return;
+    }
+    if (name == "db") {
+        db = value;
+        return;
+    }
+    if (name == "querytype") {
+        querytype = value;
+        return;
+    }
+    if (name == "queryfile") {
+        queryfile = value;
+        return;
+    }
+    if (name == "resultsfile") {
+        resultsfile = value;
+        return;
+    }
+    if (name == "transfile") {
+        transfile = value;
+        return;
+    }
+    if (name == "noresults") {
+        noresults = atoi(value.c_str());
+        return;
+    }
+    if (name == "topicfile") {
+        topicfile = value;
+        return;
+    }
+    if (name == "topicfields") {
+        topicfields = value;
+        return;
+    }
+    if (name == "relfile") {
+        relfile = value;
+        return;
+    }
+    if (name == "runname") {
+        runname = value;
+        return;
+    }
+    if (name == "nterms") {
+        nterms = atoi(value.c_str());
+        return;
+    }
+    if (name == "evaluationfiles") {
+        evaluationfiles = value;
+        return;
+    }
 
-  int found=0;
+    if (name == "indexbigram" ) {
+        indexbigram = value;
+        return;
+    }
+    if (name == "queryparsebigram" ) {
+        queryparsebigram = value;
+        return;
+    }
+    if (name == "weightingscheme") {
+        weightingscheme = value;
+        return;
+    }
 
-  if( config_tag == "textfile" ) {
-    textfile = config_value;
-    found = 1;
-  } // END if
-  if( config_tag == "stopsfile" ) {
-    stopsfile = config_value;
-    found = 1;
-  } // END if
-  if( config_tag == "language" ) {
-    language = config_value;
-    found = 1;
-  } // END if
-  if( config_tag == "db" ) {
-    db = config_value;
-    found = 1;
-  } // END if
-  if( config_tag == "querytype" ) {
-    querytype = config_value;
-    found = 1;
-  } // END if
-  if( config_tag == "queryfile" ) {
-    queryfile = config_value;
-    found = 1;
-  } // END if
-  if( config_tag == "resultsfile" ) {
-    resultsfile = config_value;
-    found = 1;
-  } // END if
-  if( config_tag == "transfile" ) {
-    transfile = config_value;
-    found = 1;
-  } // END if
-  if( config_tag == "noresults" ) {
-    noresults = atoi(config_value.c_str());
-    found = 1;
-  } // END if
-  if( config_tag == "topicfile" ) {
-    topicfile = config_value;
-    found = 1;
-  } // END if
-  if( config_tag == "topicfields" ) {
-    topicfields = config_value;
-    found = 1;
-  } // END if
-  if( config_tag == "relfile" ) {
-    relfile = config_value;
-    found = 1;
-  } // END if
-  if( config_tag == "runname" ) {
-    runname = config_value;
-    found = 1;
-  } // END if
-  if( config_tag == "nterms" ) {
-    nterms = atoi(config_value.c_str());
-    found = 1;
-  } // END if
-  if ( config_tag == "evaluationfiles" ) {
-	evaluationfiles = config_value;
-    found = 1;
-  } // END if
-
-  if (config_tag == "indexbigram" ) {
-	indexbigram = config_value;
-    found = 1;
-  } //END if
-
-  if (config_tag == "queryparsebigram" ) {
-	queryparsebigram = config_value;
-	found = 1;
-  }
-
-  if ( config_tag == "weightingscheme" ) {
-	weightingscheme = config_value;
-	found = 1;
-  }
-
-  if( !found ) {
-    cout << "ERROR: could not locate tag [" << config_tag << "] for value [" << config_value
-	 << "]" << endl;
-  } // END if
-
-} // END record_tag
+    cout << "ERROR: unknown config item '" << name << "' with value '"
+         << value << "'\n";
+}
 
 void
 CONFIG_TREC::setup_config(string filename)
@@ -156,33 +150,33 @@ CONFIG_TREC::setup_config(string filename)
             return;
         }
 
-        char* config_tag = strtok(line, " \t");
-        if (config_tag == NULL) {
+        char* name = strtok(line, " \t");
+        if (name == NULL) {
             // Blank line.
             continue;
         }
-        if (config_tag[0] == '#') {
+        if (name[0] == '#') {
             // Comment.
             continue;
         }
 
-        char* config_value = strtok(NULL, "");
-        if (config_value == NULL) {
-            cout << "No value for tag \"" << config_tag << "\"\n";
+        char* value = strtok(NULL, "");
+        if (value == NULL) {
+            cout << "No value for tag \"" << name << "\"\n";
             continue;
         }
         // Trim leading whitespace.
-        while (*config_value == ' ' || *config_value == '\t') {
-            ++config_value;
+        while (*value == ' ' || *value == '\t') {
+            ++value;
         }
         // Trim trailing whitespace.
-        char* p = config_value + strlen(config_value);
+        char* p = value + strlen(value);
         while (p[-1] == ' ' || p[-1] == '\t') --p;
         *p = '\0';
 
-        // cout << "GOT) values [" << config_tag << "] and [" << config_value << "]" << endl;
+        // cout << "GOT) values [" << name << "] and [" << value << "]" << endl;
 
-        record_tag( config_tag, config_value );
+        handle_item(name, value);
     }
 }
 

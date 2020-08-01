@@ -56,7 +56,7 @@ private:
 	string weightingscheme; //which weighting scheme to select
 
 	// private access routines
-	void record_tag( string config_tag, string config_value );
+	void handle_item(const string& name, const string& value);
 
 public:
 
