@@ -26,11 +26,9 @@
 #include <fstream>
 #include <algorithm>
 #include <string>
-#include <xapian.h>
 #include "config_file.h"
 #include "split.h"
 
-using namespace Xapian;
 using namespace std;
 
 void CONFIG_TREC::record_tag( string config_tag, string config_value ) {
