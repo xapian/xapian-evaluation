@@ -21,6 +21,7 @@
  * -----END-LICENCE-----
  */
 
+#include <cstring>
 #include <iostream>
 #include <fstream>
 #include <algorithm>
@@ -119,58 +120,73 @@ void CONFIG_TREC::record_tag( string config_tag, string config_value ) {
 
 } // END record_tag
 
-void CONFIG_TREC::setup_config( string filename ) {
+void
+CONFIG_TREC::setup_config(string filename)
+{
+    // set defaults
+    textfile = "noneassigned";     // must enter a file/dir for text
+    language = "english";          // corpus language
+    db = "noneassigned";           // must enter path of database
+    querytype = "n";               // type of query: default is n=normal
+    queryfile = "noneassigned";    // must enter path/filename of query file
+    resultsfile = "trec.log";      // path/filename of results file
+    transfile = "transaction.log";  // transaction log file (timings etc)
+    noresults = 1000;              // no of results to save in results log file
+    topicfile = "noneassigned";    // path/filename of topic file
+    topicfields = "t";             // fields of topic to use from topic file: default title
+    relfile= "noneassigned";       // path/filename of relevance judgements file
+    runname = "xapiantrec";         // name of the run
+    nterms = 100;                  // no of terms to pick from the topic
+    evaluationfiles = "eval.log";  //Name of file to which evaluation to be written.
+    indexbigram = "false";   // Default value of index bigram
+    queryparsebigram = "false"; //Default value of parse bigram in query.
+    weightingscheme = "noneassigned";
 
-  // set defaults
-  textfile = "noneassigned";     // must enter a file/dir for text
-  language = "english";          // corpus language
-  db = "noneassigned";           // must enter path of database
-  querytype = "n";               // type of query: default is n=normal
-  queryfile = "noneassigned";    // must enter path/filename of query file
-  resultsfile = "trec.log";      // path/filename of results file
-  transfile = "transaction.log";  // transaction log file (timings etc)
-  noresults = 1000;              // no of results to save in results log file
-  topicfile = "noneassigned";    // path/filename of topic file
-  topicfields = "t";             // fields of topic to use from topic file: default title
-  relfile= "noneassigned";       // path/filename of relevance judgements file
-  runname = "xapiantrec";         // name of the run
-  nterms = 100;                  // no of terms to pick from the topic
-  evaluationfiles = "eval.log";  //Name of file to which evaluation to be written.
-  indexbigram = "false";   // Default value of index bigram
-  queryparsebigram = "false"; //Default value of parse bigram in query.
-  weightingscheme = "noneassigned";
+    std::ifstream configfile( filename.c_str() );
 
-  std::ifstream configfile( filename.c_str() );
+    if (!configfile) {
+        cerr << "ERROR: you must specify a valid configuration file name" << endl;
+        exit(0);
+    }
 
-  if( !configfile ) {
-    cerr << "ERROR: you must specify a valid configuration file name" << endl;
-    exit(0);
-  } //else cout << "CONFIG) Opened configuration file: " << filename << endl;
+    while (!configfile.eof()) {
+        // Read in lines from the configuration file.
+        char line[256];
+        if (!configfile.getline(line, sizeof(line))) {
+            if (!configfile.eof())
+                cout << "Error reading config file\n";
+            return;
+        }
 
-  while( !configfile.eof() ) {
+        char* config_tag = strtok(line, " \t");
+        if (config_tag == NULL) {
+            // Blank line.
+            continue;
+        }
+        if (config_tag[0] == '#') {
+            // Comment.
+            continue;
+        }
 
-    // read in lines from the configuration file
-    string data;
-    //  the tag
-    string config_tag;
-    // get the value
-    string config_value;
+        char* config_value = strtok(NULL, "");
+        if (config_value == NULL) {
+            cout << "No value for tag \"" << config_tag << "\"\n";
+            continue;
+        }
+        // Trim leading whitespace.
+        while (*config_value == ' ' || *config_value == '\t') {
+            ++config_value;
+        }
+        // Trim trailing whitespace.
+        char* p = config_value + strlen(config_value);
+        while (p[-1] == ' ' || p[-1] == '\t') --p;
+        *p = '\0';
 
-    // identify and save information from the configuration file
-    if( !configfile.eof() ) {
-      configfile >> data;
-      config_tag = data;
-      configfile >> data;
-      config_value = data;
-      //cout << "GOT) values [" << config_tag << "] and [" << config_value << "]" << endl;
+        // cout << "GOT) values [" << config_tag << "] and [" << config_value << "]" << endl;
 
-      // record the tag
-      if( !configfile.eof() ) record_tag( config_tag, config_value );
-    } // END if
-
-  } // END while
-
-} // END setup_config
+        record_tag( config_tag, config_value );
+    }
+}
 
 int CONFIG_TREC::check_query_config() {
 // ensure that all the information required by query generator has been entered in config file
