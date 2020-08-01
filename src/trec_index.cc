@@ -47,7 +47,7 @@
 using namespace Xapian;
 using namespace std;
 
-#define ENDDOC "</DOC>"
+static const char enddoc[] = "</DOC>";
 
 // chamber (from hashbld) is where the input bundles are decompressed.
 #define CHAMBER_SIZE 30000000
@@ -141,91 +141,76 @@ SGMLParser::closing_tag(const string &tag)
     } // END if
 }
 
-string getline( int & curpos, int uncolen ) {
-
-  string line;
-  for( ; curpos < uncolen && chamber[curpos] !='\n'; curpos++ )
-    line += chamber[curpos];
-  curpos++;
-  return line;
-
-} // END getline
-
-string get_document( int & curpos, int uncolen ) {
-  // alternative version of get document
-
-  int end_found=0;
-  string document;
-  while( !end_found ) {
-    string line = getline( curpos, uncolen );
-    document += line;
-    string::size_type pos = line.find(ENDDOC,0);
-    if( pos != string::npos ) end_found=1;
-  } // END while
-
-  return document;
-
-} // END get_document
-
-inline static bool
-p_plusminus(unsigned int c)
+static void
+index_doc(const char* begin, const char* end,
+          Xapian::WritableDatabase& db,
+          Xapian::TermGenerator& indexer)
 {
-    return c == '+' || c == '-';
+    string rawdoc(begin, end);
+
+    // parse the document for the data
+    SGMLParser p;
+    p.parse_html(rawdoc);
+
+    // Add postings for terms to the document
+    Xapian::Document doc;
+    doc.set_data(p.title);
+    indexer.set_document(doc);
+    indexer.index_text(p.title);
+    indexer.index_text(p.dump);
+    indexer.index_text(p.keywords);
+    cout << "DOCID = " << p.title << endl;
+    cout << "DOCID:\t" << db.add_document(doc) << " TERMLISTCOUNT " << doc.termlist_count();
+    cout << " DOCADDED" << doc.get_docid() << "\n";
+    totaldocs++;
+    //if( (totaldocs % 10000) == 0 ) cout << "DOCUMENTS PROCESSED) " << totaldocs << endl;
 }
 
-
+// Index a file containing a number of SGML/HTML documents.
 static void
 index_file(const string& file,
            CONFIG_TREC& config,
            Xapian::WritableDatabase& db,
            Xapian::TermGenerator& indexer)
 {
-  // index a file containing a number of SGML/HTML documents
+    if (file.empty()) {
+        cout << "can't read \"" << file << "\" - skipping\n";
+        return;
+    }
 
-  if (file.empty()) {
-    cout << "can't read \"" << file << "\" - skipping\n";
-    return;
-  } else cout << "Indexing [" << file << "]" << endl;
+    cout << "Indexing [" << file << "]\n";
 
-  int curpos=0;
-  int uncolen;
+    int curpos = 0;
+    int uncolen = decompress_bundle(file.c_str(), chamber, CHAMBER_SIZE);
 
-  uncolen = decompress_bundle(file.c_str(), chamber, CHAMBER_SIZE);
-  cout << "DEBUG) decompresses file done, size = " << uncolen << endl;
+    cout << "DEBUG) decompressed file, size = " << uncolen << endl;
 
-  // accumulate the text size read in
-  ttextsize += ( (float) uncolen / 1048576.0);
+    // accumulate the text size read in
+    ttextsize += uncolen / 1048576.0;
 
-  while( curpos < uncolen ) {
+    char* end = chamber + uncolen;
+    char* doc_begin = chamber + curpos;
+    const char* tag_begin = enddoc;
+    const char* tag_end = enddoc + strlen(enddoc);
+    while (true) {
+        auto doc_end = search(doc_begin, end, tag_begin, tag_end);
+        if (doc_end == end) {
+            // Check if there's any non-whitespace.
+            for (int i = curpos; i != uncolen; ++i) {
+                if (!isspace(chamber[i])) {
+                    cout << "Last document in file missing " << enddoc
+                         << " tag, but indexing anyway\n";
+                    index_doc(doc_begin, doc_end, db, indexer);
+                    return;
+                }
+            }
+            return;
+        }
 
-    // get a document
-    string rawdoc = get_document( curpos, uncolen );
-//    cout << "DEBUG) got a document, size = " << rawdoc <<
-  //    ", curpos = " << curpos << endl;
-
-    if( rawdoc.size() > 1 ) {
-
-      // parse the document for the data
-      SGMLParser p;
-      p.parse_html(rawdoc);
-
-      // Add postings for terms to the document
-      Xapian::Document doc;
-	  doc.set_data(p.title);
-	  indexer.set_document(doc);
-	  indexer.index_text(p.title);
-	  indexer.index_text(p.dump);
-	  indexer.index_text(p.keywords);
-      cout << "DOCID = " << p.title << endl;
-      cout<<"DOCID:\t"<<db.add_document(doc)<<"TERMLISTCOUNT"<<doc.termlist_count();
-      cout<<"DOCADDED\n"<<doc.get_docid();
-      totaldocs++;
-      //if( (totaldocs % 10000) == 0 ) cout << "DOCUMENTS PROCESSED) " << totaldocs << endl;
-    } // END if
-
-  } // END while
-
-} // END index_file
+        index_doc(doc_begin, doc_end, db, indexer);
+        doc_begin = doc_end + (tag_end - tag_begin);
+    }
+}
 
 static void
 index_directory(const string& dir,
