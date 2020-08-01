@@ -1,22 +1,18 @@
 # Makefile for Ad-hoc batch TREC index and search
 
-HELPERFILES = config_file.cc htmlparse.cc split.cc qrelinmemory.cc trec_qrel.cc timer.c
-HELPERHEADERS = config_file.h htmlparse.h indextext.h split.h timer.h timerstruct.h P98_gzip.h qrelinmemory.h trec_qrel.h trec_eval.h trec_adhoceval.h
+noinst_HEADERS = config_file.h htmlparse.h indextext.h P98_gzip.h qrelinmemory.h split.h timer.h timerstruct.h trec_adhoceval.h trec_eval.h trec_qrel.h
+common_sources = config_file.cc htmlparse.cc qrelinmemory.cc split.cc trec_qrel.cc timer.c
 
-bin_PROGRAMS = $(top_builddir)/bin/trec_index $(top_builddir)/bin/trec_search $(top_builddir)/bin/trec_query $(top_builddir)/bin/trec_adhoceval
+bin_PROGRAMS = trec_adhoceval trec_index trec_query trec_search
 LDADD = $(XAPIAN_LIBS)
 AM_CXXFLAGS = $(XAPIAN_CXXFLAGS)
-include_HEADERS = $(HELPERHEADERS)
 
-__top_builddir__bin_trec_search_SOURCES = 	trec_search.cc $(HELPERFILES)
+trec_adhoceval_SOURCES = trec_adhoceval.cc $(common_sources)
 
-__top_builddir__bin_trec_index_SOURCES = trec_index.cc $(HELPERFILES)
+trec_index_SOURCES = trec_index.cc $(common_sources)
 
-__top_builddir__bin_trec_index_LDADD = $(LDADD) -lz
+trec_index_LDADD = $(LDADD) -lz
 
-__top_builddir__bin_trec_query_SOURCES = trec_query.cc $(HELPERFILES)
+trec_query_SOURCES = trec_query.cc $(common_sources)
 
-__top_builddir__bin_trec_adhoceval_SOURCES = trec_adhoceval.cc $(HELPERFILES)
-
-clean :
-	rm -rf *.o  xapian-trec trec_index trec_search trec_query trec_adhoceval
+trec_search_SOURCES = trec_search.cc $(common_sources)

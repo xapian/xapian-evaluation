@@ -2,7 +2,6 @@
 *~
 aclocal.m4
 autom4te.cache
-bin/
 compile
 config.guess
 config.h
@@ -22,10 +21,11 @@ m4/libtool.m4
 m4/lt*.m4
 missing
 src/.deps
+src/.libs
 src/Makefile
 src/Makefile.in
 stamp-h1
-trec_adhoceval
-trec_index
-trec_query
-trec_search
+src/trec_adhoceval
+src/trec_index
+src/trec_query
+src/trec_search
