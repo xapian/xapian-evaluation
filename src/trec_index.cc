@@ -37,10 +37,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <fcntl.h>
+#include <zlib.h>
 #include "htmlparse.h"
 #include "config_file.h"
 #include "indextext.h"
-#include "P98_gzip.h"
 #include <time.h>
 #include "timer.h"
 
@@ -49,9 +49,9 @@ using namespace std;
 
 static const char enddoc[] = "</DOC>";
 
-// chamber (from hashbld) is where the input bundles are decompressed.
+// "chamber" is where the input bundles are decompressed.
 #define CHAMBER_SIZE 30000000
-char chamber[CHAMBER_SIZE];
+static char chamber[CHAMBER_SIZE];
 
 float ttextsize=0;  // total amount of text in mb indexed
 int totaldocs=0;		// total number of documents indexed
@@ -180,36 +180,63 @@ index_file(const string& file,
 
     cout << "Indexing [" << file << "]\n";
 
+    gzFile in = gzopen(file.c_str(), "rb");
+
     int curpos = 0;
-    int uncolen = decompress_bundle(file.c_str(), chamber, CHAMBER_SIZE);
+    int uncolen = 0;
 
-    cout << "DEBUG) decompressed file, size = " << uncolen << endl;
-
-    // accumulate the text size read in
-    ttextsize += uncolen / 1048576.0;
-
-    char* end = chamber + uncolen;
-    char* doc_begin = chamber + curpos;
     const char* tag_begin = enddoc;
     const char* tag_end = enddoc + strlen(enddoc);
     while (true) {
-        auto doc_end = search(doc_begin, end, tag_begin, tag_end);
-        if (doc_end == end) {
+        int result = gzread(in,
+                            (voidp)(chamber + uncolen),
+                            CHAMBER_SIZE - uncolen);
+        if (result < 0) {
+            cout << "Error reading input file\n";
+            break;
+        }
+        uncolen += result;
+
+        // accumulate the text size read in
+        ttextsize += result / 1048576.0;
+
+        char* end = chamber + uncolen;
+        char* doc_begin = chamber + curpos;
+
+        while (true) {
+            char* doc_end = search(doc_begin, end, tag_begin, tag_end);
+            if (doc_end == end)
+                break;
+            index_doc(doc_begin, doc_end, db, indexer);
+            doc_begin = doc_end + (tag_end - tag_begin);
+        }
+
+        if (curpos == 0) {
+            if (uncolen == CHAMBER_SIZE) {
+                cout << "Document larger than CHAMBER_SIZE - skipping rest of file\n";
+                break;
+            }
+
             // Check if there's any non-whitespace.
             for (int i = curpos; i != uncolen; ++i) {
                 if (!isspace(chamber[i])) {
                     cout << "Last document in file missing " << enddoc
                          << " tag, but indexing anyway\n";
-                    index_doc(doc_begin, doc_end, db, indexer);
-                    return;
+                    index_doc(doc_begin, end, db, indexer);
+                    break;
                 }
             }
-            return;
+            break;
         }
 
-        index_doc(doc_begin, doc_end, db, indexer);
-        doc_begin = doc_end + (tag_end - tag_begin);
+        // Copy the remaining data to the start of the chamber, then loop to
+        // read more.
+        uncolen -= curpos;
+        memmove(chamber, chamber + curpos, uncolen);
+        curpos = 0;
     }
+
+    gzclose(in);
 }
 
 static void
