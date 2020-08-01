@@ -1,6 +1,6 @@
 # Makefile for Ad-hoc batch TREC index and search
 
-noinst_HEADERS = config_file.h htmlparse.h indextext.h P98_gzip.h qrelinmemory.h split.h timer.h timerstruct.h trec_adhoceval.h trec_eval.h trec_qrel.h
+noinst_HEADERS = config_file.h htmlparse.h indextext.h P98_gzip.h qrelinmemory.h split.h timer.h trec_adhoceval.h trec_eval.h trec_qrel.h
 common_sources = config_file.cc htmlparse.cc qrelinmemory.cc split.cc trec_qrel.cc timer.c
 
 bin_PROGRAMS = trec_adhoceval trec_index trec_query trec_search

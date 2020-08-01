@@ -21,7 +21,6 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 #include <sys/types.h>
 #include <sys/time.h>
-#include "timerstruct.h"       /* timer data structures */
 
 #ifdef __cplusplus
 extern "C" {
@@ -32,22 +31,6 @@ extern void diff_time( struct timeval finish,
 		       struct timeval *cost );
 /* calculate the difference in time between start and finish (in whole and
    decimal parts) */
-
-extern void accumtime( struct timeval *current,
-		       struct timeval newv );
-/* accumulate time from new into current */
-
-extern void accumcost( COST *cur_cost, COST new_cost );
-/* accumulate costs form new in cur */
-
-extern void Init_Cost( COST *cost );
-/* initialise cost structure */
-
-extern void Disp_Time( struct timeval timebefore, struct timeval timeafter );
-/* display the time lapse between before and after */
-
-extern void Print_Costs( COST costs );
-  /* print cost information to standard error */
 
 extern float time_real( struct timeval t );
 /* convert struct timeval into a real time in one figure */
