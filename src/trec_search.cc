@@ -96,6 +96,10 @@ int main(int argc, char **argv)
     // Start an enquire session
     Xapian::Enquire enquire(db);
 
+    auto wt = Xapian::Weight::create(config.get_weightingscheme());
+    enquire.set_weighting_scheme(*wt);
+    delete wt;
+
     // open the query file
     std::ifstream queryfile( config.get_queryfile().c_str() );
 
@@ -131,10 +135,6 @@ int main(int argc, char **argv)
 
 	// Give the query object to the enquire session
 	enquire.set_query(query);
-
-	auto wt = Xapian::Weight::create(config.get_weightingscheme());
-	enquire.set_weighting_scheme(*wt);
-	delete wt;
 
 	// Get the top n results of the query
 	Xapian::MSet matches = enquire.get_mset( 0, config.get_noresults() );
