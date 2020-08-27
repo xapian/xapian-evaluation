@@ -38,16 +38,6 @@ using namespace std;
 
 CONFIG_TREC config;
 
-void get_stopper(Xapian::SimpleStopper &stopper) {
-ifstream stopfile(config.get_stopsfile().c_str(),ifstream::in);
-while ( !stopfile.eof() ) {
-	string stopword;
-	getline(stopfile,stopword);
-	stopper.add(stopword);
-	}
-	stopfile.close();
-}
-
 int load_query( std::ifstream & queryfile, int & topicno,Xapian::Query & query, Xapian::Stem & stemmer ) {
 // load a query and record its terms
 
@@ -58,8 +48,9 @@ int load_query( std::ifstream & queryfile, int & topicno,Xapian::Query & query, 
 	getline(queryfile,line);
 	line[line.size()-1] ='\0';
 	Xapian::QueryParser qp;
-	Xapian::SimpleStopper stopper;
-	get_stopper(stopper);
+        ifstream words(config.get_stopsfile().c_str());
+        Xapian::SimpleStopper stopper{istream_iterator<string>(words),
+                                      istream_iterator<string>()};
 	qp.set_stopper(&stopper);
 	qp.set_stemmer(stemmer);
 	qp.set_stemming_strategy(Xapian::QueryParser::STEM_SOME);
