@@ -1,0 +1,78 @@
+name: CI
+
+on:
+  push:
+    paths-ignore:
+      - 'README'
+  pull_request:
+    branches: master
+    paths-ignore:
+      - 'README'
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os || 'ubuntu-20.04' }}
+
+    strategy:
+      # Don't abort other jobs if one fails.
+      fail-fast: false
+      matrix:
+        include:
+          - name: GLIBCXX_DEBUG
+            CC: gcc
+            CXX: g++
+            CPPFLAGS: -D_GLIBCXX_DEBUG
+
+          - name: clang
+            CC: clang
+            CXX: 'clang++ -stdlib=libc++'
+            extra_packages: clang libc++-dev
+
+          - name: GCC-4.8
+            os: ubuntu-18.04
+            CC: gcc-4.8
+            CXX: g++-4.8
+            extra_packages: gcc-4.8 g++-4.8
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Install CCache
+      uses: hendrikmuhs/ccache-action@v1
+      with:
+        key: ${{ matrix.name }}
+    - name: Install package dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install \
+            autoconf \
+            automake \
+            libtool \
+            ${{ matrix.extra_packages }}
+    - name: bootstrap xapian-core
+      run: |
+        git clone https://github.com/xapian/xapian.git
+        cd xapian
+        ./bootstrap xapian-core
+    - name: configure xapian-core
+      run: |
+        cd xapian
+        ./configure --disable-documentation CC='ccache ${{ matrix.CC || 'gcc' }}' CXX='ccache ${{ matrix.CXX || 'g++' }}'
+    - name: make xapian-core
+      run: make -j2 -C xapian
+    - name: bootstrap
+      run: |
+        export ACLOCAL="aclocal -I $PWD/xapian/xapian-core/m4-macros"
+        autoreconf -fiv
+    - name: configure
+      run: ./configure XAPIAN_CONFIG=$PWD/xapian/xapian-core/xapian-config $confargs CC='ccache ${{ matrix.CC || 'gcc' }}' CXX='ccache ${{ matrix.CXX || 'g++' }}' CFLAGS='-Wall -W -Werror' CXXFLAGS='-Wall -W -Werror'
+    - name: make
+      run: make -j2
+    - name: Run tests
+      run: make check VERBOSE=1 AUTOMATED_TESTING=1
+    - name: Check generated files are in .gitignore
+      # grep '^' passes through all input while giving a non-zero exit status
+      # if that input is empty.
+      run: |
+        printf '%s\n' .ccache xapian > ".git/info/exclude"
+        git status --porcelain|grep '^' && { echo "The generated files listed above are not in .gitignore" ; exit 1; }; true
