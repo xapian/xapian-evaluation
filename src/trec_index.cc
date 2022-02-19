@@ -169,7 +169,6 @@ index_doc(const char* begin, const char* end,
 // Index a file containing a number of SGML/HTML documents.
 static void
 index_file(const string& file,
-           CONFIG_TREC& config,
            Xapian::WritableDatabase& db,
            Xapian::TermGenerator& indexer)
 {
@@ -275,7 +274,7 @@ index_directory_entry(const string& file,
         string::size_type dot = file.find_last_of('.');
         if (dot != string::npos) ext = file.substr(dot + 1);
 
-        index_file(file, config, db, indexer);
+        index_file(file, db, indexer);
         return;
     }
 
@@ -358,6 +357,7 @@ int main(int argc, char **argv)
 
         // print the total time, and average time per query -
         //diff_time( finish_time, start_time, &timelapse );
+	(void)timelapse;
         //cout << "Total time for " << totaldocs << " documents is " << time_real( timelapse ) << " secs, text size = " << ttextsize
         //		 << " mb" << endl;
         cout << "Total number of documents in the database is now " << db.get_doccount() << " docs" << endl;

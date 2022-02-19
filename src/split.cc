@@ -25,30 +25,6 @@
 
 using namespace std;
 
-void clear_apos(  string & data ) {
-// clear " from data
-
-         string temp;
-
-         temp.clear();
-         for( int i=0; i < data.size(); i++ )
-                                if( data[i] != '"' && data[i] != '\n')
-                                                temp += data[i];
-
-         data = temp;
-
-} // END clear_apos
-
-static inline void
-lowercase(string & term )
-{
-    string::iterator i = term.begin();
-    while (i != term.end()) {
-        *i = tolower(*i);
-        i++;
-    }
-}
-
 void split( const string &s, char c, vector<string> &res)
  {
    res.clear();
@@ -63,10 +39,9 @@ void split( const string &s, char c, vector<string> &res)
            string tmps;
            for( j=pos; j<i; j++)
              {
-               tmps += s[j];
+	       if (s[j] != '"' && s[j] != '\n')
+		 tmps += tolower(s[j]);
              }
-                 clear_apos( tmps );
-                 lowercase( tmps );
            res.push_back(tmps);
            pos=i+1;
          } // END if

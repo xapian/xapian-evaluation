@@ -67,7 +67,7 @@ typedef struct query {
 
 } QUERY;
 
-void skip_spaces( char page[], int size, int *curpos ) {
+void skip_spaces( char page[], int *curpos ) {
   /* skip any number of spaces/irrelevant chars in rows/cols */
 
   /* find an alpha numeric character */
@@ -109,7 +109,7 @@ int iswordbreak( char c ) {
 
 } /* END iswordbreak */
 
-void get_chars(char buffer[], int size, int *curpos,
+void get_chars(char buffer[], int *curpos,
 		char saved_chars[KW_SIZE]) {
     /* get each character for a word */
 
@@ -156,14 +156,14 @@ void get_chars(char buffer[], int size, int *curpos,
     }
 } /* END get_chars */
 
-void get_word( char buffer[], int size, char word[KW_SIZE], int *curpos ) {
+void get_word( char buffer[], char word[KW_SIZE], int *curpos ) {
   /* get a word from a page */
 
   /*skip any number of spaces/irrelevant chars in rows/cols*/
-  skip_spaces( buffer, size, curpos  );
+  skip_spaces( buffer, curpos  );
 
   /* now get each character from the line */
-  get_chars( buffer, size, curpos, word );
+  get_chars( buffer, curpos, word );
   word[KW_SIZE-1] = '\0';  /*max size keyword to record */
 } /*END get_word*/
 
@@ -194,23 +194,20 @@ void check_code( char word[KW_SIZE], int *code ) {
 
 } /* END check_code */
 
-void clean_word( char word[KW_SIZE] ) {
-	int i;
-	int curpos;
-
-	for( i=0, curpos=0; i < strlen(word); i++ ) {
-		if(isalnum(word[i])) word[curpos++] = word[i];
-	} /* END for */
-} /* END clean_word */
-
+static void
+clean_word(char word[KW_SIZE])
+{
+    for (size_t i = 0, curpos = 0; i < strlen(word); i++ ) {
+	if (isalnum(word[i])) word[curpos++] = word[i];
+    }
+}
 
 void find_field_status( char arg[], int *use_title, int *use_desc, int *use_narr ) {
 /* find out what type of search you want the user wants */
 
   int foundone=0;
-  int i;
 
-  for( i=0; i < strlen(arg); i++ ) {
+  for (size_t i=0; i < strlen(arg); i++) {
     switch(arg[i]) {
     case 't' : *use_title=1; foundone=1;
       break;
@@ -314,6 +311,7 @@ void create_queries( CONFIG_TREC & config ) {
   int save_word=0;
 
   terms_to_save = config.get_nterms();  /* number of terms to save */
+  (void)terms_to_save; // FIXME: Use or remove
 
   /* find out what type of search you want the user wants */
   find_field_status( (char *) config.get_topicfields().c_str(), &use_title, &use_desc, &use_narr );
@@ -352,7 +350,7 @@ void create_queries( CONFIG_TREC & config ) {
   while( curpos < topic_size ) {
 
     memset(word, 0, KW_SIZE);
-    get_word( topics, BIG_BUFFER, word, &curpos );
+    get_word( topics, word, &curpos );
     check_code( word, &code );
     clean_word( word );
     switch( code ) {
@@ -371,9 +369,9 @@ void create_queries( CONFIG_TREC & config ) {
       break;
     case TOPIC_NUMBER :
       {
-	get_word( topics, BIG_BUFFER, word, &curpos ); // spin past Number
+	get_word( topics, word, &curpos ); // spin past Number
 	q.topic_no = atoi(word);
-	get_word( topics, BIG_BUFFER, word, &curpos );
+	get_word( topics, word, &curpos );
 	// Extracting topic number by reading it from the file
 	if(q.topic_no == 0)
 	q.topic_no = atoi(word);
@@ -388,14 +386,14 @@ void create_queries( CONFIG_TREC & config ) {
       break;
     case DESC :
       {
-	get_word( topics, BIG_BUFFER, word, &curpos ); /* spin past Description: */
+	get_word( topics, word, &curpos ); /* spin past Description: */
 	if( use_desc ) save_word = 1;
 	else save_word=0;
       }
       break;
     case NARR :
       {
-	get_word( topics, BIG_BUFFER, word, &curpos ); /* spin past Narrative: */
+	get_word( topics, word, &curpos ); /* spin past Narrative: */
 	if( use_narr ) save_word = 1;
 	else save_word=0;
       }

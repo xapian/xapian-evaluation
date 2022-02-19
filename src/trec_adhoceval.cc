@@ -153,7 +153,6 @@ while( resultfile.good() && !resultfile.eof() ) {
 	    int docrank = 0;
 		ExactPrecision[currentQuery] = 0;
 		RPrecision[currentQuery] = 0;
-		int sizeofvector  = recordvec->size();
 		// Iterating the ranklist(Record List of the Queries.
 		for (recorditr = recordvec->begin();recorditr != recordvec->end();recorditr++) {
 			Record rec = *recorditr;
@@ -320,6 +319,10 @@ evaluationPrecisionAtRecall.close();
 }
 
 int main(int argc,char **argv) {
+    if (argc != 2) {
+	cerr << "Syntax: " << argv[0] << " CONFIG_FILE\n";
+	return 1;
+    }
 CONFIG_TREC config;
 config.setup_config(string(argv[1]));
 AdhocEvaluation *eval = new AdhocEvaluation(config);
