@@ -65,11 +65,11 @@ jobs:
         export ACLOCAL="aclocal -I $PWD/xapian/xapian-core/m4-macros"
         autoreconf -fiv
     - name: configure
-      run: ./configure XAPIAN_CONFIG=$PWD/xapian/xapian-core/xapian-config $confargs CC='ccache ${{ matrix.CC || 'gcc' }}' CXX='ccache ${{ matrix.CXX || 'g++' }}' CFLAGS='-Wall -W -Werror' CXXFLAGS='-Wall -W -Werror'
+      run: ./configure XAPIAN_CONFIG=$PWD/xapian/xapian-core/xapian-config $confargs CC='ccache ${{ matrix.CC || 'gcc' }}' CXX='ccache ${{ matrix.CXX || 'g++' }}'
     - name: make
-      run: make -j2
+      run: make -j2 CFLAGS='-Wall -W -Werror' CXXFLAGS='-Wall -W -Werror'
     - name: Run tests
-      run: make check VERBOSE=1 AUTOMATED_TESTING=1
+      run: make check CFLAGS='-Wall -W -Werror' CXXFLAGS='-Wall -W -Werror' VERBOSE=1 AUTOMATED_TESTING=1
     - name: Check generated files are in .gitignore
       # grep '^' passes through all input while giving a non-zero exit status
       # if that input is empty.
